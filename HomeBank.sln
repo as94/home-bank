@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2005
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeBank.Ui", "HomeBank.Ui\HomeBank.Ui.csproj", "{B9EAC98B-240A-4C63-BDCD-C60F09A6609A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeBank.Presentaion", "HomeBank.Presentaion\HomeBank.Presentaion.csproj", "{DAA15A28-84B9-4E8E-A5F7-234A9CE361A5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B9EAC98B-240A-4C63-BDCD-C60F09A6609A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9EAC98B-240A-4C63-BDCD-C60F09A6609A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9EAC98B-240A-4C63-BDCD-C60F09A6609A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9EAC98B-240A-4C63-BDCD-C60F09A6609A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DAA15A28-84B9-4E8E-A5F7-234A9CE361A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAA15A28-84B9-4E8E-A5F7-234A9CE361A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAA15A28-84B9-4E8E-A5F7-234A9CE361A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAA15A28-84B9-4E8E-A5F7-234A9CE361A5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {29BC36BA-93F5-49B8-8607-5337D5EA88B5}
+	EndGlobalSection
+EndGlobal
