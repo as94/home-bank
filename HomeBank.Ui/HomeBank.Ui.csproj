@@ -62,15 +62,29 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Enums\MainMenuItems.cs" />
+    <Compile Include="Views\AccountView.xaml.cs">
+      <DependentUpon>AccountView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\CategoryView.xaml.cs">
       <DependentUpon>CategoryView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\SettingView.xaml.cs">
+      <DependentUpon>SettingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\StatisticView.xaml.cs">
+      <DependentUpon>StatisticView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\TransactionView.xaml.cs">
       <DependentUpon>TransactionView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Views\AccountView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\CategoryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -91,6 +105,14 @@
       <DependentUpon>MainView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\SettingView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\StatisticView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\TransactionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

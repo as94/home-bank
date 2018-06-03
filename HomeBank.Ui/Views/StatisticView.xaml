@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="HomeBank.Ui.Views.CategoryView"
+﻿<UserControl x:Class="HomeBank.Ui.Views.StatisticView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -7,18 +7,18 @@
              xmlns:local="clr-namespace:HomeBank.Ui.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
-             Background="#FF53A65A">
+             Background="#FF96549C">
 
     <Grid>
 
         <materialDesign:TransitioningContent x:Name="TransitioningContentSlide"
                                              OpeningEffect="{materialDesign:TransitionEffect SlideInFromLeft, Duration=0:0:1}">
-            
+
             <TextBlock HorizontalAlignment="Center"
                        VerticalAlignment="Center"
-                       Text="Category View" />
-            
+                       Text="Statistic View" />
+
         </materialDesign:TransitioningContent>
-        
+
     </Grid>
 </UserControl>

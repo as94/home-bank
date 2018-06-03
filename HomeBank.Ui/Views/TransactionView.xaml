@@ -9,66 +9,70 @@
              d:DesignHeight="450"
              d:DesignWidth="800">
 
-    <materialDesign:Card Padding="32"
-                         Margin="16">
+    <materialDesign:TransitioningContent x:Name="TransitioningContentSlide"
+                                         OpeningEffect="{materialDesign:TransitionEffect SlideInFromLeft, Duration=0:0:1}">
 
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="3*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+        <materialDesign:Card Padding="32"
+                             Margin="16">
 
-            <Grid Grid.Column="0">
-                <StackPanel>
-                    <TextBlock Margin="10"
-                               HorizontalAlignment="Center"
-                               Style="{DynamicResource MaterialDesignTitleTextBlock}"
-                               Text="Cash Transaction List" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-                    <ListView ItemsSource="{Binding CashTransactionList}"
-                              SelectedItem="{Binding SelectedCashTransaction}"
-                              Margin="10">
+                <Grid Grid.Column="0">
+                    <StackPanel>
+                        <TextBlock Margin="10"
+                                   HorizontalAlignment="Center"
+                                   Style="{DynamicResource MaterialDesignTitleTextBlock}"
+                                   Text="Cash Transaction List" />
 
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn Header="Date"
-                                                DisplayMemberBinding="{Binding Date}" />
+                        <ListView ItemsSource="{Binding CashTransactionList}"
+                                  SelectedItem="{Binding SelectedCashTransaction}"
+                                  Margin="10">
 
-                                <GridViewColumn Header="Source"
-                                                DisplayMemberBinding="{Binding SelectedCashTransactionCategory.Title}" />
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Date"
+                                                    DisplayMemberBinding="{Binding Date}" />
 
-                                <GridViewColumn Header="Amount"
-                                                DisplayMemberBinding="{Binding Amount}" />
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                </StackPanel>
+                                    <GridViewColumn Header="Category"
+                                                    DisplayMemberBinding="{Binding SelectedCashTransactionCategory.Title}" />
+
+                                    <GridViewColumn Header="Amount"
+                                                    DisplayMemberBinding="{Binding Amount}" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </StackPanel>
+                </Grid>
+
+                <Grid Grid.Column="1">
+                    <StackPanel Grid.Row="1">
+
+                        <TextBlock Margin="10"
+                                   HorizontalAlignment="Center"
+                                   Style="{DynamicResource MaterialDesignTitleTextBlock}"
+                                   Text="Menu" />
+
+                        <Button Content="Add"
+                                Margin="5"
+                                Command="{Binding AddCashTransactionCommand}" />
+
+                        <Button Content="Edit"
+                                Margin="5"
+                                Command="{Binding EditCashTransactionCommand}" />
+
+                        <Button Content="Remove"
+                                Margin="5"
+                                Command="{Binding RemoveCashTransactionCommand}" />
+
+                    </StackPanel>
+                </Grid>
             </Grid>
+        </materialDesign:Card>
 
-            <Grid Grid.Column="1">
-                <StackPanel Grid.Row="1">
-
-                    <TextBlock Margin="10"
-                               HorizontalAlignment="Center"
-                               Style="{DynamicResource MaterialDesignTitleTextBlock}"
-                               Text="Menu" />
-
-                    <Button Content="Add"
-                            Margin="5"
-                            Command="{Binding AddCashTransactionCommand}" />
-
-                    <Button Content="Edit"
-                            Margin="5"
-                            Command="{Binding EditCashTransactionCommand}" />
-
-                    <Button Content="Remove"
-                            Margin="5"
-                            Command="{Binding RemoveCashTransactionCommand}" />
-
-                </StackPanel>
-            </Grid>
-        </Grid>
-    </materialDesign:Card>
-
+    </materialDesign:TransitioningContent>
 
 </UserControl>

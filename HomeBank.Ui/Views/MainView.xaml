@@ -19,17 +19,16 @@
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
         Foreground="White">
-    
+
     <Grid Background="#FFEEEEEE">
-        <StackPanel>
+        <StackPanel VerticalAlignment="Top">
             <Grid x:Name="DragStripGrid"
                   Background="#FF0069C0"
                   Height="20"
                   MouseDown="DragStripGrid_MouseDown">
 
                 <StackPanel Orientation="Horizontal"
-                            HorizontalAlignment="Right"
-                            Margin="5 0 5 0">
+                            HorizontalAlignment="Right">
 
                     <Button x:Name="WindowMinimizeButton"
                             Width="40"
@@ -41,31 +40,6 @@
                             Click="WindowMinimizeButton_Click">
 
                         <materialDesign:PackIcon Kind="WindowMinimize" />
-                    </Button>
-
-                    <Button x:Name="WindowMaximizeButton"
-                            Width="40"
-                            Height="20"
-                            Padding="0"
-                            Background="{x:Null}"
-                            BorderBrush="{x:Null}"
-                            Foreground="White"
-                            Click="WindowMaximizeButton_Click">
-
-                        <materialDesign:PackIcon Kind="WindowMaximize" />
-                    </Button>
-
-                    <Button x:Name="WindowRestoreButton"
-                            Width="40"
-                            Height="20"
-                            Padding="0"
-                            Background="{x:Null}"
-                            BorderBrush="{x:Null}"
-                            Foreground="White"
-                            Visibility="Collapsed"
-                            Click="WindowRestoreButton_Click">
-
-                        <materialDesign:PackIcon Kind="WindowRestore" />
                     </Button>
 
                     <Button x:Name="CloseWindowButton"
@@ -83,26 +57,30 @@
 
             </Grid>
 
-            <Grid Margin="5">
+            <Grid>
                 <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Right">
 
-                    <Button Width="40"
+                    <Button x:Name="AccountButton"
+                            Width="40"
                             Height="40"
                             Padding="0"
                             Background="{x:Null}"
                             BorderBrush="{x:Null}"
-                            Foreground="Gray">
+                            Foreground="Gray"
+                            Click="AccountButton_Click">
 
                         <materialDesign:PackIcon Kind="Account" />
                     </Button>
 
-                    <Button Width="40"
+                    <Button x:Name="SettingButton"
+                            Width="40"
                             Height="40"
                             Padding="0"
                             Background="{x:Null}"
                             BorderBrush="{x:Null}"
-                            Foreground="Gray">
+                            Foreground="Gray"
+                            Click="SettingButton_Click">
 
                         <materialDesign:PackIcon Kind="Settings" />
                     </Button>
@@ -111,11 +89,102 @@
 
         </StackPanel>
 
-        <Grid Width="250"
+        <Grid Margin="220 60 0 0">
+
+            <Grid x:Name="GridPrincipal">
+                
+            </Grid>
+            
+        </Grid>
+
+        <Grid Width="220"
               HorizontalAlignment="Left"
               Background="#FF222222">
 
+            <materialDesign:TransitioningContent x:Name="TransitioningContentSlide"
+                                                 OpeningEffect="{materialDesign:TransitionEffect SlideInFromLeft, Duration=0:0:0.2}">
+
+                <Grid x:Name="GridCursor"
+                      Width="10"
+                      Height="60"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Top"
+                      Background="#FF0069C0"
+                      Margin="0 100 0 0" />
+
+            </materialDesign:TransitioningContent>
+
+            <ListView x:Name="ListViewMenu"
+                      Margin="0 100"
+                      Foreground="LightGray"
+                      FontFamily="Helvetica"
+                      FontSize="22"
+                      SelectedIndex="0"
+                      SelectionChanged="ListViewMenu_SelectionChanged">
+
+                <ListViewItem Height="60">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Home"
+                                                 Width="30"
+                                                 Height="30"
+                                                 Margin="5"
+                                                 VerticalAlignment="Center" />
+
+                        <TextBlock Text="Home"
+                                   VerticalAlignment="Center"
+                                   Margin="20 0" />
+
+                    </StackPanel>
+                </ListViewItem>
+
+                <ListViewItem Height="60">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="CashMultiple"
+                                                 Width="30"
+                                                 Height="30"
+                                                 Margin="5"
+                                                 VerticalAlignment="Center" />
+
+                        <TextBlock Text="Transactions"
+                                   VerticalAlignment="Center"
+                                   Margin="20 0" />
+
+                    </StackPanel>
+                </ListViewItem>
+
+                <ListViewItem Height="60">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Cards"
+                                                 Width="30"
+                                                 Height="30"
+                                                 Margin="5"
+                                                 VerticalAlignment="Center" />
+
+                        <TextBlock Text="Categories"
+                                   VerticalAlignment="Center"
+                                   Margin="20 0" />
+
+                    </StackPanel>
+                </ListViewItem>
+
+                <ListViewItem Height="60">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="ChartBarStacked"
+                                                 Width="30"
+                                                 Height="30"
+                                                 Margin="5"
+                                                 VerticalAlignment="Center" />
+
+                        <TextBlock Text="Statistics"
+                                   VerticalAlignment="Center"
+                                   Margin="20 0" />
+
+                    </StackPanel>
+                </ListViewItem>
+
+            </ListView>
+
         </Grid>
     </Grid>
-    
+
 </Window>
