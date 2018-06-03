@@ -2,8 +2,7 @@
 
 namespace HomeBank.Presentation.ViewModels
 {
-    public class MainViewModel : INotifyPropertyChanged
+    public class MainViewModel
     {
-        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

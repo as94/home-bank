@@ -1,10 +1,8 @@
-﻿using HomeBank.Presentation.ViewModels;
+﻿using HomeBank.Presentaion.ViewModels;
+using HomeBank.Presentation.ViewModels;
 using HomeBank.Ui.Enums;
-using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Input;
 
 namespace HomeBank.Ui.Views
 {
@@ -18,24 +16,6 @@ namespace HomeBank.Ui.Views
             InitializeComponent();
 
             DataContext = viewModel;
-        }
-
-        private void DragStripGrid_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ChangedButton == MouseButton.Left)
-            {
-                this.DragMove();
-            }
-        }
-
-        private void WindowMinimizeButton_Click(object sender, RoutedEventArgs e)
-        {
-            WindowState = WindowState.Minimized;
-        }
-
-        private void CloseWindowButton_Click(object sender, RoutedEventArgs e)
-        {
-            Application.Current.Shutdown();
         }
 
         private void ListViewMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -52,13 +32,51 @@ namespace HomeBank.Ui.Views
                     break;
 
                 case MainMenuItems.Transaction:
-                    GridPrincipal.Children.Add(new TransactionView());
-                    break;
+                    {
+                        var itemViewModel = new TransactionItemViewModel();
+                        var itemView = new TransactionItemView(itemViewModel);
 
+                        var viewModel = new TransactionViewModel();
+                        var view = new TransactionView(viewModel);
+
+                        viewModel.TransactionOperationExecuted += (s, args) =>
+                        {
+                            GridPrincipal.Children.Clear();
+                            GridPrincipal.Children.Add(itemView);
+                        };
+
+                        itemViewModel.TransactionItemOperationExecuted += (s, args) =>
+                        {
+                            GridPrincipal.Children.Clear();
+                            GridPrincipal.Children.Add(view);
+                        };
+
+                        GridPrincipal.Children.Add(view);
+                        break;
+                    }
                 case MainMenuItems.Category:
-                    GridPrincipal.Children.Add(new CategoryView());
-                    break;
+                    {
+                        var itemViewModel = new CategoryItemViewModel();
+                        var itemView = new CategoryItemView(itemViewModel);
 
+                        var viewModel = new CategoryViewModel();
+                        var view = new CategoryView(viewModel);
+
+                        viewModel.CategoryOperationExecuted += (s, args) =>
+                        {
+                            GridPrincipal.Children.Clear();
+                            GridPrincipal.Children.Add(itemView);
+                        };
+
+                        itemViewModel.CategoryItemOperationExecuted += (s, args) =>
+                        {
+                            GridPrincipal.Children.Clear();
+                            GridPrincipal.Children.Add(view);
+                        };
+
+                        GridPrincipal.Children.Add(view);
+                        break;
+                    }
                 case MainMenuItems.Statistic:
                     GridPrincipal.Children.Add(new StatisticView());
                     break;

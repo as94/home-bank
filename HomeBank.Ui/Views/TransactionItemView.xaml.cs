@@ -1,5 +1,4 @@
-﻿using HomeBank.Presentaion.Infrastructure;
-using HomeBank.Presentaion.ViewModels;
+﻿using HomeBank.Presentaion.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,11 +17,11 @@ using System.Windows.Shapes;
 namespace HomeBank.Ui.Views
 {
     /// <summary>
-    /// Interaction logic for CategoryView.xaml
+    /// Interaction logic for TransactionItemView.xaml
     /// </summary>
-    public partial class CategoryView : UserControl
+    public partial class TransactionItemView : UserControl
     {
-        public CategoryView(CategoryViewModel viewModel)
+        public TransactionItemView(TransactionItemViewModel viewModel)
         {
             InitializeComponent();
 
