@@ -3,6 +3,7 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 
 namespace HomeBank.Ui.Views
 {
@@ -11,8 +12,6 @@ namespace HomeBank.Ui.Views
     /// </summary>
     public partial class MainView : Window
     {
-        private bool _isOpenMenu = false;
-
         public MainView(MainViewModel viewModel)
         {
             InitializeComponent();
@@ -20,59 +19,32 @@ namespace HomeBank.Ui.Views
             DataContext = viewModel;
         }
 
-        private void ButtonOpenMenu_Click(object sender, RoutedEventArgs e)
+        private void DragStripGrid_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            ButtonOpenMenu.Visibility = Visibility.Collapsed;
-            ButtonCloseMenu.Visibility = Visibility.Visible;
-
-            _isOpenMenu = true;
-        }
-
-        private void ButtonCloseMenu_Click(object sender, RoutedEventArgs e)
-        {
-            ButtonOpenMenu.Visibility = Visibility.Visible;
-            ButtonCloseMenu.Visibility = Visibility.Collapsed;
-
-            _isOpenMenu = false;
-        }
-
-        private void ListView_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            var selected = (ListViewItem)ListViewMenu.SelectedItem;
-            if (selected != null)
+            if (e.ChangedButton == MouseButton.Left)
             {
-                var name = selected.Name;
-
-                switch (name)
-                {
-
-                    case "ButtonHome":
-                        ViewHome.Visibility = Visibility.Visible;
-                        ViewTransaction.Visibility = Visibility.Collapsed;
-                        ViewCategory.Visibility = Visibility.Collapsed;
-                        break;
-
-                    case "ButtonTransaction":
-                        ViewHome.Visibility = Visibility.Collapsed;
-                        ViewTransaction.Visibility = Visibility.Visible;
-                        ViewCategory.Visibility = Visibility.Collapsed;
-                        break;
-
-                    case "ButtonCategory":
-                        ViewHome.Visibility = Visibility.Collapsed;
-                        ViewTransaction.Visibility = Visibility.Collapsed;
-                        ViewCategory.Visibility = Visibility.Visible;
-                        break;
-
-                    default:
-                        throw new InvalidOperationException("Unknown menu item");
-                }
-
-                if (_isOpenMenu)
-                {
-                    ButtonCloseMenu.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
-                }
+                this.DragMove();
             }
+        }
+
+        private void WindowMinimizeButton_Click(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
+        }
+
+        private void WindowRestoreButton_Click(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Normal;
+        }
+
+        private void WindowMaximizeButton_Click(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Maximized;
+        }
+
+        private void CloseWindowButton_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
         }
     }
 }

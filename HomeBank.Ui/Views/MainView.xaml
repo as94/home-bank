@@ -17,189 +17,105 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
-        WindowStyle="ThreeDBorderWindow"
+        WindowStyle="None"
         Foreground="White">
+    
+    <Grid Background="#FFEEEEEE">
+        <StackPanel>
+            <Grid x:Name="DragStripGrid"
+                  Background="#FF0069C0"
+                  Height="20"
+                  MouseDown="DragStripGrid_MouseDown">
 
-    <Window.Resources>
-        <Storyboard x:Key="OpenMenu">
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="GridMenu"
-                                           Storyboard.TargetProperty="(FrameworkElement.Width)">
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Right"
+                            Margin="5 0 5 0">
 
-                <EasingDoubleKeyFrame KeyTime="0"
-                                      Value="60" />
-
-                <EasingDoubleKeyFrame KeyTime="0:0:0.5 "
-                                      Value="200" />
-            </DoubleAnimationUsingKeyFrames>
-        </Storyboard>
-
-        <Storyboard x:Key="CloseMenu">
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="GridMenu"
-                                           Storyboard.TargetProperty="(FrameworkElement.Width)">
-
-                <EasingDoubleKeyFrame KeyTime="0"
-                                      Value="200" />
-
-                <EasingDoubleKeyFrame KeyTime="0:0:0.5 "
-                                      Value="60" />
-            </DoubleAnimationUsingKeyFrames>
-        </Storyboard>
-    </Window.Resources>
-
-    <Window.Triggers>
-        <EventTrigger RoutedEvent="ButtonBase.Click"
-                      SourceName="ButtonOpenMenu">
-            <BeginStoryboard Storyboard="{StaticResource OpenMenu}" />
-        </EventTrigger>
-
-        <EventTrigger RoutedEvent="ButtonBase.Click"
-                      SourceName="ButtonCloseMenu">
-            <BeginStoryboard Storyboard="{StaticResource CloseMenu}" />
-        </EventTrigger>
-    </Window.Triggers>
-
-    <Grid Background="#FF337FA2">
-        <Grid Height="60"
-              VerticalAlignment="Top"
-              Background="#FF418362">
-
-            <TextBlock Text="Home Bank App"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       FontSize="22" />
-
-            <StackPanel HorizontalAlignment="Right"
-                        VerticalAlignment="Center"
-                        Orientation="Horizontal">
-
-                <TextBlock HorizontalAlignment="Right"
-                           VerticalAlignment="Center"
-                           Text="Anatoly Sorokin"
-                           FontSize="18" />
-
-                <materialDesign:PopupBox Margin="10"
-                                         PlacementMode="BottomAndAlignRightEdges"
-                                         StaysOpen="False">
-
-                    <StackPanel Width="150">
-                        <Button Content="Account" />
-                        <Button Content="Help" />
-                        <Separator />
-                        <Button Content="Settings" />
-                    </StackPanel>
-                </materialDesign:PopupBox>
-            </StackPanel>
-        </Grid>
-        <Grid Height="500"
-              Width="1000"
-              HorizontalAlignment="Right"
-              VerticalAlignment="Bottom">
-
-            <views:HomeView x:Name="ViewHome" />
-            
-            <views:TransactionView x:Name="ViewTransaction"
-                                   Visibility="Collapsed" />
-            
-            <views:CategoryView x:Name="ViewCategory"
-                                Visibility="Collapsed" />
-
-        </Grid>
-        <Grid x:Name="GridMenu"
-              Width="60"
-              HorizontalAlignment="Left"
-              Background="#FF7BB7D8">
-
-            <StackPanel>
-                <Grid Height="150"
-                      Background="White">
-                    <Button x:Name="ButtonOpenMenu"
-                            Width="60"
-                            Height="60"
+                    <Button x:Name="WindowMinimizeButton"
+                            Width="40"
+                            Height="20"
+                            Padding="0"
                             Background="{x:Null}"
                             BorderBrush="{x:Null}"
-                            VerticalAlignment="Top"
-                            HorizontalAlignment="Right"
-                            Foreground="#FF356383"
-                            Click="ButtonOpenMenu_Click">
+                            Foreground="White"
+                            Click="WindowMinimizeButton_Click">
 
-                        <materialDesign:PackIcon Foreground="#FF356383"
-                                                 Width="25"
-                                                 Height="25"
-                                                 Kind="Menu" />
-
+                        <materialDesign:PackIcon Kind="WindowMinimize" />
                     </Button>
 
-                    <Button x:Name="ButtonCloseMenu"
+                    <Button x:Name="WindowMaximizeButton"
+                            Width="40"
+                            Height="20"
+                            Padding="0"
+                            Background="{x:Null}"
+                            BorderBrush="{x:Null}"
+                            Foreground="White"
+                            Click="WindowMaximizeButton_Click">
+
+                        <materialDesign:PackIcon Kind="WindowMaximize" />
+                    </Button>
+
+                    <Button x:Name="WindowRestoreButton"
+                            Width="40"
+                            Height="20"
+                            Padding="0"
+                            Background="{x:Null}"
+                            BorderBrush="{x:Null}"
+                            Foreground="White"
                             Visibility="Collapsed"
-                            Width="60"
-                            Height="60"
+                            Click="WindowRestoreButton_Click">
+
+                        <materialDesign:PackIcon Kind="WindowRestore" />
+                    </Button>
+
+                    <Button x:Name="CloseWindowButton"
+                            Width="40"
+                            Height="20"
+                            Padding="0"
                             Background="{x:Null}"
                             BorderBrush="{x:Null}"
-                            VerticalAlignment="Top"
-                            HorizontalAlignment="Right"
-                            Foreground="#FF356383"
-                            Click="ButtonCloseMenu_Click">
+                            Foreground="White"
+                            Click="CloseWindowButton_Click">
 
-                        <materialDesign:PackIcon Foreground="#FF356383"
-                                                 Width="25"
-                                                 Height="25"
-                                                 Kind="ArrowLeft" />
-
+                        <materialDesign:PackIcon Kind="WindowClose" />
                     </Button>
-                </Grid>
-                <ListView x:Name="ListViewMenu"
-                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                          Foreground="#FF356383"
-                          SelectionChanged="ListView_SelectionChanged">
+                </StackPanel>
 
-                    <ListViewItem x:Name="ButtonHome"
-                                  Height="60">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="ViewDashboard"
-                                                     VerticalAlignment="Center"
-                                                     Margin="10"
-                                                     Width="25"
-                                                     Height="25" />
+            </Grid>
 
-                            <TextBlock Text="Home"
-                                       VerticalAlignment="Center"
-                                       Margin="20 10" />
-                        </StackPanel>
-                    </ListViewItem>
+            <Grid Margin="5">
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Right">
 
-                    <ListViewItem x:Name="ButtonTransaction"
-                                  Height="60">
-                        
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="Cash"
-                                                     VerticalAlignment="Center"
-                                                     Margin="10"
-                                                     Width="25"
-                                                     Height="25" />
+                    <Button Width="40"
+                            Height="40"
+                            Padding="0"
+                            Background="{x:Null}"
+                            BorderBrush="{x:Null}"
+                            Foreground="Gray">
 
-                            <TextBlock Text="Transactions"
-                                       VerticalAlignment="Center"
-                                       Margin="20 10" />
-                        </StackPanel>
-                    </ListViewItem>
+                        <materialDesign:PackIcon Kind="Account" />
+                    </Button>
 
-                    <ListViewItem x:Name="ButtonCategory"
-                                  Height="60">
-                        
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="Cards"
-                                                     VerticalAlignment="Center"
-                                                     Margin="10"
-                                                     Width="25"
-                                                     Height="25" />
+                    <Button Width="40"
+                            Height="40"
+                            Padding="0"
+                            Background="{x:Null}"
+                            BorderBrush="{x:Null}"
+                            Foreground="Gray">
 
-                            <TextBlock Text="Categories"
-                                       VerticalAlignment="Center"
-                                       Margin="20 10" />
-                        </StackPanel>
-                    </ListViewItem>
-                </ListView>
-            </StackPanel>
+                        <materialDesign:PackIcon Kind="Settings" />
+                    </Button>
+                </StackPanel>
+            </Grid>
+
+        </StackPanel>
+
+        <Grid Width="250"
+              HorizontalAlignment="Left"
+              Background="#FF222222">
+
         </Grid>
     </Grid>
+    
 </Window>
