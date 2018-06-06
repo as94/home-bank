@@ -1,6 +1,10 @@
-﻿using HomeBank.Presentaion.ViewModels;
+﻿using HomeBank.Domain.Infrastructure;
+using HomeBank.Presentaion.EventArguments;
+using HomeBank.Presentaion.ViewModels;
 using HomeBank.Presentation.ViewModels;
 using HomeBank.Ui.Enums;
+using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -11,14 +15,18 @@ namespace HomeBank.Ui.Views
     /// </summary>
     public partial class MainView : Window
     {
-        public MainView(MainViewModel viewModel)
+        private MainViewModel _mainViewModel;
+
+        public MainView(MainViewModel mainViewModel)
         {
             InitializeComponent();
 
-            DataContext = viewModel;
+            _mainViewModel = mainViewModel;
+
+            DataContext = mainViewModel;
         }
 
-        private void ListViewMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void ListViewMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var index = ListViewMenu.SelectedIndex;
             MoveCursorMenu(index);
@@ -54,33 +62,70 @@ namespace HomeBank.Ui.Views
                         GridPrincipal.Children.Add(view);
                         break;
                     }
+
                 case MainMenuItems.Category:
                     {
-                        var itemViewModel = new CategoryItemViewModel();
-                        var itemView = new CategoryItemView(itemViewModel);
-
-                        var viewModel = new CategoryViewModel();
+                        var viewModel = new CategoryViewModel(await _mainViewModel.CategoryRepository.FindAsync());
                         var view = new CategoryView(viewModel);
 
-                        viewModel.CategoryOperationExecuted += (s, args) =>
+                        EventHandler<CategoryOperationEventArgs> operationExecutedHandler = GetCategoryOperationExecutedHandler(viewModel, view);
+
+                        viewModel.CategoryOperationExecuted += async (s, args) =>
                         {
+                            if (args.Category.OperationType == Presentaion.Enums.OperationType.Remove)
+                            {
+                                await _mainViewModel.CategoryRepository.RemoveAsync(args.Category.Id);
+                                viewModel.UpdateCategories(await _mainViewModel.CategoryRepository.FindAsync());
+                                return;
+                            }
+
+                            var category = args.Category;
+                            category.CategoryItemOperationExecuted += operationExecutedHandler;
+                            category.BackExecuted += (backSender, backArgs) =>
+                            {
+                                GridPrincipal.Children.Clear();
+                                GridPrincipal.Children.Add(view);
+                            };
+
+                            var itemView = new CategoryItemView(category);
+
                             GridPrincipal.Children.Clear();
                             GridPrincipal.Children.Add(itemView);
-                        };
-
-                        itemViewModel.CategoryItemOperationExecuted += (s, args) =>
-                        {
-                            GridPrincipal.Children.Clear();
-                            GridPrincipal.Children.Add(view);
                         };
 
                         GridPrincipal.Children.Add(view);
                         break;
                     }
+
                 case MainMenuItems.Statistic:
                     GridPrincipal.Children.Add(new StatisticView());
                     break;
             }
+        }
+
+        private EventHandler<CategoryOperationEventArgs> GetCategoryOperationExecutedHandler(CategoryViewModel viewModel, CategoryView view)
+        {
+            return async (s, args) =>
+            {
+                switch (args.Category.OperationType)
+                {
+                    case Presentaion.Enums.OperationType.Add:
+                        await _mainViewModel.CategoryRepository.CreateAsync(args.Category.ToDomain());
+                        viewModel.UpdateCategories(await _mainViewModel.CategoryRepository.FindAsync());
+                        break;
+
+                    case Presentaion.Enums.OperationType.Edit:
+                        await _mainViewModel.CategoryRepository.ChangeAsync(args.Category.ToDomain());
+                        viewModel.UpdateCategories(await _mainViewModel.CategoryRepository.FindAsync());
+                        break;
+
+                    default:
+                        break;
+                }
+
+                GridPrincipal.Children.Clear();
+                GridPrincipal.Children.Add(view);
+            };
         }
 
         private void MoveCursorMenu(int index)

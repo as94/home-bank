@@ -21,9 +21,27 @@
                                  Margin="16">
                 <Grid>
                     <StackPanel>
-                        <TextBlock Margin="35 10"
-                                   Style="{DynamicResource MaterialDesignTitleTextBlock}"
-                                   Text="Cash Transaction Category" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Margin="35 10"
+                                       Style="{DynamicResource MaterialDesignTitleTextBlock}"
+                                       Text="Cash Transaction Category" />
+
+                            <Button Grid.Column="1" 
+                                    Style="{DynamicResource MaterialDesignFloatingActionButton}"
+                                    Command="{Binding BackCommand}"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Top"
+                                    Width="40"
+                                    Height="40"
+                                    Margin="5 5 20 5">
+                                <materialDesign:PackIcon Kind="ArrowLeft" />
+                            </Button>
+                        </Grid>
 
                         <Label Margin="10"
                                materialDesign:HintAssist.Hint="Status"
@@ -48,7 +66,16 @@
                                         UpdateSourceTrigger=PropertyChanged,
                                         ValidatesOnDataErrors=True}" />
 
-                        <Button Margin="0 25 0 0"
+                        <ComboBox Margin="25 10 25 10"
+                                  materialDesign:HintAssist.Hint="Type"
+                                  materialDesign:HintAssist.IsFloating="True"
+                                  ItemsSource="{Binding CategoryTypes}"
+                                  SelectedItem="{Binding Type, 
+                                                         UpdateSourceTrigger=PropertyChanged,
+                                                         ValidatesOnDataErrors=True}" />
+
+
+                        <Button Margin="0 5 0 0"
                                 Width="40"
                                 Height="40"
                                 Style="{DynamicResource MaterialDesignFloatingActionButton}"

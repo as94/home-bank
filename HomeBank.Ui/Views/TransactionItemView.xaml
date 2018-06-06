@@ -33,10 +33,10 @@
                            Content="{Binding Date}" />
 
                     <ComboBox Margin="25 10 25 10"
-                              materialDesign:HintAssist.Hint="Cash Transaction Category"
+                              materialDesign:HintAssist.Hint="Category"
                               materialDesign:HintAssist.IsFloating="True"
-                              ItemsSource="{Binding CashTransactionCategoryList}"
-                              SelectedItem="{Binding SelectedCashTransactionCategory, 
+                              ItemsSource="{Binding CategoryList}"
+                              SelectedItem="{Binding SelectedCategory, 
                                              UpdateSourceTrigger=PropertyChanged,
                                              ValidatesOnDataErrors=True}"
                               DisplayMemberPath="Title" />

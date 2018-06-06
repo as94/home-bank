@@ -14,85 +14,110 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
-    <Grid>
+    <materialDesign:TransitioningContent x:Name="TransitioningContentSlide"
+                                         OpeningEffect="{materialDesign:TransitionEffect SlideInFromLeft, Duration=0:0:1}">
 
-        <materialDesign:TransitioningContent x:Name="TransitioningContentSlide"
-                                             OpeningEffect="{materialDesign:TransitionEffect SlideInFromLeft, Duration=0:0:1}">
+        <materialDesign:Card Padding="32"
+                             Margin="16">
 
-            <materialDesign:Card Padding="32"
-                                 Margin="16">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="3*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="2*" />
+                            <RowDefinition Height="2*" />
+                            <RowDefinition Height="6*" />
+                        </Grid.RowDefinitions>
 
-                    <Grid Grid.Column="0">
-                        <StackPanel>
-                            <TextBlock Margin="10"
-                                       HorizontalAlignment="Center"
-                                       Style="{DynamicResource MaterialDesignTitleTextBlock}"
-                                       Text="Cash Transaction Category List" />
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
 
-                            <ListView ItemsSource="{Binding CashTransactionCategoryList}"
-                                      SelectedItem="{Binding SelectedCashTransactionCategory}"
-                                      Margin="10">
+                            <Grid Grid.Column="2">
+                                <ComboBox Margin="25 10 25 10"
+                                          materialDesign:HintAssist.Hint="Type"
+                                          materialDesign:HintAssist.IsFloating="True"
+                                          ItemsSource="{Binding CategoryTypes}"
+                                          SelectedItem="{Binding Type, 
+                                                             UpdateSourceTrigger=PropertyChanged,
+                                                             ValidatesOnDataErrors=True}" />
+                            </Grid>
+                        </Grid>
 
-                                <ListView.View>
-                                    <GridView>
-                                        <GridViewColumn Header="Name"
-                                                        DisplayMemberBinding="{Binding Name}" />
+                        <TextBlock Grid.Row="1"
+                                   Margin="10"
+                                   HorizontalAlignment="Center"
+                                   Style="{DynamicResource MaterialDesignTitleTextBlock}"
+                                   Text="Cash Transaction Category List" />
 
-                                        <GridViewColumn Header="Description"
-                                                        DisplayMemberBinding="{Binding Description}" />
-                                    </GridView>
-                                </ListView.View>
-                            </ListView>
-                        </StackPanel>
-                    </Grid>
+                        <ListView Grid.Row="2"
+                                  ItemsSource="{Binding Categories}"
+                                  SelectedItem="{Binding SelectedCategory}"
+                                  Margin="10">
 
-                    <Grid Grid.Column="1">
-                        <StackPanel Grid.Row="1">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Name"
+                                                    DisplayMemberBinding="{Binding Name}" />
 
-                            <TextBlock Margin="10"
-                                       HorizontalAlignment="Center"
-                                       Style="{DynamicResource MaterialDesignTitleTextBlock}"
-                                       Text="Menu" />
+                                    <GridViewColumn Header="Description"
+                                                    DisplayMemberBinding="{Binding Description}" />
 
-                            <Button Margin="5"
-                                    Width="40"
-                                    Height="40"
-                                    Style="{DynamicResource MaterialDesignFloatingActionAccentButton}"
-                                    Command="{Binding AddCategoryCommand}">
-
-                                <materialDesign:PackIcon Kind="Plus" />
-                            </Button>
-                            
-                            <Button Margin="5"
-                                    Width="40"
-                                    Height="40"
-                                    Style="{DynamicResource MaterialDesignFloatingActionButton}"
-                                    Command="{Binding EditCategoryCommand}">
-
-                                <materialDesign:PackIcon Kind="Pencil" />
-                            </Button>
-
-                            <Button Margin="5"
-                                    Width="40"
-                                    Height="40"
-                                    Style="{DynamicResource MaterialDesignFloatingActionLightButton}"
-                                    Command="{Binding RemoveCategoryCommand}">
-
-                                <materialDesign:PackIcon Kind="Delete" />
-                            </Button>
-
-                        </StackPanel>
+                                    <GridViewColumn Header="Type"
+                                                    DisplayMemberBinding="{Binding Type}" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
                     </Grid>
                 </Grid>
-            </materialDesign:Card>
 
-        </materialDesign:TransitioningContent>
-        
-    </Grid>
+                <Grid Grid.Column="1">
+                    <StackPanel Grid.Row="1">
+
+                        <TextBlock Margin="10"
+                                   HorizontalAlignment="Center"
+                                   Style="{DynamicResource MaterialDesignTitleTextBlock}"
+                                   Text="Menu" />
+
+                        <Button Margin="5"
+                                Width="40"
+                                Height="40"
+                                Style="{DynamicResource MaterialDesignFloatingActionAccentButton}"
+                                Command="{Binding AddCategoryCommand}">
+
+                            <materialDesign:PackIcon Kind="Plus" />
+                        </Button>
+
+                        <Button Margin="5"
+                                Width="40"
+                                Height="40"
+                                Style="{DynamicResource MaterialDesignFloatingActionButton}"
+                                Command="{Binding EditCategoryCommand}">
+
+                            <materialDesign:PackIcon Kind="Pencil" />
+                        </Button>
+
+                        <Button Margin="5"
+                                Width="40"
+                                Height="40"
+                                Style="{DynamicResource MaterialDesignFloatingActionLightButton}"
+                                Command="{Binding RemoveCategoryCommand}">
+
+                            <materialDesign:PackIcon Kind="Delete" />
+                        </Button>
+
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </materialDesign:Card>
+
+    </materialDesign:TransitioningContent>
 </UserControl>

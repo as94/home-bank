@@ -160,6 +160,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\HomeBank.Data.Memory\HomeBank.Data.Memory.csproj">
+      <Project>{FCA0099F-BB7D-4185-8253-59321B219F42}</Project>
+      <Name>HomeBank.Data.Memory</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HomeBank.Domain\HomeBank.Domain.csproj">
+      <Project>{45A8F657-34F2-40AA-885F-8C7B14004365}</Project>
+      <Name>HomeBank.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HomeBank.Presentaion\HomeBank.Presentaion.csproj">
       <Project>{DAA15A28-84B9-4E8E-A5F7-234A9CE361A5}</Project>
       <Name>HomeBank.Presentaion</Name>

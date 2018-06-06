@@ -100,6 +100,8 @@
                 </materialDesign:TransitioningContent>
 
                 <ListView x:Name="ListViewMenu"
+                          ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                          ScrollViewer.VerticalScrollBarVisibility="Hidden"
                           Margin="0 100"
                           Foreground="LightGray"
                           FontFamily="Helvetica"

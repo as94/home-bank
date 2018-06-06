@@ -29,6 +29,43 @@
 
                 <Grid Grid.Column="0">
                     <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Grid Grid.Column="0">
+                                <DatePicker Margin="5 25 5 10"
+                                            materialDesign:HintAssist.Hint="Current Date"
+                                            materialDesign:HintAssist.IsFloating="True"
+                                            SelectedDate="{Binding Date}" />
+                            </Grid>
+
+                            <Grid Grid.Column="1">
+                                <ComboBox Margin="25 10 25 10"
+                                          materialDesign:HintAssist.Hint="Type"
+                                          materialDesign:HintAssist.IsFloating="True"
+                                          ItemsSource="{Binding TypeList}"
+                                          SelectedItem="{Binding SelectedType, 
+                                                             UpdateSourceTrigger=PropertyChanged,
+                                                             ValidatesOnDataErrors=True}"
+                                          DisplayMemberPath="Title" />
+                            </Grid>
+
+                            <Grid Grid.Column="2">
+                                <ComboBox Margin="25 10 25 10"
+                                          materialDesign:HintAssist.Hint="Category"
+                                          materialDesign:HintAssist.IsFloating="True"
+                                          ItemsSource="{Binding CategoryList}"
+                                          SelectedItem="{Binding SelectedCategory, 
+                                                             UpdateSourceTrigger=PropertyChanged,
+                                                             ValidatesOnDataErrors=True}"
+                                          DisplayMemberPath="Title" />
+                            </Grid>
+                        </Grid>
+
                         <TextBlock Margin="10"
                                    HorizontalAlignment="Center"
                                    Style="{DynamicResource MaterialDesignTitleTextBlock}"

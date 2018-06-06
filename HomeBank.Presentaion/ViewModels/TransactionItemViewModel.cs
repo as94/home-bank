@@ -13,7 +13,7 @@ namespace HomeBank.Presentaion.ViewModels
         public event EventHandler TransactionItemOperationExecuted;
         public void OnTransactionItemOperationExecuted()
         {
-            TransactionItemOperationExecuted.Invoke(this, new EventArgs());
+            TransactionItemOperationExecuted?.Invoke(this, new EventArgs());
         }
 
         private ICommand _transactionOperationCommand;
