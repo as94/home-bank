@@ -1,19 +1,77 @@
-﻿using HomeBank.Presentaion.Infrastructure;
+﻿using HomeBank.Domain.DomainModel;
+using HomeBank.Presentaion.Enums;
+using HomeBank.Presentaion.EventArguments;
+using HomeBank.Presentaion.Infrastructure;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 
 namespace HomeBank.Presentaion.ViewModels
 {
     public class TransactionViewModel
     {
-        public event EventHandler TransactionOperationExecuted;
-        public void OnTransactionOperationExecuted()
+        public event EventHandler<TransactionOperationEventArgs> TransactionOperationExecuted;
+        public void OnTransactionOperationExecuted(TransactionOperationEventArgs args)
         {
-            TransactionOperationExecuted?.Invoke(this, new EventArgs());
+            TransactionOperationExecuted?.Invoke(this, args);
         }
 
-        public TransactionViewModel()
+        public ObservableCollection<TransactionItemViewModel> Transactions { get; set; }
+        public TransactionItemViewModel SelectedTransaction { get; set; }
+
+        public ObservableCollection<CategoryItemViewModel> Categories { get; set; }
+
+        public TransactionViewModel(IEnumerable<Category> categories, IEnumerable<Transaction> transactions)
         {
+            if (categories == null)
+            {
+                throw new ArgumentNullException(nameof(categories));
+            }
+
+            if (transactions == null)
+            {
+                throw new ArgumentNullException(nameof(transactions));
+            }
+
+            Categories = new ObservableCollection<CategoryItemViewModel>(categories.Select(category =>
+                new CategoryItemViewModel
+                {
+                    Id = category.Id,
+                    Name = category.Name,
+                    Description = category.Description,
+                    Type = category.Type
+                }));
+
+            Transactions = new ObservableCollection<TransactionItemViewModel>();
+
+            UpdateTransactions(transactions);
+        }
+
+        public void UpdateTransactions(IEnumerable<Transaction> transactions)
+        {
+            if (transactions == null)
+            {
+                throw new ArgumentNullException(nameof(transactions));
+            }
+
+            Transactions.Clear();
+
+            foreach (var transaction in transactions)
+            {
+                var view = new TransactionItemViewModel(Categories)
+                {
+                    Id = transaction.Id,
+                    Date = transaction.Date,
+                    Amount = transaction.Amount,
+                    CategoryItemViewModel = Categories.FirstOrDefault(c => c.Id == transaction.Category.Id)
+                };
+
+                Transactions.Add(view);
+            }
+
+            SelectedTransaction = Transactions.Count > 0 ? Transactions[0] : null;
         }
 
         private ICommand _addTransactionCommand;
@@ -23,7 +81,7 @@ namespace HomeBank.Presentaion.ViewModels
             {
                 return _addTransactionCommand ?? (_addTransactionCommand = new ActionCommand(vm =>
                 {
-                    OnTransactionOperationExecuted();
+                    OnTransactionOperationExecuted(new TransactionOperationEventArgs(new TransactionItemViewModel(OperationType.Add)));
                 }));
             }
         }
@@ -35,7 +93,8 @@ namespace HomeBank.Presentaion.ViewModels
             {
                 return _editTransactionCommand ?? (_editTransactionCommand = new ActionCommand(vm =>
                 {
-                    OnTransactionOperationExecuted();
+                    SelectedTransaction.OperationType = OperationType.Edit;
+                    OnTransactionOperationExecuted(new TransactionOperationEventArgs(SelectedTransaction));
                 }));
             }
         }
@@ -47,7 +106,8 @@ namespace HomeBank.Presentaion.ViewModels
             {
                 return _removeTransactionCommand ?? (_removeTransactionCommand = new ActionCommand(vm =>
                 {
-                    OnTransactionOperationExecuted();
+                    SelectedTransaction.OperationType = OperationType.Remove;
+                    OnTransactionOperationExecuted(new TransactionOperationEventArgs(SelectedTransaction));
                 }));
             }
         }

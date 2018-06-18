@@ -69,10 +69,10 @@
                         <TextBlock Margin="10"
                                    HorizontalAlignment="Center"
                                    Style="{DynamicResource MaterialDesignTitleTextBlock}"
-                                   Text="Cash Transaction List" />
+                                   Text="Transactions" />
 
-                        <ListView ItemsSource="{Binding CashTransactionList}"
-                                  SelectedItem="{Binding SelectedCashTransaction}"
+                        <ListView ItemsSource="{Binding Transactions}"
+                                  SelectedItem="{Binding SelectedTransaction}"
                                   Margin="10">
 
                             <ListView.View>
@@ -81,7 +81,7 @@
                                                     DisplayMemberBinding="{Binding Date}" />
 
                                     <GridViewColumn Header="Category"
-                                                    DisplayMemberBinding="{Binding SelectedCashTransactionCategory.Title}" />
+                                                    DisplayMemberBinding="{Binding CategoryItemViewModel.Title}" />
 
                                     <GridViewColumn Header="Amount"
                                                     DisplayMemberBinding="{Binding Amount}" />

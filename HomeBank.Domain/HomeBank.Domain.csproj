@@ -42,9 +42,11 @@
   <ItemGroup>
     <Compile Include="DomainModel\Category.cs" />
     <Compile Include="DomainModel\IIdentify.cs" />
+    <Compile Include="DomainModel\Transaction.cs" />
     <Compile Include="Enums\CategoryType.cs" />
     <Compile Include="Infrastructure\ICategoryRepository.cs" />
     <Compile Include="Infrastructure\IRepository.cs" />
+    <Compile Include="Infrastructure\ITransactionRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

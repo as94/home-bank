@@ -3,14 +3,18 @@ using HomeBank.Domain.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace HomeBank.Data.Memory.Store
 {
-    public class CategoryRepository : ICategoryRepository
+    public sealed class CategoryRepository : ICategoryRepository
     {
         private readonly List<Category> _categories;
+
+        public CategoryRepository()
+        {
+            _categories = new List<Category>();
+        }
 
         public CategoryRepository(List<Category> categories)
         {

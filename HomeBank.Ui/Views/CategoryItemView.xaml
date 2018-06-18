@@ -27,9 +27,10 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Margin="35 10"
+                            <TextBlock VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"
                                        Style="{DynamicResource MaterialDesignTitleTextBlock}"
-                                       Text="Cash Transaction Category" />
+                                       Text="Category" />
 
                             <Button Grid.Column="1" 
                                     Style="{DynamicResource MaterialDesignFloatingActionButton}"

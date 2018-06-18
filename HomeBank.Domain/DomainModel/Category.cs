@@ -17,6 +17,11 @@ namespace HomeBank.Domain.DomainModel
             string description,
             CategoryType type)
         {
+            if (id == Guid.Empty)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
             if (name == null)
             {
                 throw new ArgumentNullException(nameof(name));
@@ -78,14 +83,6 @@ namespace HomeBank.Domain.DomainModel
             return Equals(compareTo);
         }
 
-        public override int GetHashCode()
-        {
-            return Id.GetHashCode() ^
-                   Name.GetHashCode() ^
-                   Description.GetHashCode() ^
-                   Type.GetHashCode();
-        }
-
         public bool Equals(Category other)
         {
             if (ReferenceEquals(other, null)) return false;
@@ -94,6 +91,14 @@ namespace HomeBank.Domain.DomainModel
                    Name == other.Name &&
                    Description == other.Description &&
                    Type == other.Type;
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode() ^
+                   Name.GetHashCode() ^
+                   Description.GetHashCode() ^
+                   Type.GetHashCode();
         }
 
         public static bool operator ==(Category x, Category y)

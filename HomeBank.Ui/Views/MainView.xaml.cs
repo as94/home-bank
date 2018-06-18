@@ -41,22 +41,37 @@ namespace HomeBank.Ui.Views
 
                 case MainMenuItems.Transaction:
                     {
-                        var itemViewModel = new TransactionItemViewModel();
-                        var itemView = new TransactionItemView(itemViewModel);
+                        var viewModel = new TransactionViewModel(
+                            categories: await _mainViewModel.CategoryRepository.FindAsync(),
+                            transactions: await _mainViewModel.TransactionRepository.FindAsync());
 
-                        var viewModel = new TransactionViewModel();
                         var view = new TransactionView(viewModel);
 
-                        viewModel.TransactionOperationExecuted += (s, args) =>
+                        EventHandler<TransactionOperationEventArgs> operationExecutedHandler = GetTransactionOperationExecutedHandler(viewModel, view);
+
+                        viewModel.TransactionOperationExecuted += async (s, args) =>
                         {
+                            if (args.Transaction.OperationType == Presentaion.Enums.OperationType.Remove)
+                            {
+                                await _mainViewModel.TransactionRepository.RemoveAsync(args.Transaction.Id);
+                                viewModel.UpdateTransactions(await _mainViewModel.TransactionRepository.FindAsync());
+                                return;
+                            }
+
+                            var transaction = args.Transaction;
+                            transaction.TransactionItemOperationExecuted += operationExecutedHandler;
+                            transaction.BackExecuted += async (backSender, backArgs) =>
+                            {
+                                viewModel.UpdateTransactions(await _mainViewModel.TransactionRepository.FindAsync());
+
+                                GridPrincipal.Children.Clear();
+                                GridPrincipal.Children.Add(view);
+                            };
+
+                            var itemView = new TransactionItemView(transaction);
+
                             GridPrincipal.Children.Clear();
                             GridPrincipal.Children.Add(itemView);
-                        };
-
-                        itemViewModel.TransactionItemOperationExecuted += (s, args) =>
-                        {
-                            GridPrincipal.Children.Clear();
-                            GridPrincipal.Children.Add(view);
                         };
 
                         GridPrincipal.Children.Add(view);
@@ -81,8 +96,10 @@ namespace HomeBank.Ui.Views
 
                             var category = args.Category;
                             category.CategoryItemOperationExecuted += operationExecutedHandler;
-                            category.BackExecuted += (backSender, backArgs) =>
+                            category.BackExecuted += async (backSender, backArgs) =>
                             {
+                                viewModel.UpdateCategories(await _mainViewModel.CategoryRepository.FindAsync());
+
                                 GridPrincipal.Children.Clear();
                                 GridPrincipal.Children.Add(view);
                             };
@@ -128,15 +145,51 @@ namespace HomeBank.Ui.Views
             };
         }
 
+        private EventHandler<TransactionOperationEventArgs> GetTransactionOperationExecutedHandler(TransactionViewModel viewModel, TransactionView view)
+        {
+            return async (s, args) =>
+            {
+                switch (args.Transaction.OperationType)
+                {
+                    case Presentaion.Enums.OperationType.Add:
+                        await _mainViewModel.TransactionRepository.CreateAsync(args.Transaction.ToDomain());
+                        viewModel.UpdateTransactions(await _mainViewModel.TransactionRepository.FindAsync());
+                        break;
+
+                    case Presentaion.Enums.OperationType.Edit:
+                        await _mainViewModel.TransactionRepository.ChangeAsync(args.Transaction.ToDomain());
+                        viewModel.UpdateTransactions(await _mainViewModel.TransactionRepository.FindAsync());
+                        break;
+
+                    default:
+                        break;
+                }
+
+                GridPrincipal.Children.Clear();
+                GridPrincipal.Children.Add(view);
+            };
+        }
+
         private void MoveCursorMenu(int index)
         {
             TransitioningContentSlide.OnApplyTemplate();
 
-            var topOffset = index == -1 
-                ? -60
-                : 100 + (60 * index);
+            var topOffset = GetTopOffset(index);
 
             GridCursor.Margin = new Thickness(0, topOffset  , 0, 0);
+        }
+
+        private static int GetTopOffset(int index)
+        {
+            var emptyItemIndex = -1;
+            var nonVisibleOffset = -60;
+
+            var fixedItemOffset = 100;
+            var itemOffsetFactor = 60;
+
+            var visibleOffset = fixedItemOffset + (itemOffsetFactor * index);
+
+            return index == emptyItemIndex ? nonVisibleOffset : visibleOffset;
         }
 
         private void AccountButton_Click(object sender, RoutedEventArgs e)

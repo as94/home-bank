@@ -33,6 +33,8 @@ namespace HomeBank.Presentaion.ViewModels
 
         public OperationType OperationType { get; set; }
 
+        public string Title => $"{Name} - {Description}";
+
         public CategoryItemViewModel()
         {
         }

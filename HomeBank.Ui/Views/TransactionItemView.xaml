@@ -23,30 +23,51 @@
                                  Margin="16">
 
                 <StackPanel>
-                    <TextBlock Margin="35 10"
-                               Style="{DynamicResource MaterialDesignTitleTextBlock}"
-                               Text="Cash Transaction" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
 
-                    <Label Margin="10"
-                           materialDesign:HintAssist.Hint="Date"
-                           materialDesign:HintAssist.IsFloating="True"
-                           Content="{Binding Date}" />
+                        <TextBlock VerticalAlignment="Center"
+                                   HorizontalAlignment="Center"
+                                   Style="{DynamicResource MaterialDesignTitleTextBlock}"
+                                   Text="Transaction" />
 
-                    <ComboBox Margin="25 10 25 10"
-                              materialDesign:HintAssist.Hint="Category"
-                              materialDesign:HintAssist.IsFloating="True"
-                              ItemsSource="{Binding CategoryList}"
-                              SelectedItem="{Binding SelectedCategory, 
-                                             UpdateSourceTrigger=PropertyChanged,
-                                             ValidatesOnDataErrors=True}"
-                              DisplayMemberPath="Title" />
+                        <Button Grid.Column="1"
+                                Style="{DynamicResource MaterialDesignFloatingActionButton}"
+                                Command="{Binding BackCommand}"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Top"
+                                Width="40"
+                                Height="40"
+                                Margin="5 5 20 5">
+                            <materialDesign:PackIcon Kind="ArrowLeft" />
+                        </Button>
+                    </Grid>
+
+                    <DatePicker Margin="25 25 25 5"
+                                materialDesign:HintAssist.Hint="Current Date"
+                                materialDesign:HintAssist.IsFloating="True"
+                                SelectedDate="{Binding Date}" />
 
                     <TextBox Margin="25 10 25 10"
+                             materialDesign:HintAssist.Hint="Amount"
+                             materialDesign:HintAssist.IsFloating="True"
                              Text="{Binding Amount,
                                     TargetNullValue='',
                                     StringFormat={}{0:F2},
                                     UpdateSourceTrigger=PropertyChanged,
                                     ValidatesOnDataErrors=True}" />
+
+                    <ComboBox Margin="25 10 25 10"
+                              materialDesign:HintAssist.Hint="Category"
+                              materialDesign:HintAssist.IsFloating="True"
+                              ItemsSource="{Binding Categories}"
+                              SelectedItem="{Binding CategoryItemViewModel, 
+                                             UpdateSourceTrigger=PropertyChanged,
+                                             ValidatesOnDataErrors=True}"
+                              DisplayMemberPath="Title" />
 
                     <Button Margin="0 25 0 0"
                             Width="40"
