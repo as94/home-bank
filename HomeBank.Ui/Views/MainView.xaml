@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:HomeBank.Presentaion.ViewModels;assembly=HomeBank.Presentaion"
         xmlns:views="clr-namespace:HomeBank.Ui.Views"
         mc:Ignorable="d"
         Height="600"
@@ -17,6 +18,40 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
         WindowStartupLocation="CenterScreen"
         Foreground="White">
+
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type viewModels:HomeViewModel}">
+            <views:HomeView />
+        </DataTemplate>
+        
+        <DataTemplate DataType="{x:Type viewModels:AccountViewModel}">
+            <views:AccountView />
+        </DataTemplate>
+        
+        <DataTemplate DataType="{x:Type viewModels:SettingsViewModel}">
+            <views:SettingsView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewModels:TransactionViewModel}">
+            <views:TransactionView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewModels:TransactionItemViewModel}">
+            <views:TransactionItemView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewModels:CategoryViewModel}">
+            <views:CategoryView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewModels:CategoryItemViewModel}">
+            <views:CategoryItemView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewModels:StatisticViewModel}">
+            <views:StatisticView />
+        </DataTemplate>
+    </Window.Resources>
 
     <Grid>
         <Grid Background="#FFEEEEEE">
@@ -42,27 +77,27 @@
                         <StackPanel Orientation="Horizontal"
                                     HorizontalAlignment="Right">
 
-                            <Button x:Name="AccountButton"
-                                    Width="40"
+                            <Button Width="40"
                                     Height="30"
                                     Padding="0"
                                     Margin="0 0 10 0"
                                     Background="{x:Null}"
                                     BorderBrush="{x:Null}"
                                     Foreground="LightGray"
+                                    Command="{Binding AccountShowCommand}"
                                     Click="AccountButton_Click">
 
                                 <materialDesign:PackIcon Kind="Account" />
                             </Button>
 
-                            <Button x:Name="SettingButton"
-                                    Width="40"
+                            <Button Width="40"
                                     Height="30"
                                     Padding="0"
                                     Margin="0 0 20 0"
                                     Background="{x:Null}"
                                     BorderBrush="{x:Null}"
                                     Foreground="LightGray"
+                                    Command="{Binding SettingsShowCommand}"
                                     Click="SettingButton_Click">
 
                                 <materialDesign:PackIcon Kind="Settings" />
@@ -71,7 +106,7 @@
                     </Grid>
 
                     <Grid Grid.Row="1">
-                        <Grid x:Name="GridPrincipal" />
+                        <ContentControl Content="{Binding SelectedChildren}" />
                     </Grid>
                 </Grid>
             </Grid>
@@ -85,7 +120,7 @@
 
             <Grid Grid.Column="0"
                   Background="#FF222222">
-
+                
                 <materialDesign:TransitioningContent x:Name="TransitioningContentSlide"
                                                      OpeningEffect="{materialDesign:TransitionEffect SlideInFromLeft, Duration=0:0:0.2}">
 

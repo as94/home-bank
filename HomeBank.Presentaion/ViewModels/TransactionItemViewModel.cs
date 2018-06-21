@@ -1,16 +1,16 @@
-﻿using HomeBank.Domain.DomainModel;
-using HomeBank.Presentaion.Enums;
+﻿using HomeBank.Presentaion.Enums;
 using HomeBank.Presentaion.EventArguments;
 using HomeBank.Presentaion.Infrastructure;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace HomeBank.Presentaion.ViewModels
 {
-    public class TransactionItemViewModel
+    public class TransactionItemViewModel : ViewModel
     {
+        public override string ViewModelName => nameof(TransactionItemViewModel);
+
         public event EventHandler<TransactionOperationEventArgs> TransactionItemOperationExecuted;
         public void OnTransactionItemOperationExecuted(TransactionOperationEventArgs args)
         {
@@ -42,7 +42,7 @@ namespace HomeBank.Presentaion.ViewModels
             Categories = categories;
         }
 
-        public TransactionItemViewModel(OperationType operationType)
+        public TransactionItemViewModel(OperationType operationType, IEnumerable<CategoryItemViewModel> categories) : this(categories)
         {
             OperationType = operationType;
         }

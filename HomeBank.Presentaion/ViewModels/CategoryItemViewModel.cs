@@ -9,8 +9,10 @@ using System.Windows.Input;
 
 namespace HomeBank.Presentaion.ViewModels
 {
-    public class CategoryItemViewModel
+    public class CategoryItemViewModel : ViewModel
     {
+        public override string ViewModelName => nameof(CategoryItemViewModel);
+
         public static IEnumerable<CategoryType> CategoryTypes => Enum.GetValues(typeof(CategoryType)).Cast<CategoryType>();
 
         public event EventHandler<CategoryOperationEventArgs> CategoryItemOperationExecuted;

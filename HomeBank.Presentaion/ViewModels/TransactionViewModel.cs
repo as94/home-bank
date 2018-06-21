@@ -10,8 +10,10 @@ using System.Windows.Input;
 
 namespace HomeBank.Presentaion.ViewModels
 {
-    public class TransactionViewModel
+    public class TransactionViewModel : ViewModel
     {
+        public override string ViewModelName => nameof(TransactionViewModel);
+
         public event EventHandler<TransactionOperationEventArgs> TransactionOperationExecuted;
         public void OnTransactionOperationExecuted(TransactionOperationEventArgs args)
         {
@@ -81,7 +83,7 @@ namespace HomeBank.Presentaion.ViewModels
             {
                 return _addTransactionCommand ?? (_addTransactionCommand = new ActionCommand(vm =>
                 {
-                    OnTransactionOperationExecuted(new TransactionOperationEventArgs(new TransactionItemViewModel(OperationType.Add)));
+                    OnTransactionOperationExecuted(new TransactionOperationEventArgs(new TransactionItemViewModel(OperationType.Add, Categories)));
                 }));
             }
         }

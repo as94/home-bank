@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace HomeBank.Presentaion.Infrastructure
+namespace HomeBank.Presentaion.ViewModels
 {
-    public class NotifyPropertyChanged : INotifyPropertyChanged
+    public abstract class ViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -16,5 +11,7 @@ namespace HomeBank.Presentaion.Infrastructure
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        public abstract string ViewModelName { get; }
     }
 }
