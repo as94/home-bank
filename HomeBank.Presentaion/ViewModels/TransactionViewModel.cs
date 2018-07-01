@@ -14,11 +14,60 @@ namespace HomeBank.Presentaion.ViewModels
     {
         public override string ViewModelName => nameof(TransactionViewModel);
 
+        public static IEnumerable<CategoryTypeFilter> CategoryTypes => Utils.CategoryTypes.Filters;
+
         public event EventHandler<TransactionOperationEventArgs> TransactionOperationExecuted;
         public void OnTransactionOperationExecuted(TransactionOperationEventArgs args)
         {
             TransactionOperationExecuted?.Invoke(this, args);
+
+            Type = CategoryTypeFilter.All;
         }
+
+        public event EventHandler FilterChanged;
+        public void OnFilterChanged()
+        {
+            FilterChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        private DateTime? _date;
+        public DateTime? Date
+        {
+            get => _date;
+            set
+            {
+                if (_date == value) return;
+                _date = value;
+                OnPropertyChanged();
+                OnFilterChanged();
+            }
+        }
+
+        private CategoryTypeFilter _type;
+        public CategoryTypeFilter Type
+        {
+            get => _type;
+            set
+            {
+                if (_type == value) return;
+                _type = value;
+                OnPropertyChanged();
+                OnFilterChanged();
+            }
+        }
+
+        //private CategoryItemViewModel _category;
+        //public CategoryItemViewModel Category
+        //{
+        //    get => _category;
+        //    set
+        //    {
+        //        if (_category == value) return;
+        //        _category = value;
+        //        OnPropertyChanged();
+        //        OnFilterChanged();
+        //    }
+        //}
 
         public ObservableCollection<TransactionItemViewModel> Transactions { get; set; }
         public TransactionItemViewModel SelectedTransaction { get; set; }
@@ -37,18 +86,34 @@ namespace HomeBank.Presentaion.ViewModels
                 throw new ArgumentNullException(nameof(transactions));
             }
 
-            Categories = new ObservableCollection<CategoryItemViewModel>(categories.Select(category =>
-                new CategoryItemViewModel
+            Categories = new ObservableCollection<CategoryItemViewModel>();
+            Transactions = new ObservableCollection<TransactionItemViewModel>();
+
+            UpdateCategories(categories);
+            UpdateTransactions(transactions);
+        }
+
+        public void UpdateCategories(IEnumerable<Category> categories)
+        {
+            if (categories == null)
+            {
+                throw new ArgumentNullException(nameof(categories));
+            }
+
+            Categories.Clear();
+
+            foreach (var category in categories)
+            {
+                var view = new CategoryItemViewModel
                 {
                     Id = category.Id,
                     Name = category.Name,
                     Description = category.Description,
                     Type = category.Type
-                }));
+                };
 
-            Transactions = new ObservableCollection<TransactionItemViewModel>();
-
-            UpdateTransactions(transactions);
+                Categories.Add(view);
+            }
         }
 
         public void UpdateTransactions(IEnumerable<Transaction> transactions)

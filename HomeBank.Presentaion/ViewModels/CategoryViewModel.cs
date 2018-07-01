@@ -1,10 +1,13 @@
 ﻿using HomeBank.Domain.DomainModel;
 using HomeBank.Domain.Enums;
+using HomeBank.Presentaion.Converters;
+using HomeBank.Presentaion.Enums;
 using HomeBank.Presentaion.EventArguments;
 using HomeBank.Presentaion.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 
 namespace HomeBank.Presentaion.ViewModels
@@ -13,15 +16,34 @@ namespace HomeBank.Presentaion.ViewModels
     {
         public override string ViewModelName => nameof(CategoryViewModel);
 
-        public static IEnumerable<CategoryType> CategoryTypes => CategoryItemViewModel.CategoryTypes;
+        public static IEnumerable<CategoryTypeFilter> CategoryTypes => Utils.CategoryTypes.Filters;
 
         public event EventHandler<CategoryOperationEventArgs> CategoryOperationExecuted;
         public void OnCategoryOperationExecuted(CategoryOperationEventArgs args)
         {
             CategoryOperationExecuted?.Invoke(this, args);
+
+            Type = CategoryTypeFilter.All;
         }
 
-        public CategoryType Type { get; set; }
+        public event EventHandler FilterChanged;
+        public void OnFilterChanged()
+        {
+            FilterChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        private CategoryTypeFilter _type = CategoryTypeFilter.All;
+        public CategoryTypeFilter Type
+        {
+            get => _type;
+            set
+            {
+                if (_type == value) return;
+                _type = value;
+                OnPropertyChanged();
+                OnFilterChanged();
+            }
+        }
 
         public ObservableCollection<CategoryItemViewModel> Categories { get; set; }
         public CategoryItemViewModel SelectedCategory { get; set; }

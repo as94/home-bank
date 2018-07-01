@@ -16,7 +16,7 @@
     <Grid>
 
         <materialDesign:TransitioningContent x:Name="TransitioningContentSlide"
-                                             OpeningEffect="{materialDesign:TransitionEffect SlideInFromTop, Duration=0:0:1}"
+                                             OpeningEffect="{materialDesign:TransitionEffect SlideInFromTop, Duration=0:0:0.3}"
                                              Background="#FF63AE47">
 
             <TextBlock HorizontalAlignment="Center"

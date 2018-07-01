@@ -13,7 +13,7 @@ namespace HomeBank.Presentaion.ViewModels
     {
         public override string ViewModelName => nameof(CategoryItemViewModel);
 
-        public static IEnumerable<CategoryType> CategoryTypes => Enum.GetValues(typeof(CategoryType)).Cast<CategoryType>();
+        public static IEnumerable<CategoryType> CategoryTypes => Utils.CategoryTypes.Values;
 
         public event EventHandler<CategoryOperationEventArgs> CategoryItemOperationExecuted;
         public void OnCategoryItemOperationExecuted(CategoryOperationEventArgs args)

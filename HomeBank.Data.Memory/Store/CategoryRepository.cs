@@ -1,5 +1,6 @@
 ﻿using HomeBank.Domain.DomainModel;
 using HomeBank.Domain.Infrastructure;
+using HomeBank.Domain.Queries;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,9 +32,17 @@ namespace HomeBank.Data.Memory.Store
             return await Task.Run(() => _categories.FirstOrDefault(c => c.Id == id));
         }
 
-        public async Task<IEnumerable<Category>> FindAsync()
+        public async Task<IEnumerable<Category>> FindAsync(CategoryQuery query = null)
         {
-            return await Task.Run(() => _categories);
+            return await Task.Run(() =>
+            {
+                if (query?.Type != null)
+                {
+                    return _categories.Where(c => c.Type == query.Type.Value);
+                }
+
+                return _categories;
+            });
         }
 
         public async Task CreateAsync(Category entity)

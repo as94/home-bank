@@ -16,7 +16,7 @@
              d:DesignWidth="800">
 
     <materialDesign:TransitioningContent x:Name="TransitioningContentSlide"
-                                         OpeningEffect="{materialDesign:TransitionEffect SlideInFromLeft, Duration=0:0:1}">
+                                         OpeningEffect="{materialDesign:TransitionEffect SlideInFromLeft, Duration=0:0:0.3}">
 
         <materialDesign:Card Padding="32"
                              Margin="16">
@@ -47,23 +47,22 @@
                                 <ComboBox Margin="25 10 25 10"
                                           materialDesign:HintAssist.Hint="Type"
                                           materialDesign:HintAssist.IsFloating="True"
-                                          ItemsSource="{Binding TypeList}"
-                                          SelectedItem="{Binding SelectedType, 
+                                          ItemsSource="{Binding CategoryTypes}"
+                                          SelectedItem="{Binding Type, 
                                                              UpdateSourceTrigger=PropertyChanged,
-                                                             ValidatesOnDataErrors=True}"
-                                          DisplayMemberPath="Title" />
+                                                             ValidatesOnDataErrors=True}" />
                             </Grid>
 
-                            <Grid Grid.Column="2">
+                            <!--<Grid Grid.Column="2">
                                 <ComboBox Margin="25 10 25 10"
                                           materialDesign:HintAssist.Hint="Category"
                                           materialDesign:HintAssist.IsFloating="True"
-                                          ItemsSource="{Binding CategoryList}"
-                                          SelectedItem="{Binding SelectedCategory, 
+                                          ItemsSource="{Binding Categories}"
+                                          SelectedItem="{Binding Category, 
                                                              UpdateSourceTrigger=PropertyChanged,
                                                              ValidatesOnDataErrors=True}"
                                           DisplayMemberPath="Title" />
-                            </Grid>
+                            </Grid>-->
                         </Grid>
 
                         <TextBlock Margin="10"

@@ -1,12 +1,15 @@
 ﻿using HomeBank.Data.Memory.Store;
 using HomeBank.Domain.DomainModel;
+using HomeBank.Domain.Queries;
 using HomeBank.Presentaion.EventArguments;
 using HomeBank.Presentaion.ViewModels;
 using HomeBank.Presentation.ViewModels;
 using HomeBank.Ui.Views;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows;
+using HomeBank.Presentaion.Converters;
 
 namespace HomeBank.Ui
 {
@@ -15,6 +18,9 @@ namespace HomeBank.Ui
     /// </summary>
     public partial class App : Application
     {
+        private TransactionViewModel _transactionViewModel;
+        private CategoryViewModel _categoryViewModel;
+
         private MainViewModel _mainViewModel;
         private MainView _mainView;
 
@@ -43,13 +49,17 @@ namespace HomeBank.Ui
             var categoryRepository = new CategoryRepository(categories);
             var transactionRepository = new TransactionRepository(transactions);
 
-            // TODO: transaction categories not updated when updated category
+            _transactionViewModel = new TransactionViewModel(categories, transactions);
+            InitializeTransactionViewModel();
+
+            _categoryViewModel = new CategoryViewModel(categories);
+            InitializeCategoryViewModel();
 
             var childrenViewModels = new ViewModel[]
             {
                 new HomeViewModel(),
-                GetTransactionViewModel(categories, transactions),
-                GetCategoryViewModel(categories),
+                _transactionViewModel,
+                _categoryViewModel,
                 new StatisticViewModel(),
                 new AccountViewModel(),
                 new SettingsViewModel()
@@ -64,22 +74,23 @@ namespace HomeBank.Ui
 
                 _mainView = new MainView(_mainViewModel);
 
+                _transactionViewModel.Type = Presentaion.Enums.CategoryTypeFilter.All;
+                _transactionViewModel.Date = DateTime.Now;
+
                 _mainView.Show();
             }
         }
 
-        private TransactionViewModel GetTransactionViewModel(IEnumerable<Category> categories, IEnumerable<Transaction> transactions)
+        private void InitializeTransactionViewModel()
         {
-            var viewModel = new TransactionViewModel(categories, transactions);
+            EventHandler<TransactionOperationEventArgs> operationExecutedHandler = GetTransactionOperationExecutedHandler();
 
-            EventHandler<TransactionOperationEventArgs> operationExecutedHandler = GetTransactionOperationExecutedHandler(viewModel);
-
-            viewModel.TransactionOperationExecuted += async (s, args) =>
+            _transactionViewModel.TransactionOperationExecuted += async (s, args) =>
             {
                 if (args.Transaction.OperationType == Presentaion.Enums.OperationType.Remove)
                 {
                     await _mainViewModel.TransactionRepository.RemoveAsync(args.Transaction.Id);
-                    viewModel.UpdateTransactions(await _mainViewModel.TransactionRepository.FindAsync());
+                    _transactionViewModel.UpdateTransactions(await _mainViewModel.TransactionRepository.FindAsync());
                     return;
                 }
 
@@ -87,29 +98,42 @@ namespace HomeBank.Ui
                 transactionItemViewModel.TransactionItemOperationExecuted += operationExecutedHandler;
                 transactionItemViewModel.BackExecuted += async (backSender, backArgs) =>
                 {
-                    viewModel.UpdateTransactions(await _mainViewModel.TransactionRepository.FindAsync());
+                    _transactionViewModel.UpdateTransactions(await _mainViewModel.TransactionRepository.FindAsync());
 
-                    _mainViewModel.SelectedChildren = viewModel;
+                    _mainViewModel.SelectedChildren = _transactionViewModel;
                 };
 
                 _mainViewModel.SelectedChildren = transactionItemViewModel;
             };
 
-            return viewModel;
+            _transactionViewModel.FilterChanged += async (s, args) =>
+            {
+                var date = _transactionViewModel.Date;
+                var type = _transactionViewModel.Type.Convert();
+                //var category = _transactionViewModel.Category?.ToDomain();
+
+                //var categoryQuery = new CategoryQuery(type);
+                var transactionQuery = new TransactionQuery(date, type);
+
+                //var categories = await _mainViewModel.CategoryRepository.FindAsync(categoryQuery);
+                var transactions = await _mainViewModel.TransactionRepository.FindAsync(transactionQuery);
+
+                //_transactionViewModel.UpdateCategories(categories);
+                _transactionViewModel.UpdateTransactions(transactions);
+            };
         }
 
-        private CategoryViewModel GetCategoryViewModel(IEnumerable<Category> categories)
+        private void InitializeCategoryViewModel()
         {
-            var viewModel = new CategoryViewModel(categories);
+            EventHandler<CategoryOperationEventArgs> operationExecutedHandler = GetCategoryOperationExecutedHandler();
 
-            EventHandler<CategoryOperationEventArgs> operationExecutedHandler = GetCategoryOperationExecutedHandler(viewModel);
-
-            viewModel.CategoryOperationExecuted += async (s, args) =>
+            _categoryViewModel.CategoryOperationExecuted += async (s, args) =>
             {
                 if (args.Category.OperationType == Presentaion.Enums.OperationType.Remove)
                 {
                     await _mainViewModel.CategoryRepository.RemoveAsync(args.Category.Id);
-                    viewModel.UpdateCategories(await _mainViewModel.CategoryRepository.FindAsync());
+                    await UpdateCategoriesAsync();
+
                     return;
                 }
 
@@ -117,18 +141,22 @@ namespace HomeBank.Ui
                 categoryItemViewModel.CategoryItemOperationExecuted += operationExecutedHandler;
                 categoryItemViewModel.BackExecuted += async (backSender, backArgs) =>
                 {
-                    viewModel.UpdateCategories(await _mainViewModel.CategoryRepository.FindAsync());
+                    _categoryViewModel.UpdateCategories(await _mainViewModel.CategoryRepository.FindAsync());
 
-                    _mainViewModel.SelectedChildren = viewModel;
+                    _mainViewModel.SelectedChildren = _categoryViewModel;
                 };
 
                 _mainViewModel.SelectedChildren = categoryItemViewModel;
             };
 
-            return viewModel;
+            _categoryViewModel.FilterChanged += async (s, args) =>
+            {
+                var query = new CategoryQuery(_categoryViewModel.Type.Convert());
+                _categoryViewModel.UpdateCategories(await _mainViewModel.CategoryRepository.FindAsync(query));
+            };
         }
 
-        private EventHandler<TransactionOperationEventArgs> GetTransactionOperationExecutedHandler(TransactionViewModel viewModel)
+        private EventHandler<TransactionOperationEventArgs> GetTransactionOperationExecutedHandler()
         {
             return async (s, args) =>
             {
@@ -136,23 +164,23 @@ namespace HomeBank.Ui
                 {
                     case Presentaion.Enums.OperationType.Add:
                         await _mainViewModel.TransactionRepository.CreateAsync(args.Transaction.ToDomain());
-                        viewModel.UpdateTransactions(await _mainViewModel.TransactionRepository.FindAsync());
+                        await UpdateTransactionsAsync();
                         break;
 
                     case Presentaion.Enums.OperationType.Edit:
                         await _mainViewModel.TransactionRepository.ChangeAsync(args.Transaction.ToDomain());
-                        viewModel.UpdateTransactions(await _mainViewModel.TransactionRepository.FindAsync());
+                        await UpdateTransactionsAsync();
                         break;
 
                     default:
                         break;
                 }
 
-                _mainViewModel.SelectedChildren = viewModel;
+                _mainViewModel.SelectedChildren = _transactionViewModel;
             };
         }
 
-        private EventHandler<CategoryOperationEventArgs> GetCategoryOperationExecutedHandler(CategoryViewModel viewModel)
+        private EventHandler<CategoryOperationEventArgs> GetCategoryOperationExecutedHandler()
         {
             return async (s, args) =>
             {
@@ -160,20 +188,35 @@ namespace HomeBank.Ui
                 {
                     case Presentaion.Enums.OperationType.Add:
                         await _mainViewModel.CategoryRepository.CreateAsync(args.Category.ToDomain());
-                        viewModel.UpdateCategories(await _mainViewModel.CategoryRepository.FindAsync());
+                        await UpdateCategoriesAsync();
                         break;
 
                     case Presentaion.Enums.OperationType.Edit:
                         await _mainViewModel.CategoryRepository.ChangeAsync(args.Category.ToDomain());
-                        viewModel.UpdateCategories(await _mainViewModel.CategoryRepository.FindAsync());
+                        await UpdateCategoriesAsync();
                         break;
 
                     default:
                         break;
                 }
 
-                _mainViewModel.SelectedChildren = viewModel;
+                _mainViewModel.SelectedChildren = _categoryViewModel;
             };
+        }
+
+        private async Task UpdateCategoriesAsync()
+        {
+            var categories = await _mainViewModel.CategoryRepository.FindAsync();
+            _categoryViewModel.UpdateCategories(categories);
+            _transactionViewModel.UpdateCategories(categories);
+
+            await UpdateTransactionsAsync();
+        }
+
+        private async Task UpdateTransactionsAsync()
+        {
+            var transactions = await _mainViewModel.TransactionRepository.FindAsync();
+            _transactionViewModel.UpdateTransactions(transactions);
         }
     }
 }

@@ -17,7 +17,7 @@
     <Grid>
 
         <materialDesign:TransitioningContent x:Name="TransitioningContentSlide"
-                                             OpeningEffect="{materialDesign:TransitionEffect SlideInFromLeft, Duration=0:0:1}">
+                                             OpeningEffect="{materialDesign:TransitionEffect SlideInFromLeft, Duration=0:0:0.3}">
 
             <materialDesign:Card Padding="32"
                                  Margin="16">

@@ -34,7 +34,10 @@ namespace HomeBank.Ui.Views
             var menuItemIdx = ListViewMenu.SelectedIndex;
             MoveCursorMenu(menuItemIdx);
 
-            _mainViewModel.MenuItemShowCommand.Execute(menuItemIdx);
+            if (menuItemIdx != -1)
+            {
+                _mainViewModel.MenuItemShowCommand.Execute(menuItemIdx);
+            }
         }
 
         private void MoveCursorMenu(int index)
