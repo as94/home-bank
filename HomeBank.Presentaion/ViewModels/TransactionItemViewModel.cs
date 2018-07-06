@@ -76,9 +76,9 @@ namespace HomeBank.Presentaion.ViewModels
             }
         }
 
-        public Domain.DomainModel.Transaction ToDomain()
+        public Domain.DomainModels.Transaction ToDomain()
         {
-            return new Domain.DomainModel.Transaction(Id, Date, Amount, CategoryItemViewModel.ToDomain());
+            return new Domain.DomainModels.Transaction(Id, Date, Amount, CategoryItemViewModel.ToDomain());
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using HomeBank.Domain.Enums;
 using System;
 
-namespace HomeBank.Domain.DomainModel
+namespace HomeBank.Domain.DomainModels
 {
     public sealed class Category : IIdentify<Guid>, IEquatable<Category>
     {

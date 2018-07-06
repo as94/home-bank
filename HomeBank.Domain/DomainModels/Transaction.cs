@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HomeBank.Domain.DomainModel
+namespace HomeBank.Domain.DomainModels
 {
     public sealed class Transaction : IIdentify<Guid>, IEquatable<Transaction>
     {

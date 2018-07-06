@@ -1,4 +1,4 @@
-﻿using HomeBank.Domain.DomainModel;
+﻿using HomeBank.Domain.DomainModels;
 using System.Threading.Tasks;
 
 namespace HomeBank.Domain.Infrastructure

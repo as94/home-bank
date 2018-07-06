@@ -1,4 +1,4 @@
-﻿using HomeBank.Domain.DomainModel;
+﻿using HomeBank.Domain.DomainModels;
 using HomeBank.Presentaion.Enums;
 using HomeBank.Presentaion.EventArguments;
 using HomeBank.Presentaion.Infrastructure;

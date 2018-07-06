@@ -1,4 +1,4 @@
-﻿using HomeBank.Domain.DomainModel;
+﻿using HomeBank.Domain.DomainModels;
 using HomeBank.Domain.Queries;
 using System;
 using System.Collections.Generic;

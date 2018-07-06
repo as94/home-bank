@@ -1,4 +1,4 @@
-﻿namespace HomeBank.Domain.DomainModel
+﻿namespace HomeBank.Domain.DomainModels
 {
     public interface IIdentify<T>
     {

@@ -75,9 +75,9 @@ namespace HomeBank.Presentaion.ViewModels
             }
         }
 
-        public Domain.DomainModel.Category ToDomain()
+        public Domain.DomainModels.Category ToDomain()
         {
-            return new Domain.DomainModel.Category(Id, Name, Description, Type);
+            return new Domain.DomainModels.Category(Id, Name, Description, Type);
         }
     }
 }

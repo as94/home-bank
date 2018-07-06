@@ -1,4 +1,4 @@
-﻿using HomeBank.Domain.DomainModel;
+﻿using HomeBank.Domain.DomainModels;
 using NUnit.Framework;
 using System;
 

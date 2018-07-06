@@ -1,5 +1,5 @@
 ﻿using HomeBank.Data.Memory.Store;
-using HomeBank.Domain.DomainModel;
+using HomeBank.Domain.DomainModels;
 using HomeBank.Domain.Queries;
 using HomeBank.Presentaion.EventArguments;
 using HomeBank.Presentaion.ViewModels;

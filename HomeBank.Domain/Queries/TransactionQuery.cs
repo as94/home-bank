@@ -1,4 +1,4 @@
-﻿using HomeBank.Domain.DomainModel;
+﻿using HomeBank.Domain.DomainModels;
 using HomeBank.Domain.Enums;
 using System;
 
@@ -13,7 +13,7 @@ namespace HomeBank.Domain.Queries
             Category = category;
         }
 
-        public DateTime? Date { get; set; }
+        public DateTime? Date { get; }
         public CategoryType? Type { get; }
         public Category Category { get; }
     }
