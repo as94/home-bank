@@ -47,7 +47,7 @@ namespace HomeBank.Data.Sqlite.Storages
 
             if (category == null)
             {
-                throw new InvalidOperationException($"Category with id = '{id}' not found.");
+                return null;
             }
 
             return Convert(category);
