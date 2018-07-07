@@ -32,11 +32,6 @@ namespace HomeBank.Domain.DomainModels
                 throw new ArgumentNullException(nameof(description));
             }
 
-            if (type == CategoryType.None)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
-
             Id = id;
 
             Name = name;

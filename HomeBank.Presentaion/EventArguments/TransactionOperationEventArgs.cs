@@ -3,7 +3,7 @@ using System;
 
 namespace HomeBank.Presentaion.EventArguments
 {
-    public sealed class TransactionOperationEventArgs
+    public sealed class TransactionOperationEventArgs : EventArgs
     {
         public TransactionOperationEventArgs(TransactionItemViewModel transaction)
         {

@@ -1,10 +1,11 @@
 ﻿using HomeBank.Domain.Enums;
+using HomeBank.Domain.Infrastructure;
 using HomeBank.Presentaion.Enums;
 using HomeBank.Presentaion.EventArguments;
 using HomeBank.Presentaion.Infrastructure;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace HomeBank.Presentaion.ViewModels
@@ -14,18 +15,6 @@ namespace HomeBank.Presentaion.ViewModels
         public override string ViewModelName => nameof(CategoryItemViewModel);
 
         public static IEnumerable<CategoryType> CategoryTypes => Utils.CategoryTypes.Values;
-
-        public event EventHandler<CategoryOperationEventArgs> CategoryItemOperationExecuted;
-        public void OnCategoryItemOperationExecuted(CategoryOperationEventArgs args)
-        {
-            CategoryItemOperationExecuted?.Invoke(this, args);
-        }
-
-        public event EventHandler BackExecuted;
-        public void OnBackExecuted()
-        {
-            BackExecuted?.Invoke(this, new EventArgs());
-        }
 
         public Guid Id { get; set; }
 
@@ -37,13 +26,19 @@ namespace HomeBank.Presentaion.ViewModels
 
         public string Title => $"{Name} - {Description}";
 
-        public CategoryItemViewModel()
+        public CategoryItemViewModel(IEventBus eventBus)
+            : base(eventBus)
         {
         }
 
-        public CategoryItemViewModel(OperationType operationType)
+        public CategoryItemViewModel(IEventBus eventBus, OperationType operationType)
+            : this(eventBus)
         {
             OperationType = operationType;
+
+            Id = Guid.NewGuid();
+            Name = string.Empty;
+            Description = string.Empty;
         }
 
         private ICommand _categoryOperationCommand;
@@ -53,12 +48,7 @@ namespace HomeBank.Presentaion.ViewModels
             {
                 return _categoryOperationCommand ?? (_categoryOperationCommand = new ActionCommand(vm =>
                 {
-                    if (OperationType == OperationType.Add)
-                    {
-                        Id = Guid.NewGuid();
-                    }
-
-                    OnCategoryItemOperationExecuted(new CategoryOperationEventArgs(this));
+                    EventBus.Notify(EventType.CategoryItemOperationExecuted, new CategoryOperationEventArgs(this));
                 }));
             }
         }
@@ -70,7 +60,7 @@ namespace HomeBank.Presentaion.ViewModels
             {
                 return _backCommand ?? (_backCommand = new ActionCommand(vm =>
                 {
-                    OnBackExecuted();
+                    EventBus.Notify(EventType.CategoryBackExecuted);
                 }));
             }
         }

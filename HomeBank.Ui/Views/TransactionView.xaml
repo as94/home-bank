@@ -28,8 +28,14 @@
                 </Grid.ColumnDefinitions>
 
                 <Grid Grid.Column="0">
-                    <StackPanel>
-                        <Grid>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="2*" />
+                            <RowDefinition Height="2*" />
+                            <RowDefinition Height="6*" />
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
@@ -49,28 +55,30 @@
                                           materialDesign:HintAssist.IsFloating="True"
                                           ItemsSource="{Binding CategoryTypes}"
                                           SelectedItem="{Binding Type, 
-                                                             UpdateSourceTrigger=PropertyChanged,
-                                                             ValidatesOnDataErrors=True}" />
+                                                            UpdateSourceTrigger=PropertyChanged,
+                                                            ValidatesOnDataErrors=True}" />
                             </Grid>
 
                             <!--<Grid Grid.Column="2">
-                                <ComboBox Margin="25 10 25 10"
-                                          materialDesign:HintAssist.Hint="Category"
-                                          materialDesign:HintAssist.IsFloating="True"
-                                          ItemsSource="{Binding Categories}"
-                                          SelectedItem="{Binding Category, 
-                                                             UpdateSourceTrigger=PropertyChanged,
-                                                             ValidatesOnDataErrors=True}"
-                                          DisplayMemberPath="Title" />
-                            </Grid>-->
+                                    <ComboBox Margin="25 10 25 10"
+                                                materialDesign:HintAssist.Hint="Category"
+                                                materialDesign:HintAssist.IsFloating="True"
+                                                ItemsSource="{Binding Categories}"
+                                                SelectedItem="{Binding Category, 
+                                                                    UpdateSourceTrigger=PropertyChanged,
+                                                                    ValidatesOnDataErrors=True}"
+                                                DisplayMemberPath="Title" />
+                                </Grid>-->
                         </Grid>
 
-                        <TextBlock Margin="10"
+                        <TextBlock Grid.Row="1"
+                                   Margin="10"
                                    HorizontalAlignment="Center"
                                    Style="{DynamicResource MaterialDesignTitleTextBlock}"
                                    Text="Transactions" />
 
-                        <ListView ItemsSource="{Binding Transactions}"
+                        <ListView Grid.Row="2"
+                                  ItemsSource="{Binding Transactions}"
                                   SelectedItem="{Binding SelectedTransaction}"
                                   Margin="10">
 
@@ -87,7 +95,7 @@
                                 </GridView>
                             </ListView.View>
                         </ListView>
-                    </StackPanel>
+                    </Grid>
                 </Grid>
 
                 <Grid Grid.Column="1">

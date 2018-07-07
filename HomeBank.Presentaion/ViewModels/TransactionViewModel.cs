@@ -1,4 +1,7 @@
 ﻿using HomeBank.Domain.DomainModels;
+using HomeBank.Domain.Infrastructure;
+using HomeBank.Domain.Queries;
+using HomeBank.Presentaion.Converters;
 using HomeBank.Presentaion.Enums;
 using HomeBank.Presentaion.EventArguments;
 using HomeBank.Presentaion.Infrastructure;
@@ -6,29 +9,19 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace HomeBank.Presentaion.ViewModels
 {
     public class TransactionViewModel : ViewModel
     {
+        private ITransactionRepository _transactionRepository;
+        private ICategoryRepository _categoryRepository;
+
         public override string ViewModelName => nameof(TransactionViewModel);
 
         public static IEnumerable<CategoryTypeFilter> CategoryTypes => Utils.CategoryTypes.Filters;
-
-        public event EventHandler<TransactionOperationEventArgs> TransactionOperationExecuted;
-        public void OnTransactionOperationExecuted(TransactionOperationEventArgs args)
-        {
-            TransactionOperationExecuted?.Invoke(this, args);
-
-            Type = CategoryTypeFilter.All;
-        }
-
-        public event EventHandler FilterChanged;
-        public void OnFilterChanged()
-        {
-            FilterChanged?.Invoke(this, EventArgs.Empty);
-        }
 
         private DateTime? _date;
         public DateTime? Date
@@ -39,7 +32,8 @@ namespace HomeBank.Presentaion.ViewModels
                 if (_date == value) return;
                 _date = value;
                 OnPropertyChanged();
-                OnFilterChanged();
+
+                EventBus.Notify(EventType.TransactionFilterChanged);
             }
         }
 
@@ -52,7 +46,8 @@ namespace HomeBank.Presentaion.ViewModels
                 if (_type == value) return;
                 _type = value;
                 OnPropertyChanged();
-                OnFilterChanged();
+
+                EventBus.Notify(EventType.TransactionFilterChanged);
             }
         }
 
@@ -74,8 +69,24 @@ namespace HomeBank.Presentaion.ViewModels
 
         public ObservableCollection<CategoryItemViewModel> Categories { get; set; }
 
-        public TransactionViewModel(IEnumerable<Category> categories, IEnumerable<Transaction> transactions)
+        public TransactionViewModel(
+            IEventBus eventBus,
+            ITransactionRepository transactionRepository,
+            ICategoryRepository categoryRepository,
+            IEnumerable<Category> categories,
+            IEnumerable<Transaction> transactions)
+            : base(eventBus)
         {
+            if (transactionRepository == null)
+            {
+                throw new ArgumentNullException(nameof(transactionRepository));
+            }
+
+            if (categoryRepository == null)
+            {
+                throw new ArgumentNullException(nameof(categoryRepository));
+            }
+
             if (categories == null)
             {
                 throw new ArgumentNullException(nameof(categories));
@@ -86,14 +97,77 @@ namespace HomeBank.Presentaion.ViewModels
                 throw new ArgumentNullException(nameof(transactions));
             }
 
+            _transactionRepository = transactionRepository;
+            _categoryRepository = categoryRepository;
+
             Categories = new ObservableCollection<CategoryItemViewModel>();
             Transactions = new ObservableCollection<TransactionItemViewModel>();
 
             UpdateCategories(categories);
             UpdateTransactions(transactions);
+
+            EventBus.EventOccured += EventBus_EventOccured;
         }
 
-        public void UpdateCategories(IEnumerable<Category> categories)
+        private async void EventBus_EventOccured(EventType type, EventArgs args = null)
+        {
+            switch (type)
+            {
+                case EventType.TransactionOperationExecuted:
+                    await OnTransactionOperationExecuted(args);
+                    UpdateTransactions(await _transactionRepository.FindAsync(new TransactionQuery(Date, Type.Convert())));
+                    break;
+
+                case EventType.TransactionItemOperationExecuted:
+                    await OnTransactionItemOperationExecuted(args);
+                    UpdateCategories(await _categoryRepository.FindAsync());
+                    UpdateTransactions(await _transactionRepository.FindAsync(new TransactionQuery(Date, Type.Convert())));
+                    break;
+
+                case EventType.TransactionFilterChanged:
+                case EventType.TransactionBackExecuted:
+                    UpdateTransactions(await _transactionRepository.FindAsync(new TransactionQuery(Date, Type.Convert())));
+                    break;
+
+                case EventType.CategoryOperationExecuted:
+                case EventType.CategoryItemOperationExecuted:
+                    UpdateCategories(await _categoryRepository.FindAsync());
+                    UpdateTransactions(await _transactionRepository.FindAsync(new TransactionQuery(Date, Type.Convert())));
+                    break;
+            }
+        }
+
+        private async Task OnTransactionOperationExecuted(EventArgs args)
+        {
+            var transactionOperationArgs = args as TransactionOperationEventArgs;
+            if (transactionOperationArgs != null && transactionOperationArgs.Transaction.OperationType == OperationType.Remove)
+            {
+                await _transactionRepository.RemoveAsync(transactionOperationArgs.Transaction.Id);
+            }
+        }
+
+        private async Task OnTransactionItemOperationExecuted(EventArgs args)
+        {
+            var transactionOperationArgs = args as TransactionOperationEventArgs;
+            if (transactionOperationArgs == null)
+            {
+                return;
+            }
+
+            var transaction = transactionOperationArgs.Transaction.ToDomain();
+            switch (transactionOperationArgs.Transaction.OperationType)
+            {
+                case OperationType.Add:
+                    await _transactionRepository.CreateAsync(transaction);
+                    break;
+
+                case OperationType.Edit:
+                    await _transactionRepository.ChangeAsync(transaction);
+                    break;
+            }
+        }
+
+        private void UpdateCategories(IEnumerable<Category> categories)
         {
             if (categories == null)
             {
@@ -104,7 +178,7 @@ namespace HomeBank.Presentaion.ViewModels
 
             foreach (var category in categories)
             {
-                var view = new CategoryItemViewModel
+                var view = new CategoryItemViewModel(EventBus)
                 {
                     Id = category.Id,
                     Name = category.Name,
@@ -116,7 +190,7 @@ namespace HomeBank.Presentaion.ViewModels
             }
         }
 
-        public void UpdateTransactions(IEnumerable<Transaction> transactions)
+        private void UpdateTransactions(IEnumerable<Transaction> transactions)
         {
             if (transactions == null)
             {
@@ -127,7 +201,7 @@ namespace HomeBank.Presentaion.ViewModels
 
             foreach (var transaction in transactions)
             {
-                var view = new TransactionItemViewModel(Categories)
+                var view = new TransactionItemViewModel(EventBus, _transactionRepository, Categories)
                 {
                     Id = transaction.Id,
                     Date = transaction.Date,
@@ -148,7 +222,13 @@ namespace HomeBank.Presentaion.ViewModels
             {
                 return _addTransactionCommand ?? (_addTransactionCommand = new ActionCommand(vm =>
                 {
-                    OnTransactionOperationExecuted(new TransactionOperationEventArgs(new TransactionItemViewModel(OperationType.Add, Categories)));
+                    var args = new TransactionOperationEventArgs(new TransactionItemViewModel(
+                        EventBus,
+                        _transactionRepository,
+                        OperationType.Add,
+                        Categories));
+
+                    EventBus.Notify(EventType.TransactionOperationExecuted, args);
                 }));
             }
         }
@@ -160,8 +240,14 @@ namespace HomeBank.Presentaion.ViewModels
             {
                 return _editTransactionCommand ?? (_editTransactionCommand = new ActionCommand(vm =>
                 {
+                    if (SelectedTransaction == null)
+                    {
+                        return;
+                    }
+
                     SelectedTransaction.OperationType = OperationType.Edit;
-                    OnTransactionOperationExecuted(new TransactionOperationEventArgs(SelectedTransaction));
+                    var args = new TransactionOperationEventArgs(SelectedTransaction);
+                    EventBus.Notify(EventType.TransactionOperationExecuted, args);
                 }));
             }
         }
@@ -173,8 +259,14 @@ namespace HomeBank.Presentaion.ViewModels
             {
                 return _removeTransactionCommand ?? (_removeTransactionCommand = new ActionCommand(vm =>
                 {
+                    if (SelectedTransaction == null)
+                    {
+                        return;
+                    }
+
                     SelectedTransaction.OperationType = OperationType.Remove;
-                    OnTransactionOperationExecuted(new TransactionOperationEventArgs(SelectedTransaction));
+                    var args = new TransactionOperationEventArgs(SelectedTransaction);
+                    EventBus.Notify(EventType.TransactionOperationExecuted, args);
                 }));
             }
         }

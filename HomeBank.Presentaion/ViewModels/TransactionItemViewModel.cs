@@ -1,4 +1,5 @@
-﻿using HomeBank.Presentaion.Enums;
+﻿using HomeBank.Domain.Infrastructure;
+using HomeBank.Presentaion.Enums;
 using HomeBank.Presentaion.EventArguments;
 using HomeBank.Presentaion.Infrastructure;
 using System;
@@ -9,19 +10,9 @@ namespace HomeBank.Presentaion.ViewModels
 {
     public class TransactionItemViewModel : ViewModel
     {
+        private ITransactionRepository _transactionRepository;
+
         public override string ViewModelName => nameof(TransactionItemViewModel);
-
-        public event EventHandler<TransactionOperationEventArgs> TransactionItemOperationExecuted;
-        public void OnTransactionItemOperationExecuted(TransactionOperationEventArgs args)
-        {
-            TransactionItemOperationExecuted?.Invoke(this, args);
-        }
-
-        public event EventHandler BackExecuted;
-        public void OnBackExecuted()
-        {
-            BackExecuted?.Invoke(this, new EventArgs());
-        }
 
         public Guid Id { get; set; }
         public DateTime Date { get; set; } = DateTime.Now;
@@ -32,17 +23,33 @@ namespace HomeBank.Presentaion.ViewModels
 
         public IEnumerable<CategoryItemViewModel> Categories { get; }
 
-        public TransactionItemViewModel(IEnumerable<CategoryItemViewModel> categories)
+        public TransactionItemViewModel(
+            IEventBus eventBus,
+            ITransactionRepository transactionRepository,
+            IEnumerable<CategoryItemViewModel> categories)
+            : base(eventBus)
         {
+            if (transactionRepository == null)
+            {
+                throw new ArgumentNullException(nameof(transactionRepository));
+            }
+
             if (categories == null)
             {
                 throw new ArgumentNullException(nameof(categories));
             }
 
+            _transactionRepository = transactionRepository;
+
             Categories = categories;
         }
 
-        public TransactionItemViewModel(OperationType operationType, IEnumerable<CategoryItemViewModel> categories) : this(categories)
+        public TransactionItemViewModel(
+            IEventBus eventBus,
+            ITransactionRepository transactionRepository,
+            OperationType operationType,
+            IEnumerable<CategoryItemViewModel> categories) 
+            : this(eventBus, transactionRepository, categories)
         {
             OperationType = operationType;
         }
@@ -59,7 +66,7 @@ namespace HomeBank.Presentaion.ViewModels
                         Id = Guid.NewGuid();
                     }
 
-                    OnTransactionItemOperationExecuted(new TransactionOperationEventArgs(this));
+                    EventBus.Notify(EventType.TransactionItemOperationExecuted, new TransactionOperationEventArgs(this));
                 }));
             }
         }
@@ -71,7 +78,7 @@ namespace HomeBank.Presentaion.ViewModels
             {
                 return _backCommand ?? (_backCommand = new ActionCommand(vm =>
                 {
-                    OnBackExecuted();
+                    EventBus.Notify(EventType.TransactionBackExecuted);
                 }));
             }
         }

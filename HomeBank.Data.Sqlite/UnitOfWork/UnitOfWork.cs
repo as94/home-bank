@@ -38,7 +38,6 @@ namespace HomeBank.Data.Sqlite.UnitOfWork
             }
 
             _transaction.Dispose();
-            _transaction = null;
         }
     }
 }

@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using HomeBank.Presentaion.Converters;
+using HomeBank.Presentaion.Infrastructure;
+using HomeBank.Presentaion.Enums;
 
 namespace HomeBank.Ui
 {
@@ -18,8 +20,7 @@ namespace HomeBank.Ui
     /// </summary>
     public partial class App : Application
     {
-        private TransactionViewModel _transactionViewModel;
-        private CategoryViewModel _categoryViewModel;
+        private IEventBus _eventBus = new EventBus();
 
         private MainViewModel _mainViewModel;
         private MainView _mainView;
@@ -49,174 +50,39 @@ namespace HomeBank.Ui
             var categoryRepository = new CategoryRepository(categories);
             var transactionRepository = new TransactionRepository(transactions);
 
-            _transactionViewModel = new TransactionViewModel(categories, transactions);
-            InitializeTransactionViewModel();
+            var categoryItemViewModel = new CategoryItemViewModel(_eventBus);
+            var categoryViewModel = new CategoryViewModel(_eventBus, categoryRepository, categories);
 
-            _categoryViewModel = new CategoryViewModel(categories);
-            InitializeCategoryViewModel();
+            var transactionItemViewModel = new TransactionItemViewModel(_eventBus, transactionRepository, categoryViewModel.Categories);
+            var transactionViewModel = new TransactionViewModel(_eventBus, transactionRepository, categoryRepository, categories, transactions);
 
             var childrenViewModels = new ViewModel[]
             {
-                new HomeViewModel(),
-                _transactionViewModel,
-                _categoryViewModel,
-                new StatisticViewModel(),
-                new AccountViewModel(),
-                new SettingsViewModel()
+                new HomeViewModel(_eventBus),
+                transactionViewModel,
+                categoryViewModel,
+                new StatisticViewModel(_eventBus),
+                new AccountViewModel(_eventBus),
+                new SettingsViewModel(_eventBus),
+                categoryItemViewModel,
+                transactionItemViewModel
             };
 
             if (_mainView == null)
             {
                 _mainViewModel = new MainViewModel(
+                    _eventBus,
                     childrenViewModels,
                     categoryRepository,
                     transactionRepository);
 
-                _mainView = new MainView(_mainViewModel);
+                transactionViewModel.Type = CategoryTypeFilter.All;
+                transactionViewModel.Date = DateTime.Now;
 
-                _transactionViewModel.Type = Presentaion.Enums.CategoryTypeFilter.All;
-                _transactionViewModel.Date = DateTime.Now;
+                _mainView = new MainView(_mainViewModel);
 
                 _mainView.Show();
             }
-        }
-
-        private void InitializeTransactionViewModel()
-        {
-            EventHandler<TransactionOperationEventArgs> operationExecutedHandler = GetTransactionOperationExecutedHandler();
-
-            _transactionViewModel.TransactionOperationExecuted += async (s, args) =>
-            {
-                if (args.Transaction.OperationType == Presentaion.Enums.OperationType.Remove)
-                {
-                    await _mainViewModel.TransactionRepository.RemoveAsync(args.Transaction.Id);
-                    _transactionViewModel.UpdateTransactions(await _mainViewModel.TransactionRepository.FindAsync());
-                    return;
-                }
-
-                var transactionItemViewModel = args.Transaction;
-                transactionItemViewModel.TransactionItemOperationExecuted += operationExecutedHandler;
-                transactionItemViewModel.BackExecuted += async (backSender, backArgs) =>
-                {
-                    _transactionViewModel.UpdateTransactions(await _mainViewModel.TransactionRepository.FindAsync());
-
-                    _mainViewModel.SelectedChildren = _transactionViewModel;
-                };
-
-                _mainViewModel.SelectedChildren = transactionItemViewModel;
-            };
-
-            _transactionViewModel.FilterChanged += async (s, args) =>
-            {
-                var date = _transactionViewModel.Date;
-                var type = _transactionViewModel.Type.Convert();
-                //var category = _transactionViewModel.Category?.ToDomain();
-
-                //var categoryQuery = new CategoryQuery(type);
-                var transactionQuery = new TransactionQuery(date, type);
-
-                //var categories = await _mainViewModel.CategoryRepository.FindAsync(categoryQuery);
-                var transactions = await _mainViewModel.TransactionRepository.FindAsync(transactionQuery);
-
-                //_transactionViewModel.UpdateCategories(categories);
-                _transactionViewModel.UpdateTransactions(transactions);
-            };
-        }
-
-        private void InitializeCategoryViewModel()
-        {
-            EventHandler<CategoryOperationEventArgs> operationExecutedHandler = GetCategoryOperationExecutedHandler();
-
-            _categoryViewModel.CategoryOperationExecuted += async (s, args) =>
-            {
-                if (args.Category.OperationType == Presentaion.Enums.OperationType.Remove)
-                {
-                    await _mainViewModel.CategoryRepository.RemoveAsync(args.Category.Id);
-                    await UpdateCategoriesAsync();
-
-                    return;
-                }
-
-                var categoryItemViewModel = args.Category;
-                categoryItemViewModel.CategoryItemOperationExecuted += operationExecutedHandler;
-                categoryItemViewModel.BackExecuted += async (backSender, backArgs) =>
-                {
-                    _categoryViewModel.UpdateCategories(await _mainViewModel.CategoryRepository.FindAsync());
-
-                    _mainViewModel.SelectedChildren = _categoryViewModel;
-                };
-
-                _mainViewModel.SelectedChildren = categoryItemViewModel;
-            };
-
-            _categoryViewModel.FilterChanged += async (s, args) =>
-            {
-                var query = new CategoryQuery(_categoryViewModel.Type.Convert());
-                _categoryViewModel.UpdateCategories(await _mainViewModel.CategoryRepository.FindAsync(query));
-            };
-        }
-
-        private EventHandler<TransactionOperationEventArgs> GetTransactionOperationExecutedHandler()
-        {
-            return async (s, args) =>
-            {
-                switch (args.Transaction.OperationType)
-                {
-                    case Presentaion.Enums.OperationType.Add:
-                        await _mainViewModel.TransactionRepository.CreateAsync(args.Transaction.ToDomain());
-                        await UpdateTransactionsAsync();
-                        break;
-
-                    case Presentaion.Enums.OperationType.Edit:
-                        await _mainViewModel.TransactionRepository.ChangeAsync(args.Transaction.ToDomain());
-                        await UpdateTransactionsAsync();
-                        break;
-
-                    default:
-                        break;
-                }
-
-                _mainViewModel.SelectedChildren = _transactionViewModel;
-            };
-        }
-
-        private EventHandler<CategoryOperationEventArgs> GetCategoryOperationExecutedHandler()
-        {
-            return async (s, args) =>
-            {
-                switch (args.Category.OperationType)
-                {
-                    case Presentaion.Enums.OperationType.Add:
-                        await _mainViewModel.CategoryRepository.CreateAsync(args.Category.ToDomain());
-                        await UpdateCategoriesAsync();
-                        break;
-
-                    case Presentaion.Enums.OperationType.Edit:
-                        await _mainViewModel.CategoryRepository.ChangeAsync(args.Category.ToDomain());
-                        await UpdateCategoriesAsync();
-                        break;
-
-                    default:
-                        break;
-                }
-
-                _mainViewModel.SelectedChildren = _categoryViewModel;
-            };
-        }
-
-        private async Task UpdateCategoriesAsync()
-        {
-            var categories = await _mainViewModel.CategoryRepository.FindAsync();
-            _categoryViewModel.UpdateCategories(categories);
-            _transactionViewModel.UpdateCategories(categories);
-
-            await UpdateTransactionsAsync();
-        }
-
-        private async Task UpdateTransactionsAsync()
-        {
-            var transactions = await _mainViewModel.TransactionRepository.FindAsync();
-            _transactionViewModel.UpdateTransactions(transactions);
         }
     }
 }
