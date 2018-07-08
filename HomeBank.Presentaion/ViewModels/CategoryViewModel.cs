@@ -1,5 +1,4 @@
 ﻿using HomeBank.Domain.DomainModels;
-using HomeBank.Domain.Enums;
 using HomeBank.Domain.Infrastructure;
 using HomeBank.Domain.Queries;
 using HomeBank.Presentaion.Converters;
@@ -9,7 +8,6 @@ using HomeBank.Presentaion.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 

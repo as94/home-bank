@@ -1,17 +1,15 @@
 ﻿using HomeBank.Data.Sqlite.Storages;
+using HomeBank.Data.Sqlite.Test.StoragesTests.DummyData;
 using HomeBank.Domain.Infrastructure;
 using NHibernate;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace HomeBank.Data.Sqlite.Test.StoragesTests
 {
     [TestFixture]
-    internal class CategoryTests : StorageTest
+    internal class CategoryRepositoryTests : StorageTest
     {
         private ICategoryRepository _categoryRepository;
 
@@ -27,56 +25,46 @@ namespace HomeBank.Data.Sqlite.Test.StoragesTests
         public async Task CreateTest()
         {
             var id = Guid.NewGuid();
-            var category = CreateCategory(id);
+            var category = CategoryData.CreateCategory(id);
+            
+            await CommitCreateAsync(category);
 
-            using (var session = SessionProvider.Session)
-            {
-                await CommitCreateAsync(category);
+            var expected = category;
+            var actual = await _categoryRepository.GetAsync(id);
 
-                var expected = category;
-                var actual = await _categoryRepository.GetAsync(id);
-
-                Assert.AreEqual(expected, actual);
-            }
+            Assert.AreEqual(expected, actual);
         }
 
         [Test]
         public async Task ChangeTest()
         {
             var id = Guid.NewGuid();
-            var category = CreateCategory(id);
+            var category = CategoryData.CreateCategory(id);
             var description = "Orange";
 
-            using (var session = SessionProvider.Session)
-            {
-                await CommitCreateAsync(category);
+            await CommitCreateAsync(category);
 
-                category.ChangeDescription(description);
+            category.ChangeDescription(description);
 
-                await CommitChangeAsync(category);
+            await CommitChangeAsync(category);
 
-                var expected = category;
-                var actual = await _categoryRepository.GetAsync(id);
+            var expected = category;
+            var actual = await _categoryRepository.GetAsync(id);
 
-                Assert.AreEqual(expected, actual);
-            }
+            Assert.AreEqual(expected, actual);
         }
 
         [Test]
         public void ThrowStaleObjectStateExceptionChangeIfNotExistsTest()
         {
             var id = Guid.NewGuid();
-            var category = CreateCategory(id);
+            var category = CategoryData.CreateCategory(id);
             var description = "Orange";
 
             Assert.ThrowsAsync<StaleObjectStateException>(async () =>
             {
-                using (var session = SessionProvider.Session)
-                {
-                    category.ChangeDescription(description);
-
-                    await CommitChangeAsync(category);
-                }
+                category.ChangeDescription(description);
+                await CommitChangeAsync(category);
             });
         }
 
@@ -84,41 +72,37 @@ namespace HomeBank.Data.Sqlite.Test.StoragesTests
         public async Task RemoveTest()
         {
             var id = Guid.NewGuid();
-            var category = CreateCategory(id);
+            var category = CategoryData.CreateCategory(id);
 
-            using (var session = SessionProvider.Session)
-            {
-                await CommitCreateAsync(category);
+            await CommitCreateAsync(category);
 
-                var existing = await _categoryRepository.GetAsync(id);
-                Assert.That(existing, Is.Not.Null);
+            var existing = await _categoryRepository.GetAsync(id);
+            Assert.That(existing, Is.Not.Null);
 
-                await CommitRemoveAsync(category);
+            await CommitRemoveAsync(category);
 
-                var notExisting = await _categoryRepository.GetAsync(id);
-                Assert.That(notExisting, Is.Null);
-            }
+            var notExisting = await _categoryRepository.GetAsync(id);
+            Assert.That(notExisting, Is.Null);
         }
 
         [Test]
         public async Task RemoveByIdTest()
         {
             var id = Guid.NewGuid();
-            var category = CreateCategory(id);
+            var category = CategoryData.CreateCategory(id);
 
-            using (var session = SessionProvider.Session)
-            {
-                await CommitCreateAsync(category);
+            await CommitCreateAsync(category);
 
-                var existing = await _categoryRepository.GetAsync(id);
-                Assert.That(existing, Is.Not.Null);
+            var existing = await _categoryRepository.GetAsync(id);
+            Assert.That(existing, Is.Not.Null);
 
-                await CommitRemoveByIdAsync(id);
+            await CommitRemoveByIdAsync(id);
 
-                var notExisting = await _categoryRepository.GetAsync(id);
-                Assert.That(notExisting, Is.Null);
-            }
+            var notExisting = await _categoryRepository.GetAsync(id);
+            Assert.That(notExisting, Is.Null);
         }
+
+        // TODO: add find test
 
         private async Task CommitCreateAsync(Domain.DomainModels.Category category)
         {
@@ -154,11 +138,6 @@ namespace HomeBank.Data.Sqlite.Test.StoragesTests
                 await _categoryRepository.RemoveAsync(id);
                 await unitOfWork.CommitAsync();
             }
-        }
-
-        private static Domain.DomainModels.Category CreateCategory(Guid id)
-        {
-            return new Domain.DomainModels.Category(id, "Product", "Apple", Domain.Enums.CategoryType.Expenditure);
         }
     }
 }

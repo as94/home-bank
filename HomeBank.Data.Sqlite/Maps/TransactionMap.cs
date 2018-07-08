@@ -1,5 +1,4 @@
 ﻿using FluentNHibernate.Mapping;
-using System.Transactions;
 
 namespace HomeBank.Data.Sqlite.Maps
 {

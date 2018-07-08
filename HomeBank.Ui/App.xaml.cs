@@ -1,15 +1,11 @@
 ﻿using HomeBank.Data.Memory.Store;
 using HomeBank.Domain.DomainModels;
-using HomeBank.Domain.Queries;
-using HomeBank.Presentaion.EventArguments;
 using HomeBank.Presentaion.ViewModels;
 using HomeBank.Presentation.ViewModels;
 using HomeBank.Ui.Views;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Windows;
-using HomeBank.Presentaion.Converters;
 using HomeBank.Presentaion.Infrastructure;
 using HomeBank.Presentaion.Enums;
 

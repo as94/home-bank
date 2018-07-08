@@ -21,11 +21,6 @@ namespace HomeBank.Domain.DomainModels
                 throw new ArgumentNullException(nameof(id));
             }
 
-            if (category == null)
-            {
-                throw new ArgumentNullException(nameof(category));
-            }
-
             Id = id;
 
             Date = date;

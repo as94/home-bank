@@ -1,7 +1,4 @@
-﻿using HomeBank.Presentaion.EventArguments;
-using HomeBank.Presentaion.ViewModels;
-using HomeBank.Presentation.ViewModels;
-using HomeBank.Ui.Enums;
+﻿using HomeBank.Presentation.ViewModels;
 using System;
 using System.Windows;
 using System.Windows.Controls;

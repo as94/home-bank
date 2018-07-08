@@ -1,4 +1,5 @@
 ﻿using HomeBank.Data.Sqlite.Infrastructure;
+using HomeBank.Data.Sqlite.Storages.Converters;
 using HomeBank.Domain.Infrastructure;
 using HomeBank.Domain.Queries;
 using NHibernate;
@@ -36,21 +37,38 @@ namespace HomeBank.Data.Sqlite.Storages
                 }
             }
 
-            var queryResult = await queryBuilder.ToListAsync();
+            var queryResult = await queryBuilder
+                .Select(c => new Models.Category
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    Description = c.Description,
+                    Type = c.Type
+                })
+                .ToListAsync();
 
-            return queryResult.Select(Convert);
+            return queryResult.Select(CategoryConverter.Convert);
         }
 
         public async Task<Domain.DomainModels.Category> GetAsync(Guid id)
         {
-            var category = await _session.GetAsync<Models.Category>(id.ToString());
+            var category = await _session.Query<Models.Category>()
+                .Where(c => c.Id == id.ToString())
+                .Select(c => new Models.Category
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    Description = c.Description,
+                    Type = c.Type
+                })
+                .FirstOrDefaultAsync();
 
             if (category == null)
             {
                 return null;
             }
 
-            return Convert(category);
+            return CategoryConverter.Convert(category);
         }
 
         public async Task CreateAsync(Domain.DomainModels.Category entity)
@@ -60,7 +78,7 @@ namespace HomeBank.Data.Sqlite.Storages
                 throw new ArgumentNullException(nameof(entity));
             }
 
-            var category = Convert(entity);
+            var category = CategoryConverter.Convert(entity);
 
             await _session.InsertAsync(category);
         }
@@ -72,7 +90,7 @@ namespace HomeBank.Data.Sqlite.Storages
                 throw new ArgumentNullException(nameof(entity));
             }
 
-            var category = Convert(entity);
+            var category = CategoryConverter.Convert(entity);
 
             await _session.UpdateAsync(category);
         }
@@ -84,7 +102,7 @@ namespace HomeBank.Data.Sqlite.Storages
                 throw new ArgumentNullException(nameof(entity));
             }
 
-            var category = Convert(entity);
+            var category = CategoryConverter.Convert(entity);
 
             await _session.DeleteAsync(category);
         }
@@ -99,26 +117,6 @@ namespace HomeBank.Data.Sqlite.Storages
             }
 
             await RemoveAsync(category);
-        }
-
-        private Models.Category Convert(Domain.DomainModels.Category entity)
-        {
-            return new Models.Category
-            {
-                Id = entity.Id.ToString(),
-                Name = entity.Name,
-                Description = entity.Description,
-                Type = (int)entity.Type
-            };
-        }
-
-        private Domain.DomainModels.Category Convert(Models.Category category)
-        {
-            return new Domain.DomainModels.Category(
-                Guid.Parse(category.Id),
-                category.Name,
-                category.Description,
-                (Domain.Enums.CategoryType)category.Type);
         }
     }
 }

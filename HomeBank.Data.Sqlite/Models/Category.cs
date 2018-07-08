@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace HomeBank.Data.Sqlite.Models
+﻿namespace HomeBank.Data.Sqlite.Models
 {
     public class Category
     {

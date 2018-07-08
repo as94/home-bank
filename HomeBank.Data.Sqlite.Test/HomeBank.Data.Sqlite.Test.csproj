@@ -67,8 +67,11 @@
     <Compile Include="InfrastructureTests\SessionProviderFactoryTest.cs" />
     <Compile Include="InfrastructureTests\SessionProviderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StoragesTests\CategoryTests.cs" />
+    <Compile Include="StoragesTests\CategoryRepositoryTests.cs" />
+    <Compile Include="StoragesTests\DummyData\CategoryData.cs" />
+    <Compile Include="StoragesTests\DummyData\TransactionData.cs" />
     <Compile Include="StoragesTests\StorageTest.cs" />
+    <Compile Include="StoragesTests\TransactionRepositoryTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

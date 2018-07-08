@@ -89,6 +89,8 @@
     <Compile Include="Models\Transaction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Storages\CategoryRepository.cs" />
+    <Compile Include="Storages\Converters\CategoryConverter.cs" />
+    <Compile Include="Storages\Converters\TransactionConverter.cs" />
     <Compile Include="Storages\TransactionRepository.cs" />
     <Compile Include="UnitOfWork\UnitOfWork.cs" />
     <Compile Include="UnitOfWork\UnitOfWorkFactory.cs" />

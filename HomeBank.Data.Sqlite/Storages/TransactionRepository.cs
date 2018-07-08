@@ -1,42 +1,128 @@
-﻿using HomeBank.Domain.DomainModels;
+﻿using HomeBank.Data.Sqlite.Infrastructure;
+using HomeBank.Data.Sqlite.Storages.Converters;
+using HomeBank.Domain.DomainModels;
 using HomeBank.Domain.Infrastructure;
 using HomeBank.Domain.Queries;
+using NHibernate;
+using NHibernate.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace HomeBank.Data.Sqlite.Storages
 {
     public sealed class TransactionRepository : ITransactionRepository
     {
-        public Task<IEnumerable<Transaction>> FindAsync(TransactionQuery query = null)
+        private readonly IStatelessSession _session;
+
+        public TransactionRepository(ISessionProvider sessionProvider)
         {
-            throw new NotImplementedException();
+            if (sessionProvider == null)
+            {
+                throw new ArgumentNullException(nameof(sessionProvider));
+            }
+
+            _session = sessionProvider.Session;
         }
 
-        public Task<Transaction> GetAsync(Guid id)
+        public async Task<IEnumerable<Transaction>> FindAsync(TransactionQuery query = null)
         {
-            throw new NotImplementedException();
+            var queryBuilder = _session.Query<Models.Transaction>();
+
+            if (query != null)
+            {
+                if (query.Date != null)
+                {
+                    queryBuilder = queryBuilder.Where(t => t.Date == query.Date.Value);
+                }
+
+                if (query.Type != null)
+                {
+                    queryBuilder = queryBuilder.Where(t => t.Category != null && t.Category.Type == (int)query.Type.Value);
+                }
+            }
+
+            var queryResult = await queryBuilder
+                .Select(t => new Models.Transaction
+                {
+                    Id = t.Id,
+                    Date = t.Date,
+                    Amount = t.Amount,
+                    Category = t.Category
+                })
+                .ToListAsync();
+
+            return queryResult.Select(TransactionConverter.Convert);
         }
 
-        public Task CreateAsync(Transaction entity)
+        public async Task<Transaction> GetAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var transaction = await _session.Query<Models.Transaction>()
+                .Where(t => t.Id == id.ToString())
+                .Select(t => new Models.Transaction
+                {
+                    Id = t.Id,
+                    Date = t.Date,
+                    Amount = t.Amount,
+                    Category = t.Category
+                })
+                .FirstOrDefaultAsync();
+
+            if (transaction == null)
+            {
+                return null;
+            }
+
+            return TransactionConverter.Convert(transaction);
         }
 
-        public Task ChangeAsync(Transaction entity)
+        public async Task CreateAsync(Transaction entity)
         {
-            throw new NotImplementedException();
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+
+            var transaction = TransactionConverter.Convert(entity);
+
+            await _session.InsertAsync(transaction);
         }
 
-        public Task RemoveAsync(Transaction entity)
+        public async Task ChangeAsync(Transaction entity)
         {
-            throw new NotImplementedException();
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+
+            var transaction = TransactionConverter.Convert(entity);
+
+            await _session.UpdateAsync(transaction);
         }
 
-        public Task RemoveAsync(Guid id)
+        public async Task RemoveAsync(Transaction entity)
         {
-            throw new NotImplementedException();
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+
+            var transaction = TransactionConverter.Convert(entity);
+
+            await _session.DeleteAsync(transaction);
+        }
+
+        public async Task RemoveAsync(Guid id)
+        {
+            var transaction = await GetAsync(id);
+
+            if (transaction == null)
+            {
+                return;
+            }
+
+            await RemoveAsync(transaction);
         }
     }
 }

@@ -24,6 +24,8 @@ namespace HomeBank.Data.Sqlite.Test
         [TearDown]
         public void TearDown()
         {
+            SessionProvider.Dispose();
+
             File.Delete(DbFile);
         }
     }

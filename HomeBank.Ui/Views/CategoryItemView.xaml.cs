@@ -1,5 +1,4 @@
-﻿using HomeBank.Presentaion.ViewModels;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
 namespace HomeBank.Ui.Views
 {

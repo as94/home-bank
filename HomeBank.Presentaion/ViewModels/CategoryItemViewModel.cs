@@ -1,11 +1,9 @@
 ﻿using HomeBank.Domain.Enums;
-using HomeBank.Domain.Infrastructure;
 using HomeBank.Presentaion.Enums;
 using HomeBank.Presentaion.EventArguments;
 using HomeBank.Presentaion.Infrastructure;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace HomeBank.Presentaion.ViewModels
