@@ -38,6 +38,23 @@ namespace HomeBank.Presentaion.ViewModels
         public ObservableCollection<CategoryItemViewModel> Categories { get; set; }
         public CategoryItemViewModel SelectedCategory { get; set; }
 
+        public static async Task<CategoryViewModel> CreateAsync(IEventBus eventBus, ICategoryRepository categoryRepository)
+        {
+            if (eventBus == null)
+            {
+                throw new ArgumentNullException(nameof(eventBus));
+            }
+
+            if (categoryRepository == null)
+            {
+                throw new ArgumentNullException(nameof(categoryRepository));
+            }
+
+            var categories = await categoryRepository.FindAsync();
+
+            return new CategoryViewModel(eventBus, categoryRepository, categories);
+        }
+
         public CategoryViewModel(IEventBus eventBus, ICategoryRepository categoryRepository, IEnumerable<Category> categories)
             : base(eventBus)
         {

@@ -5,23 +5,11 @@ using NUnit.Framework;
 using System;
 using System.Threading.Tasks;
 
-namespace HomeBank.Data.Sqlite.Test.StoragesTests
+namespace HomeBank.Data.Sqlite.Test.StoragesTests.Transactions
 {
     [TestFixture]
-    internal class TransactionRepositoryTests : StorageTest
+    internal class TransactionRepositoryWriteTests : TransactionRepositoryTest
     {
-        private ICategoryRepository _categoryRepository;
-        private ITransactionRepository _transactionRepository;
-
-        [SetUp]
-        public override void SetUp()
-        {
-            base.SetUp();
-
-            _categoryRepository = new CategoryRepository(SessionProvider);
-            _transactionRepository = new TransactionRepository(SessionProvider);
-        }
-
         [Test]
         public async Task CreateTest()
         {
@@ -32,7 +20,7 @@ namespace HomeBank.Data.Sqlite.Test.StoragesTests
             await CommitCreateAsync(transaction);
 
             var expected = transaction;
-            var actual = await _transactionRepository.GetAsync(id);
+            var actual = await TransactionRepository.GetAsync(id);
 
             Assert.AreEqual(expected, actual);
         }
@@ -56,7 +44,7 @@ namespace HomeBank.Data.Sqlite.Test.StoragesTests
             await CommitChangeAsync(transaction);
 
             var expected = transaction;
-            var actual = await _transactionRepository.GetAsync(id);
+            var actual = await TransactionRepository.GetAsync(id);
 
             Assert.AreEqual(expected, actual);
         }
@@ -84,15 +72,15 @@ namespace HomeBank.Data.Sqlite.Test.StoragesTests
             await CommitCreateAsync(transaction.Category);
             await CommitCreateAsync(transaction);
 
-            var existing = await _transactionRepository.GetAsync(id);
+            var existing = await TransactionRepository.GetAsync(id);
             Assert.That(existing, Is.Not.Null);
 
             await CommitRemoveAsync(transaction);
 
-            var notExisting = await _transactionRepository.GetAsync(id);
+            var notExisting = await TransactionRepository.GetAsync(id);
             Assert.That(notExisting, Is.Null);
 
-            var existingCategory = await _categoryRepository.GetAsync(transaction.Category.Id);
+            var existingCategory = await CategoryRepository.GetAsync(transaction.Category.Id);
             Assert.That(existingCategory, Is.Not.Null);
         }
 
@@ -105,63 +93,16 @@ namespace HomeBank.Data.Sqlite.Test.StoragesTests
             await CommitCreateAsync(transaction.Category);
             await CommitCreateAsync(transaction);
 
-            var existing = await _transactionRepository.GetAsync(id);
+            var existing = await TransactionRepository.GetAsync(id);
             Assert.That(existing, Is.Not.Null);
 
             await CommitRemoveByIdAsync(id);
 
-            var notExisting = await _transactionRepository.GetAsync(id);
+            var notExisting = await TransactionRepository.GetAsync(id);
             Assert.That(notExisting, Is.Null);
 
-            var existingCategory = await _categoryRepository.GetAsync(transaction.Category.Id);
+            var existingCategory = await CategoryRepository.GetAsync(transaction.Category.Id);
             Assert.That(existingCategory, Is.Not.Null);
         }
-
-        private async Task CommitCreateAsync(Domain.DomainModels.Transaction transaction)
-        {
-            using (var unitOfWork = UnitOfWorkFactory.Create())
-            {
-                await _transactionRepository.CreateAsync(transaction);
-                await unitOfWork.CommitAsync();
-            }
-        }
-
-        private async Task CommitChangeAsync(Domain.DomainModels.Transaction transaction)
-        {
-            using (var unitOfWork = UnitOfWorkFactory.Create())
-            {
-                await _transactionRepository.ChangeAsync(transaction);
-                await unitOfWork.CommitAsync();
-            }
-        }
-
-        private async Task CommitRemoveAsync(Domain.DomainModels.Transaction transaction)
-        {
-            using (var unitOfWork = UnitOfWorkFactory.Create())
-            {
-                await _transactionRepository.RemoveAsync(transaction);
-                await unitOfWork.CommitAsync();
-            }
-        }
-
-        private async Task CommitRemoveByIdAsync(Guid id)
-        {
-            using (var unitOfWork = UnitOfWorkFactory.Create())
-            {
-                await _transactionRepository.RemoveAsync(id);
-                await unitOfWork.CommitAsync();
-            }
-        }
-
-        private async Task CommitCreateAsync(Domain.DomainModels.Category category)
-        {
-            using (var unitOfWork = UnitOfWorkFactory.Create())
-            {
-                await _categoryRepository.CreateAsync(category);
-                await unitOfWork.CommitAsync();
-            }
-        }
-
-        // TODO: add find test
     }
 }

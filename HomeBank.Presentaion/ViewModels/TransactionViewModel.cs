@@ -69,17 +69,14 @@ namespace HomeBank.Presentaion.ViewModels
 
         public ObservableCollection<CategoryItemViewModel> Categories { get; set; }
 
-        public TransactionViewModel(
+        public static async Task<TransactionViewModel> CreateAsync(
             IEventBus eventBus,
-            ITransactionRepository transactionRepository,
             ICategoryRepository categoryRepository,
-            IEnumerable<Category> categories,
-            IEnumerable<Transaction> transactions)
-            : base(eventBus)
+            ITransactionRepository transactionRepository)
         {
-            if (transactionRepository == null)
+            if (eventBus == null)
             {
-                throw new ArgumentNullException(nameof(transactionRepository));
+                throw new ArgumentNullException(nameof(eventBus));
             }
 
             if (categoryRepository == null)
@@ -87,6 +84,25 @@ namespace HomeBank.Presentaion.ViewModels
                 throw new ArgumentNullException(nameof(categoryRepository));
             }
 
+            if (transactionRepository == null)
+            {
+                throw new ArgumentNullException(nameof(transactionRepository));
+            }
+
+            var categories = await categoryRepository.FindAsync();
+            var transactions = await transactionRepository.FindAsync();
+
+            return new TransactionViewModel(eventBus, categoryRepository, transactionRepository, categories, transactions);
+        }
+
+        private TransactionViewModel(
+            IEventBus eventBus,
+            ICategoryRepository categoryRepository,
+            ITransactionRepository transactionRepository,
+            IEnumerable<Category> categories,
+            IEnumerable<Transaction> transactions)
+            : base(eventBus)
+        {
             if (categories == null)
             {
                 throw new ArgumentNullException(nameof(categories));

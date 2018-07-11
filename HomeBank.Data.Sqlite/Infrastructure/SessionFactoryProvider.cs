@@ -8,7 +8,7 @@ using System.IO;
 
 namespace HomeBank.Data.Sqlite.Infrastructure
 {
-    internal class SessionFactoryProvider : ISessionFactoryProvider
+    public sealed class SessionFactoryProvider : ISessionFactoryProvider
     {
         public ISessionFactory SessionFactory { get; }
 
@@ -34,10 +34,10 @@ namespace HomeBank.Data.Sqlite.Infrastructure
                 {
                     File.Delete(dbFile);
                 }
-
-                var schemaExport = new SchemaExport(config);
-                schemaExport.Create(useStdOut: false, execute: true);
             }
+
+            var schemaExport = new SchemaExport(config);
+            schemaExport.Create(useStdOut: false, execute: true);
         }
     }
 }

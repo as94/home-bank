@@ -14,9 +14,7 @@ namespace HomeBank.Data.Sqlite.Test.StoragesTests.DummyData
                 id,
                 name ?? "Product",
                 description ?? "Apple",
-                type != Domain.Enums.CategoryType.None 
-                    ? type
-                    : Domain.Enums.CategoryType.Expenditure);
+                type);
         }
     }
 }

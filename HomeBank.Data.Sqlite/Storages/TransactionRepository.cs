@@ -41,6 +41,11 @@ namespace HomeBank.Data.Sqlite.Storages
                 {
                     queryBuilder = queryBuilder.Where(t => t.Category != null && t.Category.Type == (int)query.Type.Value);
                 }
+
+                if (query.Category != null)
+                {
+                    queryBuilder = queryBuilder.Where(t => t.Category != null && t.Category.Id == query.Category.Id.ToString());
+                }
             }
 
             var queryResult = await queryBuilder

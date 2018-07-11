@@ -1,13 +1,14 @@
-﻿using HomeBank.Data.Memory.Store;
-using HomeBank.Domain.DomainModels;
-using HomeBank.Presentaion.ViewModels;
+﻿using HomeBank.Presentaion.ViewModels;
 using HomeBank.Presentation.ViewModels;
 using HomeBank.Ui.Views;
 using System;
-using System.Collections.Generic;
 using System.Windows;
 using HomeBank.Presentaion.Infrastructure;
 using HomeBank.Presentaion.Enums;
+using HomeBank.Domain.Infrastructure;
+using HomeBank.Data.Sqlite.Storages;
+using HomeBank.Data.Sqlite.Infrastructure;
+using System.Configuration;
 
 namespace HomeBank.Ui
 {
@@ -16,41 +17,35 @@ namespace HomeBank.Ui
     /// </summary>
     public partial class App : Application
     {
+        private string _dbFile;
+        private ISessionFactoryProvider _sessionFactoryProvider;
+        private ISessionProvider _sessionProvider;
+
+        private ICategoryRepository _categoryRepository;
+        private ITransactionRepository _transactionRepository;
+
         private IEventBus _eventBus = new EventBus();
 
         private MainViewModel _mainViewModel;
         private MainView _mainView;
 
-        protected override void OnStartup(StartupEventArgs e)
+        protected override async void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
-            var categories = new List<Category>
-            {
-                new Category(Guid.NewGuid(), "Work", "Programmer", Domain.Enums.CategoryType.Income),
-                new Category(Guid.NewGuid(), "Business", "Store", Domain.Enums.CategoryType.Income),
+            _dbFile = ConfigurationManager.ConnectionStrings["HomeBankConnection"].ConnectionString;
 
-                new Category(Guid.NewGuid(), "Products", "Apple", Domain.Enums.CategoryType.Expenditure),
-                new Category(Guid.NewGuid(), "Products", "Orange", Domain.Enums.CategoryType.Expenditure),
-            };
+            _sessionFactoryProvider = new SessionFactoryProvider(_dbFile);
+            _sessionProvider = new SessionProvider(_sessionFactoryProvider);
 
-            var transactions = new List<Transaction>
-            {
-                new Transaction(Guid.NewGuid(), new DateTime(2018, 2, 3), 10, categories[0]),
-                new Transaction(Guid.NewGuid(), new DateTime(2018, 2, 4), 30, categories[1]),
-                new Transaction(Guid.NewGuid(), new DateTime(2018, 3, 20), 50, categories[2]),
-                new Transaction(Guid.NewGuid(), new DateTime(2018, 6, 9), 1000, categories[3]),
-                new Transaction(Guid.NewGuid(), new DateTime(2018, 6, 10), 100, categories[3]),
-            };
-
-            var categoryRepository = new CategoryRepository(categories);
-            var transactionRepository = new TransactionRepository(transactions);
+            _categoryRepository = new CategoryRepository(_sessionProvider);
+            _transactionRepository = new TransactionRepository(_sessionProvider);
 
             var categoryItemViewModel = new CategoryItemViewModel(_eventBus);
-            var categoryViewModel = new CategoryViewModel(_eventBus, categoryRepository, categories);
+            var categoryViewModel = await CategoryViewModel.CreateAsync(_eventBus, _categoryRepository);
 
-            var transactionItemViewModel = new TransactionItemViewModel(_eventBus, transactionRepository, categoryViewModel.Categories);
-            var transactionViewModel = new TransactionViewModel(_eventBus, transactionRepository, categoryRepository, categories, transactions);
+            var transactionItemViewModel = new TransactionItemViewModel(_eventBus, _transactionRepository, categoryViewModel.Categories);
+            var transactionViewModel = await TransactionViewModel.CreateAsync(_eventBus, _categoryRepository, _transactionRepository);
 
             var childrenViewModels = new ViewModel[]
             {
@@ -69,8 +64,8 @@ namespace HomeBank.Ui
                 _mainViewModel = new MainViewModel(
                     _eventBus,
                     childrenViewModels,
-                    categoryRepository,
-                    transactionRepository);
+                    _categoryRepository,
+                    _transactionRepository);
 
                 transactionViewModel.Type = CategoryTypeFilter.All;
                 transactionViewModel.Date = DateTime.Now;
