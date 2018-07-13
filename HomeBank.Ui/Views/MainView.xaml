@@ -23,11 +23,7 @@
         <DataTemplate DataType="{x:Type viewModels:HomeViewModel}">
             <views:HomeView />
         </DataTemplate>
-        
-        <DataTemplate DataType="{x:Type viewModels:AccountViewModel}">
-            <views:AccountView />
-        </DataTemplate>
-        
+
         <DataTemplate DataType="{x:Type viewModels:SettingsViewModel}">
             <views:SettingsView />
         </DataTemplate>
@@ -76,19 +72,6 @@
                           Background="#FF2B617A">
                         <StackPanel Orientation="Horizontal"
                                     HorizontalAlignment="Right">
-
-                            <Button Width="40"
-                                    Height="30"
-                                    Padding="0"
-                                    Margin="0 0 10 0"
-                                    Background="{x:Null}"
-                                    BorderBrush="{x:Null}"
-                                    Foreground="LightGray"
-                                    Command="{Binding AccountShowCommand}"
-                                    Click="AccountButton_Click">
-
-                                <materialDesign:PackIcon Kind="Account" />
-                            </Button>
 
                             <Button Width="40"
                                     Height="30"

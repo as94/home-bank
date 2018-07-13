@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HomeBank.Data.Sqlite.Test.StoragesTests.Transactions
 {
-    internal abstract class TransactionRepositoryTest : StorageTest
+    internal abstract class SqliteTransactionRepositoryTest : StorageTest
     {
         protected ICategoryRepository CategoryRepository;
         protected ITransactionRepository TransactionRepository;
@@ -16,8 +16,8 @@ namespace HomeBank.Data.Sqlite.Test.StoragesTests.Transactions
         {
             base.SetUp();
 
-            CategoryRepository = new CategoryRepository(SessionProvider);
-            TransactionRepository = new TransactionRepository(SessionProvider);
+            CategoryRepository = new SqliteCategoryRepository(SessionProvider);
+            TransactionRepository = new SqliteTransactionRepository(SessionProvider);
         }
 
         protected async Task CommitCreateAsync(Domain.DomainModels.Transaction transaction)

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace HomeBank.Data.Sqlite.Test.StoragesTests.Transactions
 {
     [TestFixture]
-    internal class TransactionRepositoryWriteTests : TransactionRepositoryTest
+    internal class SqliteTransactionRepositoryWriteTests : SqliteTransactionRepositoryTest
     {
         [Test]
         public async Task CreateTest()

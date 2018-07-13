@@ -38,8 +38,8 @@ namespace HomeBank.Ui
             _sessionFactoryProvider = new SessionFactoryProvider(_dbFile);
             _sessionProvider = new SessionProvider(_sessionFactoryProvider);
 
-            _categoryRepository = new CategoryRepository(_sessionProvider);
-            _transactionRepository = new TransactionRepository(_sessionProvider);
+            _categoryRepository = new SqliteCategoryRepository(_sessionProvider);
+            _transactionRepository = new SqliteTransactionRepository(_sessionProvider);
 
             var categoryItemViewModel = new CategoryItemViewModel(_eventBus);
             var categoryViewModel = await CategoryViewModel.CreateAsync(_eventBus, _categoryRepository);
@@ -53,7 +53,6 @@ namespace HomeBank.Ui
                 transactionViewModel,
                 categoryViewModel,
                 new StatisticViewModel(_eventBus),
-                new AccountViewModel(_eventBus),
                 new SettingsViewModel(_eventBus),
                 categoryItemViewModel,
                 transactionItemViewModel

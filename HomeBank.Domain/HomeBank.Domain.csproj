@@ -42,15 +42,21 @@
   <ItemGroup>
     <Compile Include="DomainModels\Category.cs" />
     <Compile Include="DomainModels\IIdentify.cs" />
+    <Compile Include="DomainModels\StatisticModels\CategoryStatistic.cs" />
+    <Compile Include="DomainModels\StatisticModels\CategoryStatisticItem.cs" />
+    <Compile Include="Queries\CategoryStatisticQuery.cs" />
     <Compile Include="DomainModels\Transaction.cs" />
     <Compile Include="Enums\CategoryType.cs" />
     <Compile Include="Infrastructure\ICategoryRepository.cs" />
     <Compile Include="Infrastructure\IRepository.cs" />
+    <Compile Include="Infrastructure\Statistic\IStatisticService.cs" />
     <Compile Include="Infrastructure\ITransactionRepository.cs" />
     <Compile Include="Infrastructure\IUnitOfWork.cs" />
     <Compile Include="Infrastructure\IUnitOfWorkFactory.cs" />
+    <Compile Include="Infrastructure\Statistic\StatisticService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\CategoryQuery.cs" />
+    <Compile Include="Queries\DateQuery.cs" />
     <Compile Include="Queries\TransactionQuery.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

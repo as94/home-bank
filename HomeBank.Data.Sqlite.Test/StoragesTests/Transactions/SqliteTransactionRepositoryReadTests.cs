@@ -1,4 +1,5 @@
 ﻿using HomeBank.Data.Sqlite.Test.StoragesTests.DummyData;
+using HomeBank.Domain.Queries;
 using NUnit.Framework;
 using System;
 using System.Threading.Tasks;
@@ -6,12 +7,13 @@ using System.Threading.Tasks;
 namespace HomeBank.Data.Sqlite.Test.StoragesTests.Transactions
 {
     [TestFixture]
-    internal class TransactionRepositoryReadTests : TransactionRepositoryTest
+    internal class TransactionRepositoryReadTests : SqliteTransactionRepositoryTest
     {
         [Test]
         public async Task FindByDateTest()
         {
             var date = new DateTime(2018, 1, 1);
+            var dateQuery = new DateQuery(2018, 1, 1);
 
             var category = CategoryData.CreateCategory(Guid.NewGuid());
 
@@ -27,7 +29,7 @@ namespace HomeBank.Data.Sqlite.Test.StoragesTests.Transactions
             await CommitCreateAsync(transaction3);
             await CommitCreateAsync(transaction4);
 
-            var foundTransactions = await TransactionRepository.FindAsync(new Domain.Queries.TransactionQuery(date));
+            var foundTransactions = await TransactionRepository.FindAsync(new Domain.Queries.TransactionQuery(dateQuery));
             Assert.That(foundTransactions, Is.EquivalentTo(new[] { transaction1 }));
         }
 
@@ -113,7 +115,10 @@ namespace HomeBank.Data.Sqlite.Test.StoragesTests.Transactions
             await CommitCreateAsync(transaction3);
             await CommitCreateAsync(transaction4);
 
-            var query = new Domain.Queries.TransactionQuery(date: date3, type: Domain.Enums.CategoryType.Expenditure, category: category3);
+            var query = new Domain.Queries.TransactionQuery(
+                dateQuery: new DateQuery(date3),
+                type: Domain.Enums.CategoryType.Expenditure,
+                category: category3);
 
             var foundTransactions = await TransactionRepository.FindAsync(query);
             Assert.That(foundTransactions, Is.EquivalentTo(new[] { transaction3 }));

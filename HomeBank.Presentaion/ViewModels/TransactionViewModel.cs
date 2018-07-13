@@ -131,24 +131,24 @@ namespace HomeBank.Presentaion.ViewModels
             {
                 case EventType.TransactionOperationExecuted:
                     await OnTransactionOperationExecuted(args);
-                    UpdateTransactions(await _transactionRepository.FindAsync(new TransactionQuery(Date, Type.Convert())));
+                    UpdateTransactions(await _transactionRepository.FindAsync(new TransactionQuery(new DateQuery(Date), Type.Convert())));
                     break;
 
                 case EventType.TransactionItemOperationExecuted:
                     await OnTransactionItemOperationExecuted(args);
                     UpdateCategories(await _categoryRepository.FindAsync());
-                    UpdateTransactions(await _transactionRepository.FindAsync(new TransactionQuery(Date, Type.Convert())));
+                    UpdateTransactions(await _transactionRepository.FindAsync(new TransactionQuery(new DateQuery(Date), Type.Convert())));
                     break;
 
                 case EventType.TransactionFilterChanged:
                 case EventType.TransactionBackExecuted:
-                    UpdateTransactions(await _transactionRepository.FindAsync(new TransactionQuery(Date, Type.Convert())));
+                    UpdateTransactions(await _transactionRepository.FindAsync(new TransactionQuery(new DateQuery(Date), Type.Convert())));
                     break;
 
                 case EventType.CategoryOperationExecuted:
                 case EventType.CategoryItemOperationExecuted:
                     UpdateCategories(await _categoryRepository.FindAsync());
-                    UpdateTransactions(await _transactionRepository.FindAsync(new TransactionQuery(Date, Type.Convert())));
+                    UpdateTransactions(await _transactionRepository.FindAsync(new TransactionQuery(new DateQuery(Date), Type.Convert())));
                     break;
             }
         }

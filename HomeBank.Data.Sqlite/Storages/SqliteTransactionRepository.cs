@@ -12,11 +12,11 @@ using System.Threading.Tasks;
 
 namespace HomeBank.Data.Sqlite.Storages
 {
-    public sealed class TransactionRepository : ITransactionRepository
+    public sealed class SqliteTransactionRepository : ITransactionRepository
     {
         private readonly IStatelessSession _session;
 
-        public TransactionRepository(ISessionProvider sessionProvider)
+        public SqliteTransactionRepository(ISessionProvider sessionProvider)
         {
             if (sessionProvider == null)
             {
@@ -32,9 +32,22 @@ namespace HomeBank.Data.Sqlite.Storages
 
             if (query != null)
             {
-                if (query.Date != null)
+                if (query.DateQuery != null)
                 {
-                    queryBuilder = queryBuilder.Where(t => t.Date == query.Date.Value);
+                    if (query.DateQuery.Year != null)
+                    {
+                        queryBuilder = queryBuilder.Where(t => t.Date.Year == query.DateQuery.Year);
+                    }
+
+                    if (query.DateQuery.Month != null)
+                    {
+                        queryBuilder = queryBuilder.Where(t => t.Date.Month == query.DateQuery.Month);
+                    }
+
+                    if (query.DateQuery.Day != null)
+                    {
+                        queryBuilder = queryBuilder.Where(t => t.Date.Day == query.DateQuery.Day);
+                    }
                 }
 
                 if (query.Type != null)

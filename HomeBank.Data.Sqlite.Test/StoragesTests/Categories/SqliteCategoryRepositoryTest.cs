@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HomeBank.Data.Sqlite.Test.StoragesTests.Categories
 {
-    internal abstract class CategoryRepositoryTest : StorageTest
+    internal abstract class SqliteCategoryRepositoryTest : StorageTest
     {
         protected ICategoryRepository CategoryRepository;
 
@@ -15,7 +15,7 @@ namespace HomeBank.Data.Sqlite.Test.StoragesTests.Categories
         {
             base.SetUp();
 
-            CategoryRepository = new CategoryRepository(SessionProvider);
+            CategoryRepository = new SqliteCategoryRepository(SessionProvider);
         }
 
         protected async Task CommitCreateAsync(Domain.DomainModels.Category category)

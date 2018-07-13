@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace HomeBank.Data.Sqlite.Test.StoragesTests.Categories
 {
     [TestFixture]
-    internal class CategoryRepositoryWriteTests : CategoryRepositoryTest
+    internal class SqliteCategoryRepositoryWriteTests : SqliteCategoryRepositoryTest
     {
         [Test]
         public async Task CreateTest()

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace HomeBank.Data.Sqlite.Test.StoragesTests.Categories
 {
     [TestFixture]
-    internal class CategoryRepositoryReadTests : CategoryRepositoryTest
+    internal class SqliteCategoryRepositoryReadTests : SqliteCategoryRepositoryTest
     {
         [Test]
         public async Task FindByTypeTest()

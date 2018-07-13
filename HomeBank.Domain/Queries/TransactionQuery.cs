@@ -1,19 +1,18 @@
 ﻿using HomeBank.Domain.DomainModels;
 using HomeBank.Domain.Enums;
-using System;
 
 namespace HomeBank.Domain.Queries
 {
     public sealed class TransactionQuery
     {
-        public TransactionQuery(DateTime? date = null, CategoryType? type = null, Category category = null)
+        public TransactionQuery(DateQuery dateQuery = null, CategoryType? type = null, Category category = null)
         {
-            Date = date;
+            DateQuery = dateQuery;
             Type = type;
             Category = category;
         }
 
-        public DateTime? Date { get; }
+        public DateQuery DateQuery { get; }
         public CategoryType? Type { get; }
         public Category Category { get; }
     }

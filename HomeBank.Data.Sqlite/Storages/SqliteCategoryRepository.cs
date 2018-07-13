@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace HomeBank.Data.Sqlite.Storages
 {
-    public sealed class CategoryRepository : ICategoryRepository
+    public sealed class SqliteCategoryRepository : ICategoryRepository
     {
         private readonly IStatelessSession _session;
 
-        public CategoryRepository(ISessionProvider sessionProvider)
+        public SqliteCategoryRepository(ISessionProvider sessionProvider)
         {
             if (sessionProvider == null)
             {

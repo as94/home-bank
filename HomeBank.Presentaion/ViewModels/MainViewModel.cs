@@ -105,18 +105,6 @@ namespace HomeBank.Presentation.ViewModels
             SelectedChildren = Childrens[0];
         }
 
-        private ICommand _accountShowCommand;
-        public ICommand AccountShowCommand
-        {
-            get
-            {
-                return _accountShowCommand ?? (_accountShowCommand = new ActionCommand(vm =>
-                {
-                    SelectedChildren = Childrens.First(c => c.ViewModelName == nameof(AccountViewModel));
-                }));
-            }
-        }
-
         private ICommand _settingsShowCommand;
         public ICommand SettingsShowCommand
         {
