@@ -90,6 +90,9 @@
                                     <GridViewColumn Header="Category"
                                                     DisplayMemberBinding="{Binding CategoryItemViewModel.Title}" />
 
+                                    <GridViewColumn Header="Type"
+                                                    DisplayMemberBinding="{Binding CategoryItemViewModel.Type}" />
+
                                     <GridViewColumn Header="Amount"
                                                     DisplayMemberBinding="{Binding Amount}" />
                                 </GridView>

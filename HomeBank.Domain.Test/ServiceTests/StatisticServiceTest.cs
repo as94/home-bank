@@ -5,9 +5,6 @@ using HomeBank.Domain.Test.DummyData;
 using HomeBank.Domain.Test.FakeStorages;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace HomeBank.Domain.Test.ServiceTests
@@ -44,7 +41,7 @@ namespace HomeBank.Domain.Test.ServiceTests
             await _transactionRepository.CreateAsync(transaction2);
             await _transactionRepository.CreateAsync(transaction3);
 
-            var query = new Queries.CategoryStatisticQuery(new Queries.DateQuery(year: 2018));
+            var query = new Queries.CategoryStatisticQuery(new Queries.DateQuery(year: 2018), Enums.CategoryType.Expenditure);
             var statistic = await _statisticService.GetCategoryStatisticAsync(query);
 
             var expected = new CategoryStatistic(new[]
@@ -76,7 +73,7 @@ namespace HomeBank.Domain.Test.ServiceTests
             await _transactionRepository.CreateAsync(transaction2);
             await _transactionRepository.CreateAsync(transaction3);
 
-            var query = new Queries.CategoryStatisticQuery(new Queries.DateQuery(month: 5));
+            var query = new Queries.CategoryStatisticQuery(new Queries.DateQuery(month: 5), Enums.CategoryType.Expenditure);
             var statistic = await _statisticService.GetCategoryStatisticAsync(query);
 
             var expected = new CategoryStatistic(new[]
@@ -108,7 +105,7 @@ namespace HomeBank.Domain.Test.ServiceTests
             await _transactionRepository.CreateAsync(transaction2);
             await _transactionRepository.CreateAsync(transaction3);
 
-            var query = new Queries.CategoryStatisticQuery(new Queries.DateQuery(day: 1));
+            var query = new Queries.CategoryStatisticQuery(new Queries.DateQuery(day: 1), Enums.CategoryType.Expenditure);
             var statistic = await _statisticService.GetCategoryStatisticAsync(query);
 
             var expected = new CategoryStatistic(new[]

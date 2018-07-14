@@ -9,6 +9,7 @@ using HomeBank.Domain.Infrastructure;
 using HomeBank.Data.Sqlite.Storages;
 using HomeBank.Data.Sqlite.Infrastructure;
 using System.Configuration;
+using HomeBank.Domain.Infrastructure.Statistic;
 
 namespace HomeBank.Ui
 {
@@ -23,6 +24,8 @@ namespace HomeBank.Ui
 
         private ICategoryRepository _categoryRepository;
         private ITransactionRepository _transactionRepository;
+
+        private IStatisticService _statisticService;
 
         private IEventBus _eventBus = new EventBus();
 
@@ -41,18 +44,22 @@ namespace HomeBank.Ui
             _categoryRepository = new SqliteCategoryRepository(_sessionProvider);
             _transactionRepository = new SqliteTransactionRepository(_sessionProvider);
 
+            _statisticService = new StatisticService(_transactionRepository);
+
             var categoryItemViewModel = new CategoryItemViewModel(_eventBus);
             var categoryViewModel = await CategoryViewModel.CreateAsync(_eventBus, _categoryRepository);
 
             var transactionItemViewModel = new TransactionItemViewModel(_eventBus, _transactionRepository, categoryViewModel.Categories);
             var transactionViewModel = await TransactionViewModel.CreateAsync(_eventBus, _categoryRepository, _transactionRepository);
 
+            var statisticViewModel = await StatisticViewModel.CreateAsync(_eventBus, _statisticService);
+
             var childrenViewModels = new ViewModel[]
             {
                 new HomeViewModel(_eventBus),
                 transactionViewModel,
                 categoryViewModel,
-                new StatisticViewModel(_eventBus),
+                statisticViewModel,
                 new SettingsViewModel(_eventBus),
                 categoryItemViewModel,
                 transactionItemViewModel

@@ -14,6 +14,8 @@
         TransactionBackExecuted,
 
         CategoryFilterChanged,
-        TransactionFilterChanged
+        TransactionFilterChanged,
+
+        CategoryStatisticFilterChanged
     }
 }

@@ -99,6 +99,10 @@ namespace HomeBank.Presentation.ViewModels
                     case EventType.TransactionBackExecuted:
                         SelectedChildren = Childrens.First(c => c.ViewModelName == nameof(TransactionViewModel));
                         break;
+
+                    case EventType.CategoryStatisticFilterChanged:
+                        SelectedChildren = Childrens.First(c => c.ViewModelName == nameof(StatisticViewModel));
+                        break;
                 }
             };
 

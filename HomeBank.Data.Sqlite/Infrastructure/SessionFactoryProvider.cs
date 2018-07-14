@@ -12,7 +12,7 @@ namespace HomeBank.Data.Sqlite.Infrastructure
     {
         public ISessionFactory SessionFactory { get; }
 
-        public SessionFactoryProvider(string dbFile, bool overwriteExisting = false)
+        public SessionFactoryProvider(string dbFile, bool overwriteExisting = false, bool isNew = false)
         {
             if (string.IsNullOrEmpty(dbFile))
             {
@@ -22,11 +22,11 @@ namespace HomeBank.Data.Sqlite.Infrastructure
             SessionFactory = Fluently.Configure()
                 .Database(SQLiteConfiguration.Standard.UsingFile(dbFile))
                 .Mappings(m => m.FluentMappings.AddFromAssemblyOf<SessionFactoryProvider>())
-                .ExposeConfiguration(c => BuildScheme(c, dbFile, overwriteExisting))
+                .ExposeConfiguration(c => BuildScheme(c, dbFile, isNew, overwriteExisting))
                 .BuildSessionFactory();
         }
 
-        private void BuildScheme(Configuration config, string dbFile, bool overwriteExisting)
+        private void BuildScheme(Configuration config, string dbFile, bool overwriteExisting, bool isNew)
         {
             if (overwriteExisting)
             {
@@ -35,9 +35,12 @@ namespace HomeBank.Data.Sqlite.Infrastructure
                     File.Delete(dbFile);
                 }
             }
-
-            var schemaExport = new SchemaExport(config);
-            schemaExport.Create(useStdOut: false, execute: true);
+            
+            if (isNew)
+            {
+                var schemaExport = new SchemaExport(config);
+                schemaExport.Create(useStdOut: false, execute: true);
+            }
         }
     }
 }
