@@ -51,6 +51,9 @@
     <Reference Include="Iesi.Collections, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <HintPath>..\packages\Iesi.Collections.4.0.4\lib\net461\Iesi.Collections.dll</HintPath>
     </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="MaterialDesignColors, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignColors.1.1.2\lib\net45\MaterialDesignColors.dll</HintPath>
     </Reference>
@@ -102,11 +105,20 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Enums\MainMenuItems.cs" />
+    <Compile Include="ExceptionPatternLayoutConverter.cs" />
+    <Compile Include="Implementations\ErrorDialogServiceFactory.cs" />
+    <Compile Include="Implementations\YesNoDialogServiceFactory.cs" />
     <Compile Include="Views\CategoryItemView.xaml.cs">
       <DependentUpon>CategoryItemView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CategoryView.xaml.cs">
       <DependentUpon>CategoryView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\AreYouSureDialogView.xaml.cs">
+      <DependentUpon>AreYouSureDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\ErrorDialogView.xaml.cs">
+      <DependentUpon>ErrorDialogView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
@@ -130,6 +142,14 @@
     <Page Include="Views\CategoryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\AreYouSureDialogView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Dialogs\ErrorDialogView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\HomeView.xaml">
       <SubType>Designer</SubType>

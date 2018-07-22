@@ -15,6 +15,8 @@ namespace HomeBank.Presentaion.ViewModels
 {
     public class CategoryViewModel : ViewModel
     {
+        private IDialogServiceFactory _yesNoDialogServiceFactory;
+
         private ICategoryRepository _categoryRepository;
 
         public override string ViewModelName => nameof(CategoryViewModel);
@@ -38,11 +40,14 @@ namespace HomeBank.Presentaion.ViewModels
         public ObservableCollection<CategoryItemViewModel> Categories { get; set; }
         public CategoryItemViewModel SelectedCategory { get; set; }
 
-        public static async Task<CategoryViewModel> CreateAsync(IEventBus eventBus, ICategoryRepository categoryRepository)
+        public static async Task<CategoryViewModel> CreateAsync(
+            IEventBus eventBus,
+            IDialogServiceFactory yesNoDialogServiceFactory,
+            ICategoryRepository categoryRepository)
         {
-            if (eventBus == null)
+            if (yesNoDialogServiceFactory == null)
             {
-                throw new ArgumentNullException(nameof(eventBus));
+                throw new ArgumentNullException(nameof(yesNoDialogServiceFactory));
             }
 
             if (categoryRepository == null)
@@ -52,10 +57,18 @@ namespace HomeBank.Presentaion.ViewModels
 
             var categories = await categoryRepository.FindAsync();
 
-            return new CategoryViewModel(eventBus, categoryRepository, categories);
+            return new CategoryViewModel(
+                eventBus,
+                yesNoDialogServiceFactory,
+                categoryRepository,
+                categories);
         }
 
-        public CategoryViewModel(IEventBus eventBus, ICategoryRepository categoryRepository, IEnumerable<Category> categories)
+        public CategoryViewModel(
+            IEventBus eventBus,
+            IDialogServiceFactory yesNoDialogServiceFactory,
+            ICategoryRepository categoryRepository,
+            IEnumerable<Category> categories)
             : base(eventBus)
         {
             if (categoryRepository == null)
@@ -67,6 +80,8 @@ namespace HomeBank.Presentaion.ViewModels
             {
                 throw new ArgumentNullException(nameof(categories));
             }
+
+            _yesNoDialogServiceFactory = yesNoDialogServiceFactory;
 
             _categoryRepository = categoryRepository;
 
@@ -195,10 +210,13 @@ namespace HomeBank.Presentaion.ViewModels
                     {
                         return;
                     }
-
-                    SelectedCategory.OperationType = OperationType.Remove;
-                    var args = new CategoryOperationEventArgs(SelectedCategory);
-                    EventBus.Notify(EventType.CategoryOperationExecuted, args);
+                    
+                    if (_yesNoDialogServiceFactory.Create().ShowDialog)
+                    {
+                        SelectedCategory.OperationType = OperationType.Remove;
+                        var args = new CategoryOperationEventArgs(SelectedCategory);
+                        EventBus.Notify(EventType.CategoryOperationExecuted, args);
+                    }
                 }));
             }
         }

@@ -66,13 +66,16 @@
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn Header="Name"
-                                                    DisplayMemberBinding="{Binding Name}" />
+                                                    DisplayMemberBinding="{Binding Name}"
+                                                    Width="Auto" />
 
                                     <GridViewColumn Header="Description"
-                                                    DisplayMemberBinding="{Binding Description}" />
+                                                    DisplayMemberBinding="{Binding Description}"
+                                                    Width="Auto" />
 
                                     <GridViewColumn Header="Type"
-                                                    DisplayMemberBinding="{Binding Type}" />
+                                                    DisplayMemberBinding="{Binding Type}"
+                                                    Width="Auto" />
                                 </GridView>
                             </ListView.View>
                         </ListView>

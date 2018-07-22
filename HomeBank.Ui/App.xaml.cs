@@ -10,6 +10,12 @@ using HomeBank.Data.Sqlite.Storages;
 using HomeBank.Data.Sqlite.Infrastructure;
 using System.Configuration;
 using HomeBank.Domain.Infrastructure.Statistic;
+using HomeBank.Ui.Implementations;
+using log4net;
+using System.Threading;
+using System.Runtime.InteropServices;
+using System.Reflection;
+using log4net.Config;
 
 namespace HomeBank.Ui
 {
@@ -18,6 +24,10 @@ namespace HomeBank.Ui
     /// </summary>
     public partial class App : Application
     {
+        private bool _isOwner;
+        private Mutex _appMutex;
+        private static readonly ILog _log = LogManager.GetLogger(typeof(App));
+
         private string _dbFile;
         private ISessionFactoryProvider _sessionFactoryProvider;
         private ISessionProvider _sessionProvider;
@@ -28,12 +38,26 @@ namespace HomeBank.Ui
         private IStatisticService _statisticService;
 
         private IEventBus _eventBus = new EventBus();
+        private IDialogServiceFactory _yesNoDialogServiceFactory = new YesNoDialogServiceFactory();
+        private IDialogServiceFactory _errorDialogServiceFactory = new ErrorDialogServiceFactory();
 
         private MainViewModel _mainViewModel;
         private MainView _mainView;
 
         protected override async void OnStartup(StartupEventArgs e)
         {
+            var appId = Marshal.GetTypeLibGuidForAssembly(Assembly.GetExecutingAssembly()).ToString();
+            _appMutex = new Mutex(initiallyOwned: true, name: appId, createdNew: out _isOwner);
+
+            if (!_isOwner)
+            {
+                MessageBox.Show("The application is already running.");
+                Current.Shutdown();
+                return;
+            }
+
+            XmlConfigurator.Configure();
+
             base.OnStartup(e);
 
             _dbFile = ConfigurationManager.ConnectionStrings["HomeBankConnection"].ConnectionString;
@@ -47,10 +71,17 @@ namespace HomeBank.Ui
             _statisticService = new StatisticService(_transactionRepository);
 
             var categoryItemViewModel = new CategoryItemViewModel(_eventBus);
-            var categoryViewModel = await CategoryViewModel.CreateAsync(_eventBus, _categoryRepository);
+            var categoryViewModel = await CategoryViewModel.CreateAsync(
+                _eventBus,
+                _yesNoDialogServiceFactory,
+                _categoryRepository);
 
             var transactionItemViewModel = new TransactionItemViewModel(_eventBus, _transactionRepository, categoryViewModel.Categories);
-            var transactionViewModel = await TransactionViewModel.CreateAsync(_eventBus, _categoryRepository, _transactionRepository);
+            var transactionViewModel = await TransactionViewModel.CreateAsync(
+                _eventBus,
+                _yesNoDialogServiceFactory,
+                _categoryRepository,
+                _transactionRepository);
 
             var statisticViewModel = await StatisticViewModel.CreateAsync(_eventBus, _statisticService);
 
@@ -80,6 +111,58 @@ namespace HomeBank.Ui
 
                 _mainView.Show();
             }
+
+            HandleExceptions();
         }
+
+        private void HandleExceptions()
+        {
+            AppDomain.CurrentDomain.UnhandledException += (s, e) =>
+            {
+                var ex = e.ExceptionObject as Exception;
+                if (ex != null)
+                {
+                    OnException(ex);
+                }
+            };
+
+            Application.Current.DispatcherUnhandledException += (s, e) =>
+            {
+                var ex = e.Exception;
+                if (ex != null)
+                {
+                    OnException(ex);
+                }
+
+                e.Handled = true;
+            };
+        }
+
+        private void OnException(Exception ex)
+        {
+            _log.Fatal(ex.Message, ex);
+
+            var text = "Error occured.\nFile \"err.txt\" contains details.";
+            if (_errorDialogServiceFactory.Create(text).ShowDialog)
+            {
+                Application.Current.Shutdown();
+            }
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            if (_appMutex != null)
+            {
+                if (_isOwner)
+                {
+                    _appMutex.ReleaseMutex();
+                }
+
+                _appMutex.Dispose();
+            }
+
+            base.OnExit(e);
+        }
+
     }
 }

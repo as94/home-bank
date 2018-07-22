@@ -42,12 +42,16 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <Grid Grid.Column="0">
-                                <DatePicker Margin="5 25 5 10"
-                                            materialDesign:HintAssist.Hint="Current Date"
-                                            materialDesign:HintAssist.IsFloating="True"
-                                            SelectedDate="{Binding Date}" />
-                            </Grid>
+                            <!--<Grid Grid.Column="0">
+                                    <ComboBox Margin="25 10 25 10"
+                                                materialDesign:HintAssist.Hint="Category"
+                                                materialDesign:HintAssist.IsFloating="True"
+                                                ItemsSource="{Binding Categories}"
+                                                SelectedItem="{Binding Category, 
+                                                                    UpdateSourceTrigger=PropertyChanged,
+                                                                    ValidatesOnDataErrors=True}"
+                                                DisplayMemberPath="Title" />
+                                </Grid>-->
 
                             <Grid Grid.Column="1">
                                 <ComboBox Margin="25 10 25 10"
@@ -59,16 +63,12 @@
                                                             ValidatesOnDataErrors=True}" />
                             </Grid>
 
-                            <!--<Grid Grid.Column="2">
-                                    <ComboBox Margin="25 10 25 10"
-                                                materialDesign:HintAssist.Hint="Category"
-                                                materialDesign:HintAssist.IsFloating="True"
-                                                ItemsSource="{Binding Categories}"
-                                                SelectedItem="{Binding Category, 
-                                                                    UpdateSourceTrigger=PropertyChanged,
-                                                                    ValidatesOnDataErrors=True}"
-                                                DisplayMemberPath="Title" />
-                                </Grid>-->
+                            <Grid Grid.Column="2">
+                                <DatePicker Margin="5 25 5 10"
+                                            materialDesign:HintAssist.Hint="Current Date"
+                                            materialDesign:HintAssist.IsFloating="True"
+                                            SelectedDate="{Binding Date}" />
+                            </Grid>
                         </Grid>
 
                         <TextBlock Grid.Row="1"
@@ -85,16 +85,20 @@
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn Header="Date"
-                                                    DisplayMemberBinding="{Binding Date}" />
+                                                    DisplayMemberBinding="{Binding Date, StringFormat='dd/MM/yyyy'}"
+                                                    Width="Auto" />
 
                                     <GridViewColumn Header="Category"
-                                                    DisplayMemberBinding="{Binding CategoryItemViewModel.Title}" />
+                                                    DisplayMemberBinding="{Binding CategoryItemViewModel.Title}"
+                                                    Width="Auto"  />
 
                                     <GridViewColumn Header="Type"
-                                                    DisplayMemberBinding="{Binding CategoryItemViewModel.Type}" />
+                                                    DisplayMemberBinding="{Binding CategoryItemViewModel.Type}"
+                                                    Width="Auto"  />
 
                                     <GridViewColumn Header="Amount"
-                                                    DisplayMemberBinding="{Binding Amount}" />
+                                                    DisplayMemberBinding="{Binding Amount}"
+                                                    Width="Auto" />
                                 </GridView>
                             </ListView.View>
                         </ListView>

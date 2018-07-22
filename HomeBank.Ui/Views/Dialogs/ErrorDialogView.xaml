@@ -1,0 +1,39 @@
+﻿<Window x:Class="HomeBank.Ui.Views.Dialogs.ErrorDialogView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        d:DesignHeight="200"
+        d:DesignWidth="350"
+        MaxHeight="200"
+        MaxWidth="350"
+        ResizeMode="NoResize"
+        Title="Error">
+    
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <ScrollViewer HorizontalScrollBarVisibility="Visible"
+                      VerticalScrollBarVisibility="Disabled">
+            <TextBlock x:Name="error"
+                       Margin="0 6 0 0"
+                       FontSize="18"
+                       Grid.Row="0"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center" />
+        </ScrollViewer>
+
+        <Button Grid.Row="1"
+                IsDefault="True"
+                Style="{DynamicResource MaterialDesignFlatButton}"
+                HorizontalAlignment="Right"
+                Margin="16 0 16 0"
+                Click="Ok_Click"
+                Content="OK" />
+    </Grid>
+</Window>

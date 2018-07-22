@@ -16,6 +16,8 @@ namespace HomeBank.Presentaion.ViewModels
 {
     public class TransactionViewModel : ViewModel
     {
+        private IDialogServiceFactory _yesNoDialogServiceFactory;
+
         private ITransactionRepository _transactionRepository;
         private ICategoryRepository _categoryRepository;
 
@@ -71,12 +73,13 @@ namespace HomeBank.Presentaion.ViewModels
 
         public static async Task<TransactionViewModel> CreateAsync(
             IEventBus eventBus,
+            IDialogServiceFactory yesNoDialogServiceFactory,
             ICategoryRepository categoryRepository,
             ITransactionRepository transactionRepository)
         {
-            if (eventBus == null)
+            if (yesNoDialogServiceFactory == null)
             {
-                throw new ArgumentNullException(nameof(eventBus));
+                throw new ArgumentNullException(nameof(yesNoDialogServiceFactory));
             }
 
             if (categoryRepository == null)
@@ -92,11 +95,18 @@ namespace HomeBank.Presentaion.ViewModels
             var categories = await categoryRepository.FindAsync();
             var transactions = await transactionRepository.FindAsync();
 
-            return new TransactionViewModel(eventBus, categoryRepository, transactionRepository, categories, transactions);
+            return new TransactionViewModel(
+                eventBus,
+                yesNoDialogServiceFactory,
+                categoryRepository,
+                transactionRepository,
+                categories,
+                transactions);
         }
 
         private TransactionViewModel(
             IEventBus eventBus,
+            IDialogServiceFactory yesNoDialogServiceFactory,
             ICategoryRepository categoryRepository,
             ITransactionRepository transactionRepository,
             IEnumerable<Category> categories,
@@ -112,6 +122,8 @@ namespace HomeBank.Presentaion.ViewModels
             {
                 throw new ArgumentNullException(nameof(transactions));
             }
+
+            _yesNoDialogServiceFactory = yesNoDialogServiceFactory;
 
             _transactionRepository = transactionRepository;
             _categoryRepository = categoryRepository;
@@ -279,10 +291,13 @@ namespace HomeBank.Presentaion.ViewModels
                     {
                         return;
                     }
-
-                    SelectedTransaction.OperationType = OperationType.Remove;
-                    var args = new TransactionOperationEventArgs(SelectedTransaction);
-                    EventBus.Notify(EventType.TransactionOperationExecuted, args);
+                    
+                    if (_yesNoDialogServiceFactory.Create().ShowDialog)
+                    {
+                        SelectedTransaction.OperationType = OperationType.Remove;
+                        var args = new TransactionOperationEventArgs(SelectedTransaction);
+                        EventBus.Notify(EventType.TransactionOperationExecuted, args);
+                    }
                 }));
             }
         }

@@ -1,0 +1,39 @@
+﻿<Window x:Class="HomeBank.Ui.Views.Dialogs.AreYouSureDialogView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        Title="Question"
+        MaxHeight="150"
+        MaxWidth="300"
+        ResizeMode="NoResize">
+    
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBlock Margin="0 6 0 0"
+                   FontSize="18"
+                   Grid.Row="0"
+                   HorizontalAlignment="Center"
+                   Text="Are you sure?" />
+
+        <Button Grid.Row="1"
+                IsDefault="True"
+                Style="{DynamicResource MaterialDesignFlatButton}"
+                HorizontalAlignment="Right"
+                Margin="16 0 16 0"
+                Click="Yes_Click" 
+                Content="Yes" />
+    </Grid>
+</Window>

@@ -36,7 +36,7 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <Grid Grid.Column="0">
+                        <Grid Grid.Column="2">
                             <ComboBox Margin="25 10 25 10"
                                       materialDesign:HintAssist.Hint="Type"
                                       materialDesign:HintAssist.IsFloating="True"
@@ -60,13 +60,16 @@
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="Category"
-                                                DisplayMemberBinding="{Binding CategoryItemViewModel.Title}" />
+                                                DisplayMemberBinding="{Binding CategoryItemViewModel.Title}"
+                                                Width="Auto" />
 
                                 <GridViewColumn Header="Type"
-                                                DisplayMemberBinding="{Binding CategoryItemViewModel.Type}" />
+                                                DisplayMemberBinding="{Binding CategoryItemViewModel.Type}"
+                                                Width="Auto" />
 
                                 <GridViewColumn Header="Cost"
-                                                DisplayMemberBinding="{Binding Cost}" />
+                                                DisplayMemberBinding="{Binding Cost}"
+                                                Width="Auto" />
                             </GridView>
                         </ListView.View>
                     </ListView>
