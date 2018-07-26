@@ -1,11 +1,14 @@
 ﻿using HomeBank.Data.Sqlite.Infrastructure;
 using HomeBank.Data.Sqlite.Storages.Converters;
+using HomeBank.Domain.DomainExceptions;
 using HomeBank.Domain.Infrastructure;
 using HomeBank.Domain.Queries;
 using NHibernate;
+using NHibernate.Exceptions;
 using NHibernate.Linq;
 using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,6 +16,8 @@ namespace HomeBank.Data.Sqlite.Storages
 {
     public sealed class SqliteCategoryRepository : ICategoryRepository
     {
+        private const int SqliteConstraintErrorCode = 19;
+
         private readonly IStatelessSession _session;
 
         public SqliteCategoryRepository(ISessionProvider sessionProvider)
@@ -104,7 +109,14 @@ namespace HomeBank.Data.Sqlite.Storages
 
             var category = CategoryConverter.Convert(entity);
 
-            await _session.DeleteAsync(category);
+            try
+            {
+                await _session.DeleteAsync(category);
+            }
+            catch (GenericADOException ex) when ((ex.InnerException as SQLiteException)?.ErrorCode == SqliteConstraintErrorCode)
+            {
+                throw new CategoryRelatedTransactionsException(null);
+            }
         }
 
         public async Task RemoveAsync(Guid id)

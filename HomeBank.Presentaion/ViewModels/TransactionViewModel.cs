@@ -18,6 +18,7 @@ namespace HomeBank.Presentaion.ViewModels
     {
         private IDialogServiceFactory _yesNoDialogServiceFactory;
 
+        private IUnitOfWorkFactory _unitOfWorkFactory;
         private ITransactionRepository _transactionRepository;
         private ICategoryRepository _categoryRepository;
 
@@ -71,15 +72,22 @@ namespace HomeBank.Presentaion.ViewModels
 
         public ObservableCollection<CategoryItemViewModel> Categories { get; set; }
 
+        // TODO: extract parameters to facade
         public static async Task<TransactionViewModel> CreateAsync(
             IEventBus eventBus,
             IDialogServiceFactory yesNoDialogServiceFactory,
+            IUnitOfWorkFactory unitOfWorkFactory,
             ICategoryRepository categoryRepository,
             ITransactionRepository transactionRepository)
         {
             if (yesNoDialogServiceFactory == null)
             {
                 throw new ArgumentNullException(nameof(yesNoDialogServiceFactory));
+            }
+
+            if (unitOfWorkFactory == null)
+            {
+                throw new ArgumentNullException(nameof(unitOfWorkFactory));
             }
 
             if (categoryRepository == null)
@@ -98,6 +106,7 @@ namespace HomeBank.Presentaion.ViewModels
             return new TransactionViewModel(
                 eventBus,
                 yesNoDialogServiceFactory,
+                unitOfWorkFactory,
                 categoryRepository,
                 transactionRepository,
                 categories,
@@ -107,6 +116,7 @@ namespace HomeBank.Presentaion.ViewModels
         private TransactionViewModel(
             IEventBus eventBus,
             IDialogServiceFactory yesNoDialogServiceFactory,
+            IUnitOfWorkFactory unitOfWorkFactory,
             ICategoryRepository categoryRepository,
             ITransactionRepository transactionRepository,
             IEnumerable<Category> categories,
@@ -125,6 +135,7 @@ namespace HomeBank.Presentaion.ViewModels
 
             _yesNoDialogServiceFactory = yesNoDialogServiceFactory;
 
+            _unitOfWorkFactory = unitOfWorkFactory;
             _transactionRepository = transactionRepository;
             _categoryRepository = categoryRepository;
 
@@ -170,7 +181,11 @@ namespace HomeBank.Presentaion.ViewModels
             var transactionOperationArgs = args as TransactionOperationEventArgs;
             if (transactionOperationArgs != null && transactionOperationArgs.Transaction.OperationType == OperationType.Remove)
             {
-                await _transactionRepository.RemoveAsync(transactionOperationArgs.Transaction.Id);
+                using (var unitOfWork = _unitOfWorkFactory.Create())
+                {
+                    await _transactionRepository.RemoveAsync(transactionOperationArgs.Transaction.Id);
+                    await unitOfWork.CommitAsync();
+                }
             }
         }
 
@@ -186,11 +201,19 @@ namespace HomeBank.Presentaion.ViewModels
             switch (transactionOperationArgs.Transaction.OperationType)
             {
                 case OperationType.Add:
-                    await _transactionRepository.CreateAsync(transaction);
+                    using (var unitOfWork = _unitOfWorkFactory.Create())
+                    {
+                        await _transactionRepository.CreateAsync(transaction);
+                        await unitOfWork.CommitAsync();
+                    }
                     break;
 
                 case OperationType.Edit:
-                    await _transactionRepository.ChangeAsync(transaction);
+                    using (var unitOfWork = _unitOfWorkFactory.Create())
+                    {
+                        await _transactionRepository.ChangeAsync(transaction);
+                        await unitOfWork.CommitAsync();
+                    }
                     break;
             }
         }

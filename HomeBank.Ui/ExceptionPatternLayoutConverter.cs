@@ -8,7 +8,7 @@ namespace HomeBank.Ui
     {
         protected override void Convert(TextWriter writer, LoggingEvent loggingEvent)
         {
-            var exData = loggingEvent.ExceptionObject.Data;
+            var exData = loggingEvent.ExceptionObject?.Data;
 
             if (exData != null)
             {

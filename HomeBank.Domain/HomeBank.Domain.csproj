@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DomainExceptions\CategoryRelatedTransactionsException.cs" />
     <Compile Include="DomainModels\Category.cs" />
     <Compile Include="DomainModels\IIdentify.cs" />
     <Compile Include="DomainModels\StatisticModels\CategoryStatistic.cs" />

@@ -16,6 +16,7 @@ using System.Threading;
 using System.Runtime.InteropServices;
 using System.Reflection;
 using log4net.Config;
+using HomeBank.Data.Sqlite.UnitOfWork;
 
 namespace HomeBank.Ui
 {
@@ -32,6 +33,7 @@ namespace HomeBank.Ui
         private ISessionFactoryProvider _sessionFactoryProvider;
         private ISessionProvider _sessionProvider;
 
+        private IUnitOfWorkFactory _unitOfWorkFactory;
         private ICategoryRepository _categoryRepository;
         private ITransactionRepository _transactionRepository;
 
@@ -65,6 +67,7 @@ namespace HomeBank.Ui
             _sessionFactoryProvider = new SessionFactoryProvider(_dbFile);
             _sessionProvider = new SessionProvider(_sessionFactoryProvider);
 
+            _unitOfWorkFactory = new UnitOfWorkFactory(_sessionProvider);
             _categoryRepository = new SqliteCategoryRepository(_sessionProvider);
             _transactionRepository = new SqliteTransactionRepository(_sessionProvider);
 
@@ -74,12 +77,15 @@ namespace HomeBank.Ui
             var categoryViewModel = await CategoryViewModel.CreateAsync(
                 _eventBus,
                 _yesNoDialogServiceFactory,
+                _errorDialogServiceFactory,
+                _unitOfWorkFactory,
                 _categoryRepository);
 
             var transactionItemViewModel = new TransactionItemViewModel(_eventBus, _transactionRepository, categoryViewModel.Categories);
             var transactionViewModel = await TransactionViewModel.CreateAsync(
                 _eventBus,
                 _yesNoDialogServiceFactory,
+                _unitOfWorkFactory,
                 _categoryRepository,
                 _transactionRepository);
 
@@ -163,6 +169,5 @@ namespace HomeBank.Ui
 
             base.OnExit(e);
         }
-
     }
 }

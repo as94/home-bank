@@ -1,4 +1,5 @@
-﻿using HomeBank.Domain.DomainModels;
+﻿using HomeBank.Domain.DomainExceptions;
+using HomeBank.Domain.DomainModels;
 using HomeBank.Domain.Infrastructure;
 using HomeBank.Domain.Queries;
 using HomeBank.Presentaion.Converters;
@@ -16,7 +17,9 @@ namespace HomeBank.Presentaion.ViewModels
     public class CategoryViewModel : ViewModel
     {
         private IDialogServiceFactory _yesNoDialogServiceFactory;
+        private IDialogServiceFactory _errorDialogServiceFactory;
 
+        private IUnitOfWorkFactory _unitOfWorkFactory;
         private ICategoryRepository _categoryRepository;
 
         public override string ViewModelName => nameof(CategoryViewModel);
@@ -40,14 +43,27 @@ namespace HomeBank.Presentaion.ViewModels
         public ObservableCollection<CategoryItemViewModel> Categories { get; set; }
         public CategoryItemViewModel SelectedCategory { get; set; }
 
+        // TODO: extract parameters to facade
         public static async Task<CategoryViewModel> CreateAsync(
             IEventBus eventBus,
             IDialogServiceFactory yesNoDialogServiceFactory,
+            IDialogServiceFactory errorDialogServiceFactory,
+            IUnitOfWorkFactory unitOfWorkFactory,
             ICategoryRepository categoryRepository)
         {
             if (yesNoDialogServiceFactory == null)
             {
                 throw new ArgumentNullException(nameof(yesNoDialogServiceFactory));
+            }
+
+            if (errorDialogServiceFactory == null)
+            {
+                throw new ArgumentNullException(nameof(errorDialogServiceFactory));
+            }
+
+            if (unitOfWorkFactory == null)
+            {
+                throw new ArgumentNullException(nameof(unitOfWorkFactory));
             }
 
             if (categoryRepository == null)
@@ -60,29 +76,30 @@ namespace HomeBank.Presentaion.ViewModels
             return new CategoryViewModel(
                 eventBus,
                 yesNoDialogServiceFactory,
+                errorDialogServiceFactory,
+                unitOfWorkFactory,
                 categoryRepository,
                 categories);
         }
 
-        public CategoryViewModel(
+        private CategoryViewModel(
             IEventBus eventBus,
             IDialogServiceFactory yesNoDialogServiceFactory,
+            IDialogServiceFactory errorDialogServiceFactory,
+            IUnitOfWorkFactory unitOfWorkFactory,
             ICategoryRepository categoryRepository,
             IEnumerable<Category> categories)
             : base(eventBus)
         {
-            if (categoryRepository == null)
-            {
-                throw new ArgumentNullException(nameof(categoryRepository));
-            }
-
             if (categories == null)
             {
                 throw new ArgumentNullException(nameof(categories));
             }
 
             _yesNoDialogServiceFactory = yesNoDialogServiceFactory;
+            _errorDialogServiceFactory = errorDialogServiceFactory;
 
+            _unitOfWorkFactory = unitOfWorkFactory;
             _categoryRepository = categoryRepository;
 
             Categories = new ObservableCollection<CategoryItemViewModel>();
@@ -118,7 +135,19 @@ namespace HomeBank.Presentaion.ViewModels
             var categoryOperationArgs = args as CategoryOperationEventArgs;
             if (categoryOperationArgs != null && categoryOperationArgs.Category.OperationType == OperationType.Remove)
             {
-                await _categoryRepository.RemoveAsync(categoryOperationArgs.Category.Id);
+                using (var unitOfWork = _unitOfWorkFactory.Create())
+                {
+                    try
+                    {
+                        await _categoryRepository.RemoveAsync(categoryOperationArgs.Category.Id);
+                        await unitOfWork.CommitAsync();
+                    }
+                    catch (CategoryRelatedTransactionsException ex)
+                    {
+                        var text = ex.Message;
+                        _errorDialogServiceFactory.Create(text);
+                    }
+                }
             }
         }
 
@@ -132,11 +161,19 @@ namespace HomeBank.Presentaion.ViewModels
                 switch (operationType)
                 {
                     case OperationType.Add:
-                        await _categoryRepository.CreateAsync(category);
+                        using (var unitOfWork = _unitOfWorkFactory.Create())
+                        {
+                            await _categoryRepository.CreateAsync(category);
+                            await unitOfWork.CommitAsync();
+                        }
                         break;
 
                     case OperationType.Edit:
-                        await _categoryRepository.ChangeAsync(category);
+                        using (var unitOfWork = _unitOfWorkFactory.Create())
+                        {
+                            await _categoryRepository.ChangeAsync(category);
+                            await unitOfWork.CommitAsync();
+                        }
                         break;
                 }
             }
