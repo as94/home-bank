@@ -80,8 +80,13 @@ namespace HomeBank.Presentaion.ViewModels
             switch (type)
             {
                 case EventType.CategoryStatisticFilterChanged:
+
+                case EventType.TransactionOperationExecuted:
                 case EventType.TransactionItemOperationExecuted:
+
+                case EventType.CategoryOperationExecuted:
                 case EventType.CategoryItemOperationExecuted:
+
                     var query = new Domain.Queries.CategoryStatisticQuery(type: Type.Convert());
                     var categoryStatistic = await _statisticService.GetCategoryStatisticAsync(query);
                     UpdateCategoryStatisticItems(categoryStatistic.StatisticItems);

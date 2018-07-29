@@ -115,7 +115,7 @@ namespace HomeBank.Data.Sqlite.Storages
             }
             catch (GenericADOException ex) when ((ex.InnerException as SQLiteException)?.ErrorCode == SqliteConstraintErrorCode)
             {
-                throw new CategoryRelatedTransactionsException(null);
+                throw new CategoryRelatedTransactionsException(entity);
             }
         }
 

@@ -12,7 +12,7 @@ namespace HomeBank.Data.Sqlite.Infrastructure
     {
         public ISessionFactory SessionFactory { get; }
 
-        public SessionFactoryProvider(string dbFile, bool overwriteExisting = false, bool isNew = false)
+        public SessionFactoryProvider(string dbFile, bool overwriteExisting = false)
         {
             if (string.IsNullOrEmpty(dbFile))
             {
@@ -22,25 +22,43 @@ namespace HomeBank.Data.Sqlite.Infrastructure
             SessionFactory = Fluently.Configure()
                 .Database(SQLiteConfiguration.Standard.UsingFile(dbFile))
                 .Mappings(m => m.FluentMappings.AddFromAssemblyOf<SessionFactoryProvider>())
-                .ExposeConfiguration(c => BuildScheme(c, dbFile, isNew, overwriteExisting))
+                .ExposeConfiguration(c => BuildScheme(c, dbFile, overwriteExisting))
                 .BuildSessionFactory();
         }
 
-        private void BuildScheme(Configuration config, string dbFile, bool overwriteExisting, bool isNew)
+        private void BuildScheme(Configuration config, string dbFile, bool overwriteExisting)
         {
             if (overwriteExisting)
             {
-                if (File.Exists(dbFile))
-                {
-                    File.Delete(dbFile);
-                }
+                DeleteDatabaseFileIfExists(dbFile);
+                CreateDatabase(config);
             }
-            
-            if (isNew)
+            else
             {
-                var schemaExport = new SchemaExport(config);
-                schemaExport.Create(useStdOut: false, execute: true);
+                CreateDatabaseIfNotExists(config, dbFile);
             }
+        }
+
+        private void DeleteDatabaseFileIfExists(string dbFile)
+        {
+            if (File.Exists(dbFile))
+            {
+                File.Delete(dbFile);
+            }
+        }
+
+        private void CreateDatabaseIfNotExists(Configuration config, string dbFile)
+        {
+            if (!File.Exists(dbFile))
+            {
+                CreateDatabase(config);
+            }
+        }
+
+        private static void CreateDatabase(Configuration config)
+        {
+            var schemaExport = new SchemaExport(config);
+            schemaExport.Create(useStdOut: false, execute: true);
         }
     }
 }

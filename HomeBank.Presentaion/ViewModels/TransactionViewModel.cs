@@ -257,7 +257,7 @@ namespace HomeBank.Presentaion.ViewModels
                     Id = transaction.Id,
                     Date = transaction.Date,
                     Amount = transaction.Amount,
-                    CategoryItemViewModel = Categories.FirstOrDefault(c => c.Id == transaction.Category.Id)
+                    CategoryItemViewModel = Categories.FirstOrDefault(c => c.Id == transaction.Category?.Id)
                 };
 
                 Transactions.Add(view);
