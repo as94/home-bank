@@ -36,7 +36,7 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <Grid Grid.Column="2">
+                        <Grid Grid.Column="0">
                             <ComboBox Margin="25 10 25 10"
                                       materialDesign:HintAssist.Hint="Type"
                                       materialDesign:HintAssist.IsFloating="True"
@@ -44,6 +44,22 @@
                                       SelectedItem="{Binding Type,
                                                             UpdateSourceTrigger=PropertyChanged,
                                                             ValidatesOnDataErrors=True}" />
+                        </Grid>
+
+                        <Grid Grid.Column="1">
+                            <DatePicker Margin="5 25 5 10"
+                                        materialDesign:HintAssist.Hint="Start Date"
+                                        materialDesign:HintAssist.IsFloating="True"
+                                        SelectedDate="{Binding StartDate}" />
+
+                        </Grid>
+
+                        <Grid Grid.Column="2">
+                            <DatePicker Margin="5 25 5 10"
+                                        materialDesign:HintAssist.Hint="End Date"
+                                        materialDesign:HintAssist.IsFloating="True"
+                                        SelectedDate="{Binding EndDate}" />
+
                         </Grid>
                     </Grid>
 

@@ -13,7 +13,7 @@ namespace HomeBank.Data.Sqlite.Test.StoragesTests.Transactions
         public async Task FindByDateTest()
         {
             var date = new DateTime(2018, 1, 1);
-            var dateQuery = new DateQuery(2018, 1, 1);
+            var dateQuery = new DateQuery(date);
 
             var category = CategoryData.CreateCategory(Guid.NewGuid());
 
@@ -29,7 +29,9 @@ namespace HomeBank.Data.Sqlite.Test.StoragesTests.Transactions
             await CommitCreateAsync(transaction3);
             await CommitCreateAsync(transaction4);
 
-            var foundTransactions = await TransactionRepository.FindAsync(new Domain.Queries.TransactionQuery(dateQuery));
+            var foundTransactions = await TransactionRepository.FindAsync(
+                new TransactionQuery(new DateRangeQuery(dateQuery, dateQuery)));
+
             Assert.That(foundTransactions, Is.EquivalentTo(new[] { transaction1 }));
         }
 
@@ -116,7 +118,7 @@ namespace HomeBank.Data.Sqlite.Test.StoragesTests.Transactions
             await CommitCreateAsync(transaction4);
 
             var query = new Domain.Queries.TransactionQuery(
-                dateQuery: new DateQuery(date3),
+                dateRangeQuery: new DateRangeQuery(new DateQuery(date3), new DateQuery(date3)),
                 type: Domain.Enums.CategoryType.Expenditure,
                 category: category3);
 

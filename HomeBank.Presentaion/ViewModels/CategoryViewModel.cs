@@ -16,11 +16,11 @@ namespace HomeBank.Presentaion.ViewModels
 {
     public class CategoryViewModel : ViewModel
     {
-        private IDialogServiceFactory _yesNoDialogServiceFactory;
-        private IDialogServiceFactory _errorDialogServiceFactory;
+        private readonly IDialogServiceFactory _yesNoDialogServiceFactory;
+        private readonly IDialogServiceFactory _errorDialogServiceFactory;
 
-        private IUnitOfWorkFactory _unitOfWorkFactory;
-        private ICategoryRepository _categoryRepository;
+        private readonly IUnitOfWorkFactory _unitOfWorkFactory;
+        private readonly ICategoryRepository _categoryRepository;
 
         public override string ViewModelName => nameof(CategoryViewModel);
 
@@ -42,8 +42,7 @@ namespace HomeBank.Presentaion.ViewModels
 
         public ObservableCollection<CategoryItemViewModel> Categories { get; set; }
         public CategoryItemViewModel SelectedCategory { get; set; }
-
-        // TODO: extract parameters to facade
+        
         public static async Task<CategoryViewModel> CreateAsync(
             IEventBus eventBus,
             IDialogServiceFactory yesNoDialogServiceFactory,
@@ -132,8 +131,7 @@ namespace HomeBank.Presentaion.ViewModels
 
         private async Task OnCategoryOperationExecutedAsync(EventArgs args)
         {
-            var categoryOperationArgs = args as CategoryOperationEventArgs;
-            if (categoryOperationArgs != null && categoryOperationArgs.Category.OperationType == OperationType.Remove)
+            if (args is CategoryOperationEventArgs categoryOperationArgs && categoryOperationArgs.Category.OperationType == OperationType.Remove)
             {
                 using (var unitOfWork = _unitOfWorkFactory.Create())
                 {
@@ -153,8 +151,7 @@ namespace HomeBank.Presentaion.ViewModels
 
         private async Task OnCategoryItemOperationExecuted(EventArgs args)
         {
-            var categoryOperationArgs = args as CategoryOperationEventArgs;
-            if (categoryOperationArgs != null)
+            if (args is CategoryOperationEventArgs categoryOperationArgs)
             {
                 var operationType = categoryOperationArgs.Category.OperationType;
                 var category = categoryOperationArgs.Category.ToDomain();

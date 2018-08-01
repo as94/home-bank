@@ -5,14 +5,14 @@ namespace HomeBank.Domain.Queries
 {
     public sealed class TransactionQuery
     {
-        public TransactionQuery(DateQuery dateQuery = null, CategoryType? type = null, Category category = null)
+        public TransactionQuery(DateRangeQuery dateRangeQuery = null, CategoryType? type = null, Category category = null)
         {
-            DateQuery = dateQuery;
+            DateRangeQuery = dateRangeQuery;
             Type = type;
             Category = category;
         }
 
-        public DateQuery DateQuery { get; }
+        public DateRangeQuery DateRangeQuery { get; }
         public CategoryType? Type { get; }
         public Category Category { get; }
     }

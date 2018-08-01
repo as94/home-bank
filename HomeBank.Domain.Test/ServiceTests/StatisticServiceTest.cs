@@ -6,6 +6,7 @@ using HomeBank.Domain.Test.FakeStorages;
 using NUnit.Framework;
 using System;
 using System.Threading.Tasks;
+using HomeBank.Domain.Queries;
 
 namespace HomeBank.Domain.Test.ServiceTests
 {
@@ -25,7 +26,7 @@ namespace HomeBank.Domain.Test.ServiceTests
         }
 
         [Test]
-        public async Task GetCategoryStatisticByYearTest()
+        public async Task GetCategoryStatisticByDateTest()
         {
             var category1 = CategoryData.CreateCategory(Guid.NewGuid(), "Products", "Orange", Enums.CategoryType.Expenditure);
             var category2 = CategoryData.CreateCategory(Guid.NewGuid(), "Products", "Cheese", Enums.CategoryType.Expenditure);
@@ -41,71 +42,10 @@ namespace HomeBank.Domain.Test.ServiceTests
             await _transactionRepository.CreateAsync(transaction2);
             await _transactionRepository.CreateAsync(transaction3);
 
-            var query = new Queries.CategoryStatisticQuery(new Queries.DateQuery(year: 2018), Enums.CategoryType.Expenditure);
-            var statistic = await _statisticService.GetCategoryStatisticAsync(query);
+            var query = new CategoryStatisticQuery(
+                new DateRangeQuery(new DateQuery(date), new DateQuery(date)),
+                Enums.CategoryType.Expenditure);
 
-            var expected = new CategoryStatistic(new[]
-            {
-                new CategoryStatisticItem(category1, 200),
-                new CategoryStatisticItem(category2, 100)
-            },
-            300);
-
-            var actual = statistic;
-
-            Assert.That(expected, Is.EqualTo(actual));
-        }
-
-        [Test]
-        public async Task GetCategoryStatisticByMonthTest()
-        {
-            var category1 = CategoryData.CreateCategory(Guid.NewGuid(), "Products", "Orange", Enums.CategoryType.Expenditure);
-            var category2 = CategoryData.CreateCategory(Guid.NewGuid(), "Products", "Cheese", Enums.CategoryType.Expenditure);
-            var date = new DateTime(2018, 5, 1);
-
-            var transaction0 = TransactionData.CreateTransaction(Guid.NewGuid(), date, 200, category1);
-            var transaction1 = TransactionData.CreateTransaction(Guid.NewGuid(), date, 100, category2);
-            var transaction2 = TransactionData.CreateTransaction(Guid.NewGuid(), new DateTime(2018, 6, 1));
-            var transaction3 = TransactionData.CreateTransaction(Guid.NewGuid(), new DateTime(2018, 4, 1));
-
-            await _transactionRepository.CreateAsync(transaction0);
-            await _transactionRepository.CreateAsync(transaction1);
-            await _transactionRepository.CreateAsync(transaction2);
-            await _transactionRepository.CreateAsync(transaction3);
-
-            var query = new Queries.CategoryStatisticQuery(new Queries.DateQuery(month: 5), Enums.CategoryType.Expenditure);
-            var statistic = await _statisticService.GetCategoryStatisticAsync(query);
-
-            var expected = new CategoryStatistic(new[]
-            {
-                new CategoryStatisticItem(category1, 200),
-                new CategoryStatisticItem(category2, 100)
-            },
-            300);
-
-            var actual = statistic;
-
-            Assert.That(expected, Is.EqualTo(actual));
-        }
-
-        [Test]
-        public async Task GetCategoryStatisticByDayTest()
-        {
-            var category1 = CategoryData.CreateCategory(Guid.NewGuid(), "Products", "Orange", Enums.CategoryType.Expenditure);
-            var category2 = CategoryData.CreateCategory(Guid.NewGuid(), "Products", "Cheese", Enums.CategoryType.Expenditure);
-            var date = new DateTime(2018, 1, 1);
-
-            var transaction0 = TransactionData.CreateTransaction(Guid.NewGuid(), date, 200, category1);
-            var transaction1 = TransactionData.CreateTransaction(Guid.NewGuid(), date, 100, category2);
-            var transaction2 = TransactionData.CreateTransaction(Guid.NewGuid(), new DateTime(2018, 1, 2));
-            var transaction3 = TransactionData.CreateTransaction(Guid.NewGuid(), new DateTime(2018, 1, 3));
-
-            await _transactionRepository.CreateAsync(transaction0);
-            await _transactionRepository.CreateAsync(transaction1);
-            await _transactionRepository.CreateAsync(transaction2);
-            await _transactionRepository.CreateAsync(transaction3);
-
-            var query = new Queries.CategoryStatisticQuery(new Queries.DateQuery(day: 1), Enums.CategoryType.Expenditure);
             var statistic = await _statisticService.GetCategoryStatisticAsync(query);
 
             var expected = new CategoryStatistic(new[]

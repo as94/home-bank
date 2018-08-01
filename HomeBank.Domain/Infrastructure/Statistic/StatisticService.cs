@@ -23,7 +23,10 @@ namespace HomeBank.Domain.Infrastructure.Statistic
 
         public async Task<CategoryStatistic> GetCategoryStatisticAsync(CategoryStatisticQuery query = null)
         {
-            var transactionQuery = new TransactionQuery(dateQuery: query?.DateQuery, type: query?.CategoryType);
+            var transactionQuery = new TransactionQuery(
+                dateRangeQuery: query?.DateRangeQuery,
+                type: query?.CategoryType);
+
             var transactions = await _transactionRepository.FindAsync(transactionQuery);
 
             var statisticItems = transactions
@@ -31,14 +34,15 @@ namespace HomeBank.Domain.Infrastructure.Statistic
                 .GroupBy(t => t.Category)
                 .Select(g => new CategoryStatisticItem(
                     category: g.Key,
-                    cost: g.Select(c => c.Amount).Sum()));
+                    cost: g.Select(c => c.Amount).Sum()))
+                .ToArray();
 
             decimal total = GetTotal(query, statisticItems);
 
             return new CategoryStatistic(statisticItems, total);
         }
 
-        private static decimal GetTotal(CategoryStatisticQuery query, IEnumerable<CategoryStatisticItem> statisticItems)
+        private static decimal GetTotal(CategoryStatisticQuery query, CategoryStatisticItem[] statisticItems)
         {
             decimal total = 0;
 
@@ -64,7 +68,7 @@ namespace HomeBank.Domain.Infrastructure.Statistic
 
         private static bool IsDifferenceTotal(CategoryStatisticQuery query)
         {
-            return query == null || query.CategoryType == null || query.CategoryType == Enums.CategoryType.None;
+            return query?.CategoryType == null || query.CategoryType == Enums.CategoryType.None;
         }
     }
 }

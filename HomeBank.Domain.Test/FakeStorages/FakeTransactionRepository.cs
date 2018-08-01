@@ -41,20 +41,7 @@ namespace HomeBank.Domain.Test.FakeStorages
 
                 if (query != null)
                 {
-                    if (query.DateQuery.Year != null)
-                    {
-                        result = result.Where(t => t.Date.Year == query.DateQuery.Year);
-                    }
-
-                    if (query.DateQuery.Month != null)
-                    {
-                        result = result.Where(t => t.Date.Month == query.DateQuery.Month);
-                    }
-
-                    if (query.DateQuery.Day != null)
-                    {
-                        result = result.Where(t => t.Date.Day == query.DateQuery.Day);
-                    }
+                    result = GetQueryBuilder(result, query.DateRangeQuery);
 
                     if (query.Type != null)
                     {
@@ -118,6 +105,24 @@ namespace HomeBank.Domain.Test.FakeStorages
             }
 
             await Task.Run(() => _transaction.Remove(entity));
+        }
+
+        private static IEnumerable<Transaction> GetQueryBuilder(IEnumerable<Transaction> result, DateRangeQuery dateRangeQuery)
+        {
+            if (dateRangeQuery != null)
+            {
+                if (dateRangeQuery.StartDate?.Date != null)
+                {
+                    result = result.Where(t => t.Date >= dateRangeQuery.StartDate.Date.Value);
+                }
+
+                if (dateRangeQuery.EndDate?.Date != null)
+                {
+                    result = result.Where(t => t.Date <= dateRangeQuery.EndDate.Date.Value);
+                }
+            }
+
+            return result;
         }
     }
 }

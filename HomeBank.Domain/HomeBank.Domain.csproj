@@ -58,6 +58,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\CategoryQuery.cs" />
     <Compile Include="Queries\DateQuery.cs" />
+    <Compile Include="Queries\DateRangeQuery.cs" />
     <Compile Include="Queries\TransactionQuery.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

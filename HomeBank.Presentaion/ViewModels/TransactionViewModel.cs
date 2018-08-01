@@ -16,24 +16,38 @@ namespace HomeBank.Presentaion.ViewModels
 {
     public class TransactionViewModel : ViewModel
     {
-        private IDialogServiceFactory _yesNoDialogServiceFactory;
+        private readonly IDialogServiceFactory _yesNoDialogServiceFactory;
 
-        private IUnitOfWorkFactory _unitOfWorkFactory;
-        private ITransactionRepository _transactionRepository;
-        private ICategoryRepository _categoryRepository;
+        private readonly IUnitOfWorkFactory _unitOfWorkFactory;
+        private readonly ITransactionRepository _transactionRepository;
+        private readonly ICategoryRepository _categoryRepository;
 
         public override string ViewModelName => nameof(TransactionViewModel);
 
         public static IEnumerable<CategoryTypeFilter> CategoryTypes => Utils.CategoryTypes.Filters;
 
-        private DateTime? _date;
-        public DateTime? Date
+        private DateTime? _startDate;
+        public DateTime? StartDate
         {
-            get => _date;
+            get => _startDate;
             set
             {
-                if (_date == value) return;
-                _date = value;
+                if (_startDate == value) return;
+                _startDate = value;
+                OnPropertyChanged();
+
+                EventBus.Notify(EventType.TransactionFilterChanged);
+            }
+        }
+
+        private DateTime? _endDate;
+        public DateTime? EndDate
+        {
+            get => _endDate;
+            set
+            {
+                if (_endDate == value) return;
+                _endDate = value;
                 OnPropertyChanged();
 
                 EventBus.Notify(EventType.TransactionFilterChanged);
@@ -72,7 +86,6 @@ namespace HomeBank.Presentaion.ViewModels
 
         public ObservableCollection<CategoryItemViewModel> Categories { get; set; }
 
-        // TODO: extract parameters to facade
         public static async Task<TransactionViewModel> CreateAsync(
             IEventBus eventBus,
             IDialogServiceFactory yesNoDialogServiceFactory,
@@ -154,32 +167,43 @@ namespace HomeBank.Presentaion.ViewModels
             {
                 case EventType.TransactionOperationExecuted:
                     await OnTransactionOperationExecuted(args);
-                    UpdateTransactions(await _transactionRepository.FindAsync(new TransactionQuery(new DateQuery(Date), Type.Convert())));
+                    UpdateTransactions(await _transactionRepository.FindAsync(
+                        new TransactionQuery(
+                            dateRangeQuery: new DateRangeQuery(StartDate, EndDate),
+                            type: Type.Convert())));
                     break;
 
                 case EventType.TransactionItemOperationExecuted:
                     await OnTransactionItemOperationExecuted(args);
                     UpdateCategories(await _categoryRepository.FindAsync());
-                    UpdateTransactions(await _transactionRepository.FindAsync(new TransactionQuery(new DateQuery(Date), Type.Convert())));
+                    UpdateTransactions(await _transactionRepository.FindAsync(
+                        new TransactionQuery(
+                            dateRangeQuery: new DateRangeQuery(StartDate, EndDate),
+                            type: Type.Convert())));
                     break;
 
                 case EventType.TransactionFilterChanged:
                 case EventType.TransactionBackExecuted:
-                    UpdateTransactions(await _transactionRepository.FindAsync(new TransactionQuery(new DateQuery(Date), Type.Convert())));
+                    UpdateTransactions(await _transactionRepository.FindAsync(
+                        new TransactionQuery(
+                            dateRangeQuery: new DateRangeQuery(StartDate, EndDate),
+                            type: Type.Convert())));
                     break;
 
                 case EventType.CategoryOperationExecuted:
                 case EventType.CategoryItemOperationExecuted:
                     UpdateCategories(await _categoryRepository.FindAsync());
-                    UpdateTransactions(await _transactionRepository.FindAsync(new TransactionQuery(new DateQuery(Date), Type.Convert())));
+                    UpdateTransactions(await _transactionRepository.FindAsync(
+                        new TransactionQuery(
+                            dateRangeQuery: new DateRangeQuery(StartDate, EndDate),
+                            type: Type.Convert())));
                     break;
             }
         }
 
         private async Task OnTransactionOperationExecuted(EventArgs args)
         {
-            var transactionOperationArgs = args as TransactionOperationEventArgs;
-            if (transactionOperationArgs != null && transactionOperationArgs.Transaction.OperationType == OperationType.Remove)
+            if (args is TransactionOperationEventArgs transactionOperationArgs && transactionOperationArgs.Transaction.OperationType == OperationType.Remove)
             {
                 using (var unitOfWork = _unitOfWorkFactory.Create())
                 {
@@ -314,7 +338,7 @@ namespace HomeBank.Presentaion.ViewModels
                     {
                         return;
                     }
-                    
+
                     if (_yesNoDialogServiceFactory.Create().ShowDialog)
                     {
                         SelectedTransaction.OperationType = OperationType.Remove;

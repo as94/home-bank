@@ -10,7 +10,7 @@ namespace HomeBank.Ui.Views
     /// </summary>
     public partial class MainView : Window
     {
-        private MainViewModel _mainViewModel;
+        private readonly MainViewModel _mainViewModel;
 
         public MainView(MainViewModel mainViewModel)
         {

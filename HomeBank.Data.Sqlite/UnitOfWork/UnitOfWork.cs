@@ -8,7 +8,7 @@ namespace HomeBank.Data.Sqlite.UnitOfWork
 {
     public sealed class UnitOfWork : IUnitOfWork
     {
-        private ITransaction _transaction;
+        private readonly ITransaction _transaction;
 
         public UnitOfWork(ISessionProvider sessionProvider)
         {

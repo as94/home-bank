@@ -7,18 +7,19 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using HomeBank.Domain.Queries;
 
 namespace HomeBank.Presentaion.ViewModels
 {
     public class StatisticViewModel : ViewModel
     {
-        private IStatisticService _statisticService;
+        private readonly IStatisticService _statisticService;
 
         public override string ViewModelName => nameof(StatisticViewModel);
 
         public static IEnumerable<CategoryTypeFilter> CategoryTypes => Utils.CategoryTypes.Filters;
 
-        private CategoryTypeFilter _type = CategoryTypeFilter.All;
+        private CategoryTypeFilter _type;
         public CategoryTypeFilter Type
         {
             get => _type;
@@ -26,6 +27,34 @@ namespace HomeBank.Presentaion.ViewModels
             {
                 if (_type == value) return;
                 _type = value;
+                OnPropertyChanged();
+
+                EventBus.Notify(EventType.CategoryStatisticFilterChanged);
+            }
+        }
+
+        private DateTime? _startDate;
+        public DateTime? StartDate
+        {
+            get => _startDate;
+            set
+            {
+                if (_startDate == value) return;
+                _startDate = value;
+                OnPropertyChanged();
+
+                EventBus.Notify(EventType.CategoryStatisticFilterChanged);
+            }
+        }
+
+        private DateTime? _endDate;
+        public DateTime? EndDate
+        {
+            get => _endDate;
+            set
+            {
+                if (_endDate == value) return;
+                _endDate = value;
                 OnPropertyChanged();
 
                 EventBus.Notify(EventType.CategoryStatisticFilterChanged);
@@ -53,7 +82,8 @@ namespace HomeBank.Presentaion.ViewModels
             return new StatisticViewModel(eventBus, statisticService, categoryStatistic);
         }
 
-        private StatisticViewModel(IEventBus eventBus, IStatisticService statisticService, CategoryStatistic categoryStatistic) : base(eventBus)
+        private StatisticViewModel(IEventBus eventBus, IStatisticService statisticService, CategoryStatistic categoryStatistic)
+            : base(eventBus)
         {
             if (statisticService == null)
             {
@@ -87,7 +117,10 @@ namespace HomeBank.Presentaion.ViewModels
                 case EventType.CategoryOperationExecuted:
                 case EventType.CategoryItemOperationExecuted:
 
-                    var query = new Domain.Queries.CategoryStatisticQuery(type: Type.Convert());
+                    var query = new CategoryStatisticQuery(
+                        dateRangeQuery: new DateRangeQuery(StartDate, EndDate),
+                        type: Type.Convert());
+
                     var categoryStatistic = await _statisticService.GetCategoryStatisticAsync(query);
                     UpdateCategoryStatisticItems(categoryStatistic.StatisticItems);
                     UpdateTotal(categoryStatistic.Total);

@@ -32,23 +32,7 @@ namespace HomeBank.Data.Sqlite.Storages
 
             if (query != null)
             {
-                if (query.DateQuery != null)
-                {
-                    if (query.DateQuery.Year != null)
-                    {
-                        queryBuilder = queryBuilder.Where(t => t.Date.Year == query.DateQuery.Year);
-                    }
-
-                    if (query.DateQuery.Month != null)
-                    {
-                        queryBuilder = queryBuilder.Where(t => t.Date.Month == query.DateQuery.Month);
-                    }
-
-                    if (query.DateQuery.Day != null)
-                    {
-                        queryBuilder = queryBuilder.Where(t => t.Date.Day == query.DateQuery.Day);
-                    }
-                }
+                queryBuilder = GetQueryBuilder(queryBuilder, query.DateRangeQuery);
 
                 if (query.Type != null)
                 {
@@ -141,6 +125,24 @@ namespace HomeBank.Data.Sqlite.Storages
             }
 
             await RemoveAsync(transaction);
+        }
+
+        private static IQueryable<Models.Transaction> GetQueryBuilder(IQueryable<Models.Transaction> queryBuilder, DateRangeQuery dateRangeQuery)
+        {
+            if (dateRangeQuery != null)
+            {
+                if (dateRangeQuery.StartDate?.Date != null)
+                {
+                    queryBuilder = queryBuilder.Where(t => t.Date >= dateRangeQuery.StartDate.Date.Value);
+                }
+
+                if (dateRangeQuery.EndDate?.Date != null)
+                {
+                    queryBuilder = queryBuilder.Where(t => t.Date <= dateRangeQuery.EndDate.Date.Value);
+                }
+            }
+
+            return queryBuilder;
         }
     }
 }

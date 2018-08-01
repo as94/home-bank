@@ -4,13 +4,13 @@ namespace HomeBank.Domain.Queries
 {
     public sealed class CategoryStatisticQuery
     {
-        public CategoryStatisticQuery(DateQuery dateQuery = null, CategoryType? type = null)
+        public CategoryStatisticQuery(DateRangeQuery dateRangeQuery = null, CategoryType? type = null)
         {
-            DateQuery = dateQuery;
+            DateRangeQuery = dateRangeQuery;
             CategoryType = type;
         }
 
-        public DateQuery DateQuery { get; }
+        public DateRangeQuery DateRangeQuery { get; }
 
         public CategoryType? CategoryType { get; }
     }

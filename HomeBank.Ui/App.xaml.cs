@@ -27,7 +27,7 @@ namespace HomeBank.Ui
     {
         private bool _isOwner;
         private Mutex _appMutex;
-        private static readonly ILog _log = LogManager.GetLogger(typeof(App));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(App));
 
         private string _dbFile;
         private ISessionFactoryProvider _sessionFactoryProvider;
@@ -39,9 +39,9 @@ namespace HomeBank.Ui
 
         private IStatisticService _statisticService;
 
-        private IEventBus _eventBus = new EventBus();
-        private IDialogServiceFactory _yesNoDialogServiceFactory = new YesNoDialogServiceFactory();
-        private IDialogServiceFactory _errorDialogServiceFactory = new ErrorDialogServiceFactory();
+        private readonly IEventBus _eventBus = new EventBus();
+        private readonly IDialogServiceFactory _yesNoDialogServiceFactory = new YesNoDialogServiceFactory();
+        private readonly IDialogServiceFactory _errorDialogServiceFactory = new ErrorDialogServiceFactory();
 
         private MainViewModel _mainViewModel;
         private MainView _mainView;
@@ -90,6 +90,9 @@ namespace HomeBank.Ui
                 _transactionRepository);
 
             var statisticViewModel = await StatisticViewModel.CreateAsync(_eventBus, _statisticService);
+            statisticViewModel.Type = CategoryTypeFilter.All;
+            statisticViewModel.StartDate = DateTime.Now;
+            statisticViewModel.EndDate = DateTime.Now;
 
             var childrenViewModels = new ViewModel[]
             {
@@ -111,7 +114,8 @@ namespace HomeBank.Ui
                     _transactionRepository);
 
                 transactionViewModel.Type = CategoryTypeFilter.All;
-                transactionViewModel.Date = DateTime.Now;
+                transactionViewModel.StartDate = DateTime.Now;
+                transactionViewModel.EndDate = DateTime.Now;
 
                 _mainView = new MainView(_mainViewModel);
 
@@ -125,8 +129,7 @@ namespace HomeBank.Ui
         {
             AppDomain.CurrentDomain.UnhandledException += (s, e) =>
             {
-                var ex = e.ExceptionObject as Exception;
-                if (ex != null)
+                if (e.ExceptionObject is Exception ex)
                 {
                     OnException(ex);
                 }
@@ -146,7 +149,7 @@ namespace HomeBank.Ui
 
         private void OnException(Exception ex)
         {
-            _log.Fatal(ex.Message, ex);
+            Log.Fatal(ex.Message, ex);
 
             var text = "Error occured.\nFile \"err.txt\" contains details.";
             if (_errorDialogServiceFactory.Create(text).ShowDialog)

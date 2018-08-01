@@ -11,21 +11,15 @@ namespace HomeBank.Domain.Queries
                 Year = date.Value.Year;
                 Month = date.Value.Month;
                 Day = date.Value.Day;
+
+                Date = new DateTime(Year, Month, Day);
             }
         }
 
-        public DateQuery(
-            int? year = null,
-            int? month = null,
-            int? day = null)
-        {
-            Year = year;
-            Month = month;
-            Day = day;
-        }
+        public int Year { get; }
+        public int Month { get; }
+        public int Day { get; }
 
-        public int? Year { get; }
-        public int? Month { get; }
-        public int? Day { get; }
+        public DateTime? Date { get; }
     }
 }
