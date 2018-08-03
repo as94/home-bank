@@ -118,7 +118,7 @@ namespace HomeBank.Presentaion.ViewModels
                 case EventType.CategoryItemOperationExecuted:
 
                     var query = new CategoryStatisticQuery(
-                        dateRangeQuery: new DateRangeQuery(StartDate, EndDate),
+                        dateRangeQuery: new DateRangeQuery(StartDate, EndDate?.AddDays(1)),
                         type: Type.Convert());
 
                     var categoryStatistic = await _statisticService.GetCategoryStatisticAsync(query);

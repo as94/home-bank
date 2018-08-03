@@ -163,40 +163,32 @@ namespace HomeBank.Presentaion.ViewModels
 
         private async void EventBus_EventOccured(EventType type, EventArgs args = null)
         {
+            var query = new TransactionQuery(
+                dateRangeQuery: new DateRangeQuery(StartDate, EndDate?.AddDays(1)),
+                type: Type.Convert());
+            
             switch (type)
             {
                 case EventType.TransactionOperationExecuted:
                     await OnTransactionOperationExecuted(args);
-                    UpdateTransactions(await _transactionRepository.FindAsync(
-                        new TransactionQuery(
-                            dateRangeQuery: new DateRangeQuery(StartDate, EndDate),
-                            type: Type.Convert())));
+                    UpdateTransactions(await _transactionRepository.FindAsync(query));
                     break;
 
                 case EventType.TransactionItemOperationExecuted:
                     await OnTransactionItemOperationExecuted(args);
                     UpdateCategories(await _categoryRepository.FindAsync());
-                    UpdateTransactions(await _transactionRepository.FindAsync(
-                        new TransactionQuery(
-                            dateRangeQuery: new DateRangeQuery(StartDate, EndDate),
-                            type: Type.Convert())));
+                    UpdateTransactions(await _transactionRepository.FindAsync(query));
                     break;
 
                 case EventType.TransactionFilterChanged:
                 case EventType.TransactionBackExecuted:
-                    UpdateTransactions(await _transactionRepository.FindAsync(
-                        new TransactionQuery(
-                            dateRangeQuery: new DateRangeQuery(StartDate, EndDate),
-                            type: Type.Convert())));
+                    UpdateTransactions(await _transactionRepository.FindAsync(query));
                     break;
 
                 case EventType.CategoryOperationExecuted:
                 case EventType.CategoryItemOperationExecuted:
                     UpdateCategories(await _categoryRepository.FindAsync());
-                    UpdateTransactions(await _transactionRepository.FindAsync(
-                        new TransactionQuery(
-                            dateRangeQuery: new DateRangeQuery(StartDate, EndDate),
-                            type: Type.Convert())));
+                    UpdateTransactions(await _transactionRepository.FindAsync(query));
                     break;
             }
         }
