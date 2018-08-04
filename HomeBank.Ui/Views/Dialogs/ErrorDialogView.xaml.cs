@@ -1,5 +1,5 @@
-﻿using HomeBank.Presentaion.Infrastructure;
-using System.Windows;
+﻿using System.Windows;
+using HomeBank.Presentation.Infrastructure;
 
 namespace HomeBank.Ui.Views.Dialogs
 {

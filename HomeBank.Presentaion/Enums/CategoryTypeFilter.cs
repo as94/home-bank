@@ -1,4 +1,4 @@
-﻿namespace HomeBank.Presentaion.Enums
+﻿namespace HomeBank.Presentation.Enums
 {
     public enum CategoryTypeFilter
     {

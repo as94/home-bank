@@ -1,6 +1,6 @@
-﻿using HomeBank.Presentaion.Infrastructure;
-using HomeBank.Ui.Views.Dialogs;
+﻿using HomeBank.Ui.Views.Dialogs;
 using System;
+using HomeBank.Presentation.Infrastructure;
 
 namespace HomeBank.Ui.Implementations
 {

@@ -1,12 +1,12 @@
-﻿using HomeBank.Domain.Enums;
-using HomeBank.Presentaion.Enums;
-using HomeBank.Presentaion.EventArguments;
-using HomeBank.Presentaion.Infrastructure;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows.Input;
+using HomeBank.Domain.Enums;
+using HomeBank.Presentation.Enums;
+using HomeBank.Presentation.EventArguments;
+using HomeBank.Presentation.Infrastructure;
 
-namespace HomeBank.Presentaion.ViewModels
+namespace HomeBank.Presentation.ViewModels
 {
     public class CategoryItemViewModel : ViewModel
     {

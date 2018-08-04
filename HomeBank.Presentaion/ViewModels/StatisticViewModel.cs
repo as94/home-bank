@@ -1,17 +1,17 @@
-﻿using HomeBank.Domain.DomainModels.StatisticModels;
-using HomeBank.Domain.Infrastructure.Statistic;
-using HomeBank.Presentaion.Converters;
-using HomeBank.Presentaion.Enums;
-using HomeBank.Presentaion.Infrastructure;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using HomeBank.Domain.DomainModels.StatisticModels;
+using HomeBank.Domain.Infrastructure.Statistic;
 using HomeBank.Domain.Queries;
+using HomeBank.Presentation.Converters;
+using HomeBank.Presentation.Enums;
+using HomeBank.Presentation.Infrastructure;
 using OxyPlot;
 using OxyPlot.Series;
 
-namespace HomeBank.Presentaion.ViewModels
+namespace HomeBank.Presentation.ViewModels
 {
     public class StatisticViewModel : ViewModel
     {

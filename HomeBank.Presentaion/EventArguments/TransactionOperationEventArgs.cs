@@ -1,7 +1,7 @@
-﻿using HomeBank.Presentaion.ViewModels;
-using System;
+﻿using System;
+using HomeBank.Presentation.ViewModels;
 
-namespace HomeBank.Presentaion.EventArguments
+namespace HomeBank.Presentation.EventArguments
 {
     public sealed class TransactionOperationEventArgs : EventArgs
     {

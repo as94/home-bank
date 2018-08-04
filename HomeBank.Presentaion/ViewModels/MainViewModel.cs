@@ -3,10 +3,11 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using HomeBank.Domain.Infrastructure;
-using HomeBank.Presentaion.EventArguments;
-using HomeBank.Presentaion.Infrastructure;
+using HomeBank.Presentation.Enums;
+using HomeBank.Presentation.EventArguments;
+using HomeBank.Presentation.Infrastructure;
 
-namespace HomeBank.Presentaion.ViewModels
+namespace HomeBank.Presentation.ViewModels
 {
     public class MainViewModel : ViewModel
     {
@@ -68,7 +69,7 @@ namespace HomeBank.Presentaion.ViewModels
                     case EventType.CategoryOperationExecuted:
                         {
                             var opArgs = args as CategoryOperationEventArgs;
-                            if (opArgs != null && opArgs.Category.OperationType == Presentaion.Enums.OperationType.Remove)
+                            if (opArgs != null && opArgs.Category.OperationType == OperationType.Remove)
                             {
                                 return;
                             }
@@ -85,7 +86,7 @@ namespace HomeBank.Presentaion.ViewModels
                     case EventType.TransactionOperationExecuted:
                         {
                             var opArgs = args as TransactionOperationEventArgs;
-                            if (opArgs != null && opArgs.Transaction.OperationType == Presentaion.Enums.OperationType.Remove)
+                            if (opArgs != null && opArgs.Transaction.OperationType == OperationType.Remove)
                             {
                                 return;
                             }

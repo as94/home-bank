@@ -1,11 +1,11 @@
-﻿using HomeBank.Domain.Enums;
-using HomeBank.Presentaion.Converters;
-using HomeBank.Presentaion.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using HomeBank.Domain.Enums;
+using HomeBank.Presentation.Converters;
+using HomeBank.Presentation.Enums;
 
-namespace HomeBank.Presentaion.Utils
+namespace HomeBank.Presentation.Utils
 {
     internal static class CategoryTypes
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HomeBank.Presentaion.Infrastructure
+namespace HomeBank.Presentation.Infrastructure
 {
     public delegate void EventBusHandler(EventType type, EventArgs args = null);
 }

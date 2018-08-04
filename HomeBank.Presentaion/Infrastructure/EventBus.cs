@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HomeBank.Presentaion.Infrastructure
+namespace HomeBank.Presentation.Infrastructure
 {
     public sealed class EventBus : IEventBus
     {

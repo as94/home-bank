@@ -221,9 +221,9 @@
       <Project>{45A8F657-34F2-40AA-885F-8C7B14004365}</Project>
       <Name>HomeBank.Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HomeBank.Presentaion\HomeBank.Presentaion.csproj">
-      <Project>{DAA15A28-84B9-4E8E-A5F7-234A9CE361A5}</Project>
-      <Name>HomeBank.Presentaion</Name>
+    <ProjectReference Include="..\HomeBank.Presentaion\HomeBank.Presentation.csproj">
+      <Project>{daa15a28-84b9-4e8e-a5f7-234a9ce361a5}</Project>
+      <Name>HomeBank.Presentation</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

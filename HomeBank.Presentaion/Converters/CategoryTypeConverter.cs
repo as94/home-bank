@@ -1,7 +1,7 @@
 ﻿using HomeBank.Domain.Enums;
-using HomeBank.Presentaion.Enums;
+using HomeBank.Presentation.Enums;
 
-namespace HomeBank.Presentaion.Converters
+namespace HomeBank.Presentation.Converters
 {
     public static class CategoryTypeConverter
     {

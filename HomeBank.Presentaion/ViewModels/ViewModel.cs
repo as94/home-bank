@@ -1,9 +1,9 @@
-﻿using HomeBank.Presentaion.Infrastructure;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using HomeBank.Presentation.Infrastructure;
 
-namespace HomeBank.Presentaion.ViewModels
+namespace HomeBank.Presentation.ViewModels
 {
     public abstract class ViewModel : INotifyPropertyChanged
     {

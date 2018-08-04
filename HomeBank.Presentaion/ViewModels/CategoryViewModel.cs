@@ -1,18 +1,18 @@
-﻿using HomeBank.Domain.DomainExceptions;
-using HomeBank.Domain.DomainModels;
-using HomeBank.Domain.Infrastructure;
-using HomeBank.Domain.Queries;
-using HomeBank.Presentaion.Converters;
-using HomeBank.Presentaion.Enums;
-using HomeBank.Presentaion.EventArguments;
-using HomeBank.Presentaion.Infrastructure;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using HomeBank.Domain.DomainExceptions;
+using HomeBank.Domain.DomainModels;
+using HomeBank.Domain.Infrastructure;
+using HomeBank.Domain.Queries;
+using HomeBank.Presentation.Converters;
+using HomeBank.Presentation.Enums;
+using HomeBank.Presentation.EventArguments;
+using HomeBank.Presentation.Infrastructure;
 
-namespace HomeBank.Presentaion.ViewModels
+namespace HomeBank.Presentation.ViewModels
 {
     public class CategoryViewModel : ViewModel
     {

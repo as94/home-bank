@@ -1,6 +1,6 @@
-﻿using HomeBank.Presentaion.Infrastructure;
+﻿using HomeBank.Presentation.Infrastructure;
 
-namespace HomeBank.Presentaion.ViewModels
+namespace HomeBank.Presentation.ViewModels
 {
     public class StatisticItemViewModel : ViewModel
     {

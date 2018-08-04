@@ -1,9 +1,6 @@
-﻿using HomeBank.Presentaion.ViewModels;
-using HomeBank.Ui.Views;
+﻿using HomeBank.Ui.Views;
 using System;
 using System.Windows;
-using HomeBank.Presentaion.Infrastructure;
-using HomeBank.Presentaion.Enums;
 using HomeBank.Domain.Infrastructure;
 using HomeBank.Data.Sqlite.Storages;
 using HomeBank.Data.Sqlite.Infrastructure;
@@ -16,6 +13,9 @@ using System.Runtime.InteropServices;
 using System.Reflection;
 using log4net.Config;
 using HomeBank.Data.Sqlite.UnitOfWork;
+using HomeBank.Presentation.Enums;
+using HomeBank.Presentation.Infrastructure;
+using HomeBank.Presentation.ViewModels;
 
 namespace HomeBank.Ui
 {

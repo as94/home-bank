@@ -5,8 +5,6 @@ VisualStudioVersion = 15.0.27428.2005
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeBank.Ui", "HomeBank.Ui\HomeBank.Ui.csproj", "{B9EAC98B-240A-4C63-BDCD-C60F09A6609A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeBank.Presentaion", "HomeBank.Presentaion\HomeBank.Presentaion.csproj", "{DAA15A28-84B9-4E8E-A5F7-234A9CE361A5}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeBank.Domain", "HomeBank.Domain\HomeBank.Domain.csproj", "{45A8F657-34F2-40AA-885F-8C7B14004365}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeBank.Domain.Test", "HomeBank.Domain.Test\HomeBank.Domain.Test.csproj", "{1E369F6E-630B-4D72-9895-35008644AC4C}"
@@ -14,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeBank.Data.Sqlite", "HomeBank.Data.Sqlite\HomeBank.Data.Sqlite.csproj", "{A8654CAC-EC08-4AA2-9EA1-EA15B1F991C3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeBank.Data.Sqlite.Test", "HomeBank.Data.Sqlite.Test\HomeBank.Data.Sqlite.Test.csproj", "{E11E8F5B-ED34-4298-A807-672B828894CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeBank.Presentation", "HomeBank.Presentaion\HomeBank.Presentation.csproj", "{DAA15A28-84B9-4E8E-A5F7-234A9CE361A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +25,6 @@ Global
 		{B9EAC98B-240A-4C63-BDCD-C60F09A6609A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9EAC98B-240A-4C63-BDCD-C60F09A6609A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9EAC98B-240A-4C63-BDCD-C60F09A6609A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DAA15A28-84B9-4E8E-A5F7-234A9CE361A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DAA15A28-84B9-4E8E-A5F7-234A9CE361A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DAA15A28-84B9-4E8E-A5F7-234A9CE361A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DAA15A28-84B9-4E8E-A5F7-234A9CE361A5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{45A8F657-34F2-40AA-885F-8C7B14004365}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{45A8F657-34F2-40AA-885F-8C7B14004365}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45A8F657-34F2-40AA-885F-8C7B14004365}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -45,6 +41,10 @@ Global
 		{E11E8F5B-ED34-4298-A807-672B828894CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E11E8F5B-ED34-4298-A807-672B828894CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E11E8F5B-ED34-4298-A807-672B828894CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DAA15A28-84B9-4E8E-A5F7-234A9CE361A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAA15A28-84B9-4E8E-A5F7-234A9CE361A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAA15A28-84B9-4E8E-A5F7-234A9CE361A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAA15A28-84B9-4E8E-A5F7-234A9CE361A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

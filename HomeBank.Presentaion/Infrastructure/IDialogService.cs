@@ -1,4 +1,4 @@
-﻿namespace HomeBank.Presentaion.Infrastructure
+﻿namespace HomeBank.Presentation.Infrastructure
 {
     public interface IDialogService
     {
