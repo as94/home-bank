@@ -1,7 +1,7 @@
-﻿using HomeBank.Presentation.ViewModels;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using HomeBank.Presentaion.ViewModels;
 
 namespace HomeBank.Ui.Views
 {

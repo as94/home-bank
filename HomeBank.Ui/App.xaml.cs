@@ -1,5 +1,4 @@
 ﻿using HomeBank.Presentaion.ViewModels;
-using HomeBank.Presentation.ViewModels;
 using HomeBank.Ui.Views;
 using System;
 using System.Windows;
@@ -96,7 +95,6 @@ namespace HomeBank.Ui
 
             var childrenViewModels = new ViewModel[]
             {
-                new HomeViewModel(_eventBus),
                 transactionViewModel,
                 categoryViewModel,
                 statisticViewModel,

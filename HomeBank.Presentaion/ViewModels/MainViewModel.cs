@@ -1,13 +1,12 @@
-﻿using HomeBank.Domain.Infrastructure;
-using HomeBank.Presentaion.EventArguments;
-using HomeBank.Presentaion.Infrastructure;
-using HomeBank.Presentaion.ViewModels;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
+using HomeBank.Domain.Infrastructure;
+using HomeBank.Presentaion.EventArguments;
+using HomeBank.Presentaion.Infrastructure;
 
-namespace HomeBank.Presentation.ViewModels
+namespace HomeBank.Presentaion.ViewModels
 {
     public class MainViewModel : ViewModel
     {

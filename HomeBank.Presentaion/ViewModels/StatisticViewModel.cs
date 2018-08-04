@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using HomeBank.Domain.Queries;
+using OxyPlot;
+using OxyPlot.Series;
 
 namespace HomeBank.Presentaion.ViewModels
 {
@@ -62,6 +64,8 @@ namespace HomeBank.Presentaion.ViewModels
         }
 
         public ObservableCollection<StatisticItemViewModel> CategoryStatisticItems { get; set; }
+        
+        public PlotModel GraphicModel { get; set; } 
 
         private string _total;
         public string Total
@@ -94,12 +98,18 @@ namespace HomeBank.Presentaion.ViewModels
             {
                 throw new ArgumentNullException(nameof(categoryStatistic));
             }
-
+            
             _statisticService = statisticService;
 
             CategoryStatisticItems = new ObservableCollection<StatisticItemViewModel>();
+            
+            GraphicModel = new PlotModel
+            {
+                Title = "Categories"
+            };
 
             UpdateCategoryStatisticItems(categoryStatistic.StatisticItems);
+            UpdateCategoryStatisticPieSeries(categoryStatistic.StatisticItems);
             UpdateTotal(categoryStatistic.Total);
 
             EventBus.EventOccured += EventBus_EventOccured;
@@ -123,6 +133,7 @@ namespace HomeBank.Presentaion.ViewModels
 
                     var categoryStatistic = await _statisticService.GetCategoryStatisticAsync(query);
                     UpdateCategoryStatisticItems(categoryStatistic.StatisticItems);
+                    UpdateCategoryStatisticPieSeries(categoryStatistic.StatisticItems);
                     UpdateTotal(categoryStatistic.Total);
                     break;
             }
@@ -156,6 +167,38 @@ namespace HomeBank.Presentaion.ViewModels
 
                 CategoryStatisticItems.Add(view);
             }
+        }
+
+        private void UpdateCategoryStatisticPieSeries(IEnumerable<CategoryStatisticItem> statisticItems)
+        {
+            if (statisticItems == null)
+            {
+                throw new ArgumentNullException(nameof(statisticItems));
+            }
+            
+            GraphicModel.Series.Clear();
+
+            var categoryStatisticPieSerie = new PieSeries
+            {
+                StrokeThickness = 2.0,
+                InsideLabelPosition = 0.8,
+                AngleSpan = 360,
+                StartAngle = 0
+            };
+
+            foreach (var statisticItem in statisticItems)
+            {
+                var title = $"{statisticItem.Category.Name} - {statisticItem.Category.Description}";
+                var cost = Convert.ToDouble(statisticItem.Cost);
+
+                categoryStatisticPieSerie.Slices.Add(
+                    new PieSlice(title, cost)
+                    {
+                        IsExploded = true
+                    });
+            }
+
+            GraphicModel.Series.Add(categoryStatisticPieSerie);
         }
 
         private void UpdateTotal(decimal total)

@@ -8,6 +8,7 @@
         mc:Ignorable="d"
         Height="600"
         Width="1024"
+        WindowState="Maximized"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
@@ -20,10 +21,6 @@
         Foreground="White">
 
     <Window.Resources>
-        <DataTemplate DataType="{x:Type viewModels:HomeViewModel}">
-            <views:HomeView />
-        </DataTemplate>
-
         <DataTemplate DataType="{x:Type viewModels:SettingsViewModel}">
             <views:SettingsView />
         </DataTemplate>
@@ -126,21 +123,6 @@
                           FontSize="22"
                           SelectedIndex="0"
                           SelectionChanged="ListViewMenu_SelectionChanged">
-
-                    <ListViewItem Height="60">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="Home"
-                                                     Width="30"
-                                                     Height="30"
-                                                     Margin="5"
-                                                     VerticalAlignment="Center" />
-
-                            <TextBlock Text="Home"
-                                       VerticalAlignment="Center"
-                                       Margin="20 0" />
-
-                        </StackPanel>
-                    </ListViewItem>
 
                     <ListViewItem Height="60">
                         <StackPanel Orientation="Horizontal">
