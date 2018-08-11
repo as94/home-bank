@@ -8,6 +8,6 @@ namespace HomeBank.Domain.Infrastructure
 {
     public interface ITransactionRepository : IRepository<Transaction, Guid>
     {
-        Task<IEnumerable<Transaction>> FindAsync(TransactionQuery query = null);
+        Task<IEnumerable<Transaction>> FindAsync(TransactionQuery query = null, IComparer<Transaction> transactionComparer = null);
     }
 }

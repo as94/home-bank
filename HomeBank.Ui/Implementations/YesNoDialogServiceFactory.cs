@@ -1,5 +1,4 @@
 ﻿using HomeBank.Ui.Views.Dialogs;
-using System;
 using HomeBank.Presentation.Infrastructure;
 
 namespace HomeBank.Ui.Implementations

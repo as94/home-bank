@@ -1,16 +1,18 @@
-﻿using HomeBank.Data.Sqlite.Infrastructure;
-using HomeBank.Data.Sqlite.Storages.Converters;
-using HomeBank.Domain.DomainExceptions;
-using HomeBank.Domain.Infrastructure;
-using HomeBank.Domain.Queries;
-using NHibernate;
-using NHibernate.Exceptions;
-using NHibernate.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
 using System.Threading.Tasks;
+using HomeBank.Data.Sqlite.Infrastructure;
+using HomeBank.Data.Sqlite.Storages.Converters;
+using HomeBank.Domain.DomainExceptions;
+using HomeBank.Domain.DomainModels;
+using HomeBank.Domain.Infrastructure;
+using HomeBank.Domain.Infrastructure.Comparers;
+using HomeBank.Domain.Queries;
+using NHibernate;
+using NHibernate.Exceptions;
+using NHibernate.Linq;
 
 namespace HomeBank.Data.Sqlite.Storages
 {
@@ -30,7 +32,9 @@ namespace HomeBank.Data.Sqlite.Storages
             _session = sessionProvider.Session;
         }
 
-        public async Task<IEnumerable<Domain.DomainModels.Category>> FindAsync(CategoryQuery query = null)
+        public async Task<IEnumerable<Category>> FindAsync(
+            CategoryQuery query = null,
+            IComparer<Category> categoryComparer = null)
         {
             var queryBuilder = _session.Query<Models.Category>();
 
@@ -40,6 +44,11 @@ namespace HomeBank.Data.Sqlite.Storages
                 {
                     queryBuilder = queryBuilder.Where(c => c.Type == (int)query.Type.Value);
                 }
+            }
+
+            if (categoryComparer == null)
+            {
+                categoryComparer = CategoryComparers.DefaultCategoryComparer;
             }
 
             var queryResult = await queryBuilder
@@ -52,10 +61,12 @@ namespace HomeBank.Data.Sqlite.Storages
                 })
                 .ToListAsync();
 
-            return queryResult.Select(CategoryConverter.Convert);
+            return queryResult
+                .Select(CategoryConverter.Convert)
+                .OrderBy(c => c, categoryComparer);
         }
 
-        public async Task<Domain.DomainModels.Category> GetAsync(Guid id)
+        public async Task<Category> GetAsync(Guid id)
         {
             var category = await _session.Query<Models.Category>()
                 .Where(c => c.Id == id.ToString())
@@ -76,7 +87,7 @@ namespace HomeBank.Data.Sqlite.Storages
             return CategoryConverter.Convert(category);
         }
 
-        public async Task CreateAsync(Domain.DomainModels.Category entity)
+        public async Task CreateAsync(Category entity)
         {
             if (entity == null)
             {
@@ -88,7 +99,7 @@ namespace HomeBank.Data.Sqlite.Storages
             await _session.InsertAsync(category);
         }
 
-        public async Task ChangeAsync(Domain.DomainModels.Category entity)
+        public async Task ChangeAsync(Category entity)
         {
             if (entity == null)
             {
@@ -100,7 +111,7 @@ namespace HomeBank.Data.Sqlite.Storages
             await _session.UpdateAsync(category);
         }
 
-        public async Task RemoveAsync(Domain.DomainModels.Category entity)
+        public async Task RemoveAsync(Category entity)
         {
             if (entity == null)
             {

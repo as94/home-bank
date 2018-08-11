@@ -89,6 +89,11 @@
         </e>
         <e p="HomeBank.Domain.csproj" t="IncludeRecursive" />
         <e p="Infrastructure" t="Include">
+          <e p="Comparers" t="Include">
+            <e p="CategoryComparers.cs" t="Include" />
+            <e p="CategoryStatisticItemComparers.cs" t="Include" />
+            <e p="TransactionComparers.cs" t="Include" />
+          </e>
           <e p="ICategoryRepository.cs" t="Include" />
           <e p="IRepository.cs" t="Include" />
           <e p="ITransactionRepository.cs" t="Include" />

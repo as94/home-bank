@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HomeBank.Domain.Infrastructure.Comparers;
 
 namespace HomeBank.Data.Sqlite.Storages
 {
@@ -26,7 +27,9 @@ namespace HomeBank.Data.Sqlite.Storages
             _session = sessionProvider.Session;
         }
 
-        public async Task<IEnumerable<Transaction>> FindAsync(TransactionQuery query = null)
+        public async Task<IEnumerable<Transaction>> FindAsync(
+            TransactionQuery query = null,
+            IComparer<Transaction> transactionComparer = null)
         {
             var queryBuilder = _session.Query<Models.Transaction>();
 
@@ -36,13 +39,20 @@ namespace HomeBank.Data.Sqlite.Storages
 
                 if (query.Type != null)
                 {
-                    queryBuilder = queryBuilder.Where(t => t.Category != null && t.Category.Type == (int)query.Type.Value);
+                    queryBuilder =
+                        queryBuilder.Where(t => t.Category != null && t.Category.Type == (int)query.Type.Value);
                 }
 
                 if (query.Category != null)
                 {
-                    queryBuilder = queryBuilder.Where(t => t.Category != null && t.Category.Id == query.Category.Id.ToString());
+                    queryBuilder = queryBuilder.Where(t =>
+                        t.Category != null && t.Category.Id == query.Category.Id.ToString());
                 }
+            }
+
+            if (transactionComparer == null)
+            {
+                transactionComparer = TransactionComparers.DefaultTransactionComparer;
             }
 
             var queryResult = await queryBuilder
@@ -55,7 +65,9 @@ namespace HomeBank.Data.Sqlite.Storages
                 })
                 .ToListAsync();
 
-            return queryResult.Select(TransactionConverter.Convert);
+            return queryResult
+                .Select(TransactionConverter.Convert)
+                .OrderBy(t => t, transactionComparer);
         }
 
         public async Task<Transaction> GetAsync(Guid id)
@@ -127,7 +139,8 @@ namespace HomeBank.Data.Sqlite.Storages
             await RemoveAsync(transaction);
         }
 
-        private static IQueryable<Models.Transaction> GetQueryBuilder(IQueryable<Models.Transaction> queryBuilder, DateRangeQuery dateRangeQuery)
+        private static IQueryable<Models.Transaction> GetQueryBuilder(IQueryable<Models.Transaction> queryBuilder,
+            DateRangeQuery dateRangeQuery)
         {
             if (dateRangeQuery != null)
             {
@@ -144,5 +157,5 @@ namespace HomeBank.Data.Sqlite.Storages
 
             return queryBuilder;
         }
-    }
+}
 }

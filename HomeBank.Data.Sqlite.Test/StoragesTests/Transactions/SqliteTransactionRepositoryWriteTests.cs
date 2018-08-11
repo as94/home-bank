@@ -1,6 +1,4 @@
-﻿using HomeBank.Data.Sqlite.Storages;
-using HomeBank.Domain.Infrastructure;
-using NHibernate;
+﻿using NHibernate;
 using NUnit.Framework;
 using System;
 using System.Threading.Tasks;

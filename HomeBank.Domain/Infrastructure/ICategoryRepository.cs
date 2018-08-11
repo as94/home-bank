@@ -8,6 +8,6 @@ namespace HomeBank.Domain.Infrastructure
 {
     public interface ICategoryRepository : IRepository<Category, Guid>
     {
-        Task<IEnumerable<Category>> FindAsync(CategoryQuery query = null);
+        Task<IEnumerable<Category>> FindAsync(CategoryQuery query = null, IComparer<Category> categoryComparer = null);
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HomeBank.Domain.DomainModels.StatisticModels;
+using HomeBank.Domain.Infrastructure.Comparers;
 using HomeBank.Domain.Queries;
 
 namespace HomeBank.Domain.Infrastructure.Statistic
@@ -21,11 +22,18 @@ namespace HomeBank.Domain.Infrastructure.Statistic
             _transactionRepository = transactionRepository;
         }
 
-        public async Task<CategoryStatistic> GetCategoryStatisticAsync(CategoryStatisticQuery query = null)
+        public async Task<CategoryStatistic> GetCategoryStatisticAsync(
+            CategoryStatisticQuery query = null,
+            IComparer<CategoryStatisticItem> categoryStatisticItemComparer = null)
         {
             var transactionQuery = new TransactionQuery(
                 dateRangeQuery: query?.DateRangeQuery,
                 type: query?.CategoryType);
+
+            if (categoryStatisticItemComparer == null)
+            {
+                categoryStatisticItemComparer = CategoryStatisticItemComparers.DefaultCategoryStatisticItemComparer;
+            }
 
             var transactions = await _transactionRepository.FindAsync(transactionQuery);
 
@@ -35,6 +43,7 @@ namespace HomeBank.Domain.Infrastructure.Statistic
                 .Select(g => new CategoryStatisticItem(
                     category: g.Key,
                     cost: g.Select(c => c.Amount).Sum()))
+                .OrderBy(i => i, categoryStatisticItemComparer)
                 .ToArray();
 
             decimal total = GetTotal(query, statisticItems);

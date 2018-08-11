@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HomeBank.Domain.Infrastructure.Comparers;
 
 namespace HomeBank.Domain.Test.FakeStorages
 {
@@ -32,7 +33,9 @@ namespace HomeBank.Domain.Test.FakeStorages
             return await Task.Run(() => _categories.FirstOrDefault(c => c.Id == id));
         }
 
-        public async Task<IEnumerable<Category>> FindAsync(CategoryQuery query = null)
+        public async Task<IEnumerable<Category>> FindAsync(
+            CategoryQuery query = null,
+            IComparer<Category> categoryComparer = null)
         {
             return await Task.Run(() =>
             {
@@ -41,7 +44,12 @@ namespace HomeBank.Domain.Test.FakeStorages
                     return _categories.Where(c => c.Type == query.Type.Value);
                 }
 
-                return _categories;
+                if (categoryComparer == null)
+                {
+                    categoryComparer = CategoryComparers.DefaultCategoryComparer;
+                }
+
+                return _categories.OrderBy(c => c, categoryComparer);
             });
         }
 

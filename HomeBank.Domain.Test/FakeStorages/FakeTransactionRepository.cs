@@ -4,8 +4,8 @@ using HomeBank.Domain.Queries;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using HomeBank.Domain.Infrastructure.Comparers;
 
 namespace HomeBank.Domain.Test.FakeStorages
 {
@@ -33,7 +33,9 @@ namespace HomeBank.Domain.Test.FakeStorages
             return await Task.Run(() => _transaction.FirstOrDefault(t => t.Id == id));
         }
  
-        public async Task<IEnumerable<Transaction>> FindAsync(TransactionQuery query = null)
+        public async Task<IEnumerable<Transaction>> FindAsync(
+            TransactionQuery query = null,
+            IComparer<Transaction> transactionComparer = null)
         {
             return await Task.Run(() =>
             {
@@ -53,8 +55,13 @@ namespace HomeBank.Domain.Test.FakeStorages
                         result = result.Where(c => c.Category == query.Category);
                     }
                 }
+                
+                if (transactionComparer == null)
+                {
+                    transactionComparer = TransactionComparers.DefaultTransactionComparer;
+                }
 
-                return result;
+                return result.OrderBy(t => t, transactionComparer);
             });
         }
 

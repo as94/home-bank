@@ -45,6 +45,9 @@
     <Compile Include="DomainModels\IIdentify.cs" />
     <Compile Include="DomainModels\StatisticModels\CategoryStatistic.cs" />
     <Compile Include="DomainModels\StatisticModels\CategoryStatisticItem.cs" />
+    <Compile Include="Infrastructure\Comparers\CategoryComparers.cs" />
+    <Compile Include="Infrastructure\Comparers\CategoryStatisticItemComparers.cs" />
+    <Compile Include="Infrastructure\Comparers\TransactionComparers.cs" />
     <Compile Include="Queries\CategoryStatisticQuery.cs" />
     <Compile Include="DomainModels\Transaction.cs" />
     <Compile Include="Enums\CategoryType.cs" />
