@@ -6,8 +6,12 @@
 *.user
 *.userosscache
 *.sln.docstates
+**/.idea/**/indexLayout.xml
 **/.idea/**/workspace.xml
+**/.idea/**/modules.xml
 **/.idea/**/tasks.xml
+**/.idea/**/vcs.xml
+**/.idea/**/riderModule.iml
 **/.idea/shelf/*
 **/.idea/dictionaries
 
