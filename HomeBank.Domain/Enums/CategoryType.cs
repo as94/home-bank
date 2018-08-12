@@ -4,6 +4,7 @@
     {
         None,
         Income,
-        Expenditure
+        Expenditure,
+        Saving
     }
 }
