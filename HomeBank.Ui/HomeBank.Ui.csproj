@@ -122,6 +122,9 @@
     <Compile Include="Views\CategoryView.xaml.cs">
       <DependentUpon>CategoryView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\CommunalView.xaml.cs">
+      <DependentUpon>CommunalView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Dialogs\AreYouSureDialogView.xaml.cs">
       <DependentUpon>AreYouSureDialogView.xaml</DependentUpon>
     </Compile>
@@ -148,6 +151,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\CommunalView.xaml" />
     <Page Include="Views\Dialogs\AreYouSureDialogView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

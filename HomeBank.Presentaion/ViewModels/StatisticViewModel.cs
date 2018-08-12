@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using HomeBank.Domain.DomainModels.StatisticModels;
-using HomeBank.Domain.Infrastructure.Statistic;
+using HomeBank.Domain.Infrastructure.Statistics;
 using HomeBank.Domain.Queries;
 using HomeBank.Presentation.Converters;
 using HomeBank.Presentation.Enums;

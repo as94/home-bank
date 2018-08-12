@@ -5,7 +5,6 @@ using HomeBank.Domain.Infrastructure;
 using HomeBank.Data.Sqlite.Storages;
 using HomeBank.Data.Sqlite.Infrastructure;
 using System.Configuration;
-using HomeBank.Domain.Infrastructure.Statistic;
 using HomeBank.Ui.Implementations;
 using log4net;
 using System.Threading;
@@ -13,6 +12,9 @@ using System.Runtime.InteropServices;
 using System.Reflection;
 using log4net.Config;
 using HomeBank.Data.Sqlite.UnitOfWork;
+using HomeBank.Domain.DomainModels.CommunalModels;
+using HomeBank.Domain.Infrastructure.Communals;
+using HomeBank.Domain.Infrastructure.Statistics;
 using HomeBank.Presentation.Enums;
 using HomeBank.Presentation.Infrastructure;
 using HomeBank.Presentation.ViewModels;
@@ -24,6 +26,8 @@ namespace HomeBank.Ui
     /// </summary>
     public partial class App : Application
     {
+        private static CommunalTariffs CommunalTariffs => new CommunalTariffs(2.49, 17.16, 100.1);
+        
         private bool _isOwner;
         private Mutex _appMutex;
         private static readonly ILog Log = LogManager.GetLogger(typeof(App));
@@ -37,6 +41,7 @@ namespace HomeBank.Ui
         private ITransactionRepository _transactionRepository;
 
         private IStatisticService _statisticService;
+        private ICommunalCalculator _communalCalculator;
 
         private readonly IEventBus _eventBus = new EventBus();
         private readonly IDialogServiceFactory _yesNoDialogServiceFactory = new YesNoDialogServiceFactory();
@@ -71,6 +76,7 @@ namespace HomeBank.Ui
             _transactionRepository = new SqliteTransactionRepository(_sessionProvider);
 
             _statisticService = new StatisticService(_transactionRepository);
+            _communalCalculator = new CommunalCalculator(CommunalTariffs);
 
             var categoryItemViewModel = new CategoryItemViewModel(_eventBus);
             var categoryViewModel = await CategoryViewModel.CreateAsync(
@@ -93,12 +99,16 @@ namespace HomeBank.Ui
             statisticViewModel.StartDate = DateTime.Now;
             statisticViewModel.EndDate = DateTime.Now;
 
+            var communalViewModel = new CommunalViewModel(_eventBus, _communalCalculator);
+            var settingsViewModel = new SettingsViewModel(_eventBus);
+            
             var childrenViewModels = new ViewModel[]
             {
                 transactionViewModel,
                 categoryViewModel,
                 statisticViewModel,
-                new SettingsViewModel(_eventBus),
+                communalViewModel,
+                settingsViewModel,
                 categoryItemViewModel,
                 transactionItemViewModel
             };

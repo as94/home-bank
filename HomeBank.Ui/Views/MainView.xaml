@@ -21,10 +21,6 @@
         Foreground="White">
 
     <Window.Resources>
-        <DataTemplate DataType="{x:Type viewModels:SettingsViewModel}">
-            <views:SettingsView />
-        </DataTemplate>
-
         <DataTemplate DataType="{x:Type viewModels:TransactionViewModel}">
             <views:TransactionView />
         </DataTemplate>
@@ -44,8 +40,16 @@
         <DataTemplate DataType="{x:Type viewModels:StatisticViewModel}">
             <views:StatisticView />
         </DataTemplate>
+    
+        <DataTemplate DataType="{x:Type viewModels:SettingsViewModel}">
+            <views:SettingsView />
+        </DataTemplate>
+        
+        <DataTemplate DataType="{x:Type viewModels:CommunalViewModel}">
+            <views:CommunalView />
+        </DataTemplate>
     </Window.Resources>
-
+    
     <Grid>
         <Grid Background="#FFEEEEEE">
             <Grid>
@@ -60,32 +64,7 @@
                 </Grid>
 
                 <Grid Grid.Column="1">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="0.5*" />
-                        <RowDefinition Height="9.5*" />
-                    </Grid.RowDefinitions>
-
-                    <Grid Grid.Row="0"
-                          Background="#FF2B617A">
-                        <StackPanel Orientation="Horizontal"
-                                    HorizontalAlignment="Right">
-
-                            <Button Width="40"
-                                    Height="30"
-                                    Padding="0"
-                                    Margin="0 0 20 0"
-                                    Background="{x:Null}"
-                                    BorderBrush="{x:Null}"
-                                    Foreground="LightGray"
-                                    Command="{Binding SettingsShowCommand}"
-                                    Click="SettingButton_Click">
-
-                                <materialDesign:PackIcon Kind="Settings" />
-                            </Button>
-                        </StackPanel>
-                    </Grid>
-
-                    <Grid Grid.Row="1">
+                    <Grid>
                         <ContentControl Content="{Binding SelectedChildren}" />
                     </Grid>
                 </Grid>
@@ -163,6 +142,36 @@
                                                      VerticalAlignment="Center" />
 
                             <TextBlock Text="Statistics"
+                                       VerticalAlignment="Center"
+                                       Margin="20 0" />
+
+                        </StackPanel>
+                    </ListViewItem>
+                    
+                    <ListViewItem Height="60">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="ArrowAll"
+                                                     Width="30"
+                                                     Height="30"
+                                                     Margin="5"
+                                                     VerticalAlignment="Center" />
+
+                            <TextBlock Text="Communal Payments"
+                                       VerticalAlignment="Center"
+                                       Margin="20 0" />
+
+                        </StackPanel>
+                    </ListViewItem>
+                    
+                    <ListViewItem Height="60">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Settings"
+                                                     Width="30"
+                                                     Height="30"
+                                                     Margin="5"
+                                                     VerticalAlignment="Center" />
+
+                            <TextBlock Text="Settings"
                                        VerticalAlignment="Center"
                                        Margin="20 0" />
 

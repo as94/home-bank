@@ -6,7 +6,7 @@ using HomeBank.Domain.DomainModels.StatisticModels;
 using HomeBank.Domain.Infrastructure.Comparers;
 using HomeBank.Domain.Queries;
 
-namespace HomeBank.Domain.Infrastructure.Statistic
+namespace HomeBank.Domain.Infrastructure.Statistics
 {
     public sealed class StatisticService : IStatisticService
     {

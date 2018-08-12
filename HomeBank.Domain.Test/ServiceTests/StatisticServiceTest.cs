@@ -1,11 +1,11 @@
 ﻿using HomeBank.Domain.DomainModels.StatisticModels;
 using HomeBank.Domain.Infrastructure;
-using HomeBank.Domain.Infrastructure.Statistic;
 using HomeBank.Domain.Test.DummyData;
 using HomeBank.Domain.Test.FakeStorages;
 using NUnit.Framework;
 using System;
 using System.Threading.Tasks;
+using HomeBank.Domain.Infrastructure.Statistics;
 using HomeBank.Domain.Queries;
 
 namespace HomeBank.Domain.Test.ServiceTests

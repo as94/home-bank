@@ -42,9 +42,14 @@
   <ItemGroup>
     <Compile Include="DomainExceptions\CategoryRelatedTransactionsException.cs" />
     <Compile Include="DomainModels\Category.cs" />
+    <Compile Include="DomainModels\CommunalModels\CommunalOutgoings.cs" />
+    <Compile Include="DomainModels\CommunalModels\CommunalPayments.cs" />
+    <Compile Include="DomainModels\CommunalModels\CommunalTariffs.cs" />
     <Compile Include="DomainModels\IIdentify.cs" />
     <Compile Include="DomainModels\StatisticModels\CategoryStatistic.cs" />
     <Compile Include="DomainModels\StatisticModels\CategoryStatisticItem.cs" />
+    <Compile Include="Infrastructure\Communals\CommunalCalculator.cs" />
+    <Compile Include="Infrastructure\Communals\ICommunalCalculator.cs" />
     <Compile Include="Infrastructure\Comparers\CategoryComparers.cs" />
     <Compile Include="Infrastructure\Comparers\CategoryStatisticItemComparers.cs" />
     <Compile Include="Infrastructure\Comparers\TransactionComparers.cs" />
@@ -53,11 +58,11 @@
     <Compile Include="Enums\CategoryType.cs" />
     <Compile Include="Infrastructure\ICategoryRepository.cs" />
     <Compile Include="Infrastructure\IRepository.cs" />
-    <Compile Include="Infrastructure\Statistic\IStatisticService.cs" />
+    <Compile Include="Infrastructure\Statistics\IStatisticService.cs" />
     <Compile Include="Infrastructure\ITransactionRepository.cs" />
     <Compile Include="Infrastructure\IUnitOfWork.cs" />
     <Compile Include="Infrastructure\IUnitOfWorkFactory.cs" />
-    <Compile Include="Infrastructure\Statistic\StatisticService.cs" />
+    <Compile Include="Infrastructure\Statistics\StatisticService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\CategoryQuery.cs" />
     <Compile Include="Queries\DateQuery.cs" />

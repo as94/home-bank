@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using HomeBank.Domain.DomainModels.StatisticModels;
 using HomeBank.Domain.Queries;
-using System.Threading.Tasks;
 
-namespace HomeBank.Domain.Infrastructure.Statistic
+namespace HomeBank.Domain.Infrastructure.Statistics
 {
     public interface IStatisticService
     {

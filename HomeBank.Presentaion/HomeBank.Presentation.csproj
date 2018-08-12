@@ -59,6 +59,7 @@
     <Compile Include="Utils\CategoryTypes.cs" />
     <Compile Include="ViewModels\CategoryItemViewModel.cs" />
     <Compile Include="ViewModels\CategoryViewModel.cs" />
+    <Compile Include="ViewModels\CommunalViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\StatisticItemViewModel.cs" />
     <Compile Include="ViewModels\StatisticViewModel.cs" />

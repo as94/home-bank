@@ -6,6 +6,7 @@
 *.user
 *.userosscache
 *.sln.docstates
+**/.idea/**/contentModel.xml
 **/.idea/**/indexLayout.xml
 **/.idea/**/workspace.xml
 **/.idea/**/modules.xml

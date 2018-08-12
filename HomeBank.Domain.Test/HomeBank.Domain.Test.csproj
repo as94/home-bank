@@ -47,12 +47,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DomainModelTest\CategoryTest.cs" />
+    <Compile Include="DomainModelTest\CommunalOutgoingsTests.cs" />
+    <Compile Include="DomainModelTest\CommunalTariffsTests.cs" />
     <Compile Include="DomainModelTest\TransactionTest.cs" />
     <Compile Include="DummyData\CategoryData.cs" />
     <Compile Include="DummyData\TransactionData.cs" />
     <Compile Include="FakeStorages\FakeCategoryRepository.cs" />
     <Compile Include="FakeStorages\FakeTransactionRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceTests\CommunalCalculatorTests.cs" />
     <Compile Include="ServiceTests\StatisticServiceTest.cs" />
   </ItemGroup>
   <ItemGroup>
