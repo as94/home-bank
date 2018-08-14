@@ -8,14 +8,19 @@ namespace HomeBank.Domain.Infrastructure.Comparers
     {
         public static IComparer<Transaction> DefaultTransactionComparer => Comparer<Transaction>.Create((x, y) =>
         {
-            if (x == null)
+            if (ReferenceEquals(x, y))
             {
-                throw new ArgumentNullException(nameof(x));
+                return 0;
             }
-                
-            if (y == null)
+
+            if (ReferenceEquals(x, null))
             {
-                throw new ArgumentNullException(nameof(y));
+                return -1;
+            }
+            
+            if (ReferenceEquals(y, null))
+            {
+                return 1;
             }
             
             var amounts = y.Amount.CompareTo(x.Amount);

@@ -8,14 +8,19 @@ namespace HomeBank.Domain.Infrastructure.Comparers
     {
         public static IComparer<CategoryStatisticItem> DefaultCategoryStatisticItemComparer => Comparer<CategoryStatisticItem>.Create((x, y) =>
         {
-            if (x == null)
+            if (ReferenceEquals(x, y))
             {
-                throw new ArgumentNullException(nameof(x));
+                return 0;
             }
-                
-            if (y == null)
+
+            if (ReferenceEquals(x, null))
             {
-                throw new ArgumentNullException(nameof(y));
+                return -1;
+            }
+            
+            if (ReferenceEquals(y, null))
+            {
+                return 1;
             }
             
             var amounts = y.Cost.CompareTo(x.Cost);
