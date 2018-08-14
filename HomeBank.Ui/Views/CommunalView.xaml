@@ -37,30 +37,57 @@
 
                     <TextBox Margin="25 10 25 10"
                              materialDesign:HintAssist.Hint="Electrical Outgoings"
-                             materialDesign:HintAssist.IsFloating="True"
-                             Text="{Binding ElectricalOutgoings,
-                                    TargetNullValue='',
-                                    StringFormat={}{0:F2},
-                                    UpdateSourceTrigger=PropertyChanged,
-                                    ValidatesOnDataErrors=True}" />
+                             materialDesign:HintAssist.IsFloating="True">
+                        
+                        <TextBox.Text>
+                            <Binding Path="ElectricalOutgoings"
+                                     TargetNullValue=''
+                                     UpdateSourceTrigger="PropertyChanged"
+                                     StringFormat="{}{0:F2}"
+                                     ValidatesOnDataErrors="True">
+                                <Binding.ValidationRules>
+                                    <ExceptionValidationRule />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                        
+                    </TextBox>
                     
                     <TextBox Margin="25 10 25 10"
                              materialDesign:HintAssist.Hint="Could Water Outgoings"
-                             materialDesign:HintAssist.IsFloating="True"
-                             Text="{Binding CouldWaterOutgoings,
-                                    TargetNullValue='',
-                                    StringFormat={}{0:F2},
-                                    UpdateSourceTrigger=PropertyChanged,
-                                    ValidatesOnDataErrors=True}" />
+                             materialDesign:HintAssist.IsFloating="True">
+                        
+                        <TextBox.Text>
+                            <Binding Path="CouldWaterOutgoings"
+                                     TargetNullValue=''
+                                     UpdateSourceTrigger="PropertyChanged"
+                                     StringFormat="{}{0:F2}"
+                                     ValidatesOnDataErrors="True">
+                                <Binding.ValidationRules>
+                                    <ExceptionValidationRule />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                        
+                    </TextBox>
                     
                     <TextBox Margin="25 10 25 10"
                              materialDesign:HintAssist.Hint="Hot Water Outgoings"
-                             materialDesign:HintAssist.IsFloating="True"
-                             Text="{Binding HotWaterOutgoings,
-                                    TargetNullValue='',
-                                    StringFormat={}{0:F2},
-                                    UpdateSourceTrigger=PropertyChanged,
-                                    ValidatesOnDataErrors=True}" />
+                             materialDesign:HintAssist.IsFloating="True">
+                        
+                        <TextBox.Text>
+                            <Binding Path="HotWaterOutgoings"
+                                     TargetNullValue=''
+                                     UpdateSourceTrigger="PropertyChanged"
+                                     StringFormat="{}{0:F2}"
+                                     ValidatesOnDataErrors="True">
+                                <Binding.ValidationRules>
+                                    <ExceptionValidationRule />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                        
+                    </TextBox>
 
                     <Button Margin="0 25 0 0"
                             Width="40"

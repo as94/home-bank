@@ -16,7 +16,25 @@ namespace HomeBank.Presentation.ViewModels
 
         public Guid Id { get; set; }
         public DateTime Date { get; set; } = DateTime.Now;
-        public decimal Amount { get; set; }
+
+        private decimal _amount;
+        public decimal Amount
+        {
+            get => _amount;
+            set
+            {
+                if (_amount == value) return;
+                _amount = value;
+
+                if (_amount < 0)
+                {
+                    throw new ArgumentException("The amount shouldn't be less than zero");
+                }
+                
+                OnPropertyChanged();
+            }
+        }
+
         public CategoryItemViewModel CategoryItemViewModel { get; set; }
 
         public OperationType OperationType { get; set; }
@@ -67,7 +85,8 @@ namespace HomeBank.Presentation.ViewModels
                     }
 
                     EventBus.Notify(EventType.TransactionItemOperationExecuted, new TransactionOperationEventArgs(this));
-                }));
+                },
+                vm => _amount >= 0));
             }
         }
 

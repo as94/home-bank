@@ -3,7 +3,7 @@ using HomeBank.Presentation.Enums;
 
 namespace HomeBank.Presentation.Converters
 {
-    public static class CategoryTypeConverter
+    internal static class CategoryTypeConverter
     {
         public static CategoryTypeFilter Convert(this CategoryType type)
         {

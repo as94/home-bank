@@ -53,12 +53,21 @@
 
                     <TextBox Margin="25 10 25 10"
                              materialDesign:HintAssist.Hint="Amount"
-                             materialDesign:HintAssist.IsFloating="True"
-                             Text="{Binding Amount,
-                                    TargetNullValue='',
-                                    StringFormat={}{0:F2},
-                                    UpdateSourceTrigger=PropertyChanged,
-                                    ValidatesOnDataErrors=True}" />
+                             materialDesign:HintAssist.IsFloating="True">
+                        
+                        <TextBox.Text>
+                            <Binding Path="Amount"
+                                     TargetNullValue=''
+                                     UpdateSourceTrigger="PropertyChanged"
+                                     StringFormat="{}{0:F2}"
+                                     ValidatesOnDataErrors="True">
+                                <Binding.ValidationRules>
+                                    <ExceptionValidationRule />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                        
+                    </TextBox>
 
                     <ComboBox Margin="25 10 25 10"
                               materialDesign:HintAssist.Hint="Category"

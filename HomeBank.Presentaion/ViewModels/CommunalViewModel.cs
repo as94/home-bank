@@ -8,6 +8,8 @@ namespace HomeBank.Presentation.ViewModels
 {
     public class CommunalViewModel : ViewModel
     {
+        private const double Tolerance = 0.0001;
+        
         private readonly ICommunalCalculator _communalCalculator;
 
         public const string ElectricalPaymentLabel = "Electrical Payment";
@@ -16,11 +18,59 @@ namespace HomeBank.Presentation.ViewModels
         public const string TotalLabel = "Total";
         
         public override string ViewModelName => nameof(SettingsViewModel);
-        
-        public double ElectricalOutgoings { get; set; }
-        public double CouldWaterOutgoings { get; set; }
-        public double HotWaterOutgoings { get; set; }
-        
+
+        private double _electricalOutgoings;
+        public double ElectricalOutgoings
+        {
+            get => _electricalOutgoings;
+            set
+            {
+                if (Math.Abs(_electricalOutgoings - value) < Tolerance) return;
+                _electricalOutgoings = value;
+                
+                if (_electricalOutgoings < 0)
+                {
+                    throw new ArgumentException("The Electrical Outgoings shouldn't be less than zero");
+                }
+                
+                OnPropertyChanged();
+            }
+        }
+
+        private double _couldWaterOutgoings;
+        public double CouldWaterOutgoings
+        {
+            get => _couldWaterOutgoings;
+            set
+            {
+                if (Math.Abs(_couldWaterOutgoings - value) < Tolerance) return;
+                _couldWaterOutgoings = value;
+                if (_couldWaterOutgoings < 0)
+                {
+                    throw new ArgumentException("The Could Water Outgoings shouldn't be less than zero");
+                }
+                
+                OnPropertyChanged();
+            }
+        }
+
+        private string _hotWaterPayment;
+        public double HotWaterOutgoings
+        {
+            get => _hotWaterOutgoings;
+            set
+            {
+                if (Math.Abs(_hotWaterOutgoings - value) < Tolerance) return;
+                _hotWaterOutgoings = value;
+                if (_hotWaterOutgoings < 0)
+                {
+                    throw new ArgumentException("The Hot Water Outgoings shouldn't be less than zero");
+                }
+                
+                OnPropertyChanged();
+            }
+        }
+
         private string _electricalPayment;
         public string ElectricalPayment
         {
@@ -29,10 +79,11 @@ namespace HomeBank.Presentation.ViewModels
             {
                 if (_electricalPayment == value) return;
                 _electricalPayment = value;
+                
                 OnPropertyChanged();
             }
         }
-        
+
         private string _couldWaterPayment;
         public string CouldWaterPayment
         {
@@ -41,11 +92,13 @@ namespace HomeBank.Presentation.ViewModels
             {
                 if (_couldWaterPayment == value) return;
                 _couldWaterPayment = value;
+                
                 OnPropertyChanged();
             }
         }
-        
-        private string _hotWaterPayment;
+
+
+        private double _hotWaterOutgoings;
         public string HotWaterPayment
         {
             get => _hotWaterPayment;
@@ -53,10 +106,11 @@ namespace HomeBank.Presentation.ViewModels
             {
                 if (_hotWaterPayment == value) return;
                 _hotWaterPayment = value;
+                
                 OnPropertyChanged();
             }
         }
-        
+
         private string _total;
         public string Total
         {
@@ -96,7 +150,8 @@ namespace HomeBank.Presentation.ViewModels
                     var payments = _communalCalculator.Calculate(outgoings);
                     
                     Update(payments);
-                }));
+                },
+               vm => _electricalOutgoings >= 0 && _couldWaterOutgoings >= 0 && _hotWaterOutgoings >= 0));
             }
         }
         
