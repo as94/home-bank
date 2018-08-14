@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using HomeBank.Domain.DomainModels.StatisticModels;
 using HomeBank.Domain.Infrastructure.Statistics;
@@ -108,8 +109,9 @@ namespace HomeBank.Presentation.ViewModels
                 Title = "Categories"
             };
 
-            UpdateCategoryStatisticItems(categoryStatistic.StatisticItems);
-            UpdateCategoryStatisticPieSeries(categoryStatistic.StatisticItems);
+            var statisticItems = categoryStatistic.StatisticItems.ToArray();
+            UpdateCategoryStatisticItems(statisticItems);
+            UpdateCategoryStatisticPieSeries(statisticItems);
             UpdateTotal(categoryStatistic.Total);
 
             EventBus.EventOccured += EventBus_EventOccured;
@@ -132,8 +134,9 @@ namespace HomeBank.Presentation.ViewModels
                         type: Type.Convert());
 
                     var categoryStatistic = await _statisticService.GetCategoryStatisticAsync(query);
-                    UpdateCategoryStatisticItems(categoryStatistic.StatisticItems);
-                    UpdateCategoryStatisticPieSeries(categoryStatistic.StatisticItems);
+                    var statisticItems = categoryStatistic.StatisticItems.ToArray();
+                    UpdateCategoryStatisticItems(statisticItems);
+                    UpdateCategoryStatisticPieSeries(statisticItems);
                     UpdateTotal(categoryStatistic.Total);
                     break;
             }
@@ -168,7 +171,7 @@ namespace HomeBank.Presentation.ViewModels
                 CategoryStatisticItems.Add(view);
             }
         }
-
+        
         private void UpdateCategoryStatisticPieSeries(IEnumerable<CategoryStatisticItem> statisticItems)
         {
             if (statisticItems == null)
@@ -199,6 +202,8 @@ namespace HomeBank.Presentation.ViewModels
             }
 
             GraphicModel.Series.Add(categoryStatisticPieSerie);
+            
+            GraphicModel.InvalidatePlot(updateData: true);
         }
 
         private void UpdateTotal(decimal total)
