@@ -5,28 +5,20 @@ namespace HomeBank.Domain.Infrastructure.Communals
 {
     public sealed class CommunalCalculator : ICommunalCalculator
     {
-        public CommunalCalculator(CommunalTariffs tariffs)
-        {
-            ChangeTariffs(tariffs);
-        }
-        
-        public CommunalTariffs Tariffs { get; private set; }
+        private readonly ICommunalSettings _communalSettings;
 
-        public void ChangeTariffs(CommunalTariffs tariffs)
+        public CommunalCalculator(ICommunalSettings communalSettings)
         {
-            if (tariffs == null)
-            {
-                throw new ArgumentNullException(nameof(tariffs));
-            }
-            
-            Tariffs = tariffs;   
+            _communalSettings = communalSettings ?? throw new ArgumentNullException(nameof(communalSettings));
         }
         
         public CommunalPayments Calculate(CommunalOutgoings outgoings)
         {
-            var electricalPayment = Tariffs.ElectricalSupplyInRublesPerKilowatt * outgoings.ElectricalOutgoings;
-            var couldWaterPayment = Tariffs.CouldWaterSupplyInRublesPerCubicMeters * outgoings.CouldWaterOutgoings;
-            var hotWaterPayment = Tariffs.HotWaterSupplyInRublesPerCubicMeters * outgoings.HotWaterOutgoings;
+            var tariffs = _communalSettings.CommunalTariffs;
+            
+            var electricalPayment = tariffs.ElectricalSupplyInRublesPerKilowatt * outgoings.ElectricalOutgoings;
+            var couldWaterPayment = tariffs.CouldWaterSupplyInRublesPerCubicMeters * outgoings.CouldWaterOutgoings;
+            var hotWaterPayment = tariffs.HotWaterSupplyInRublesPerCubicMeters * outgoings.HotWaterOutgoings;
             
             return new CommunalPayments(electricalPayment, couldWaterPayment, hotWaterPayment);
         }

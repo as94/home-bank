@@ -116,6 +116,7 @@
     <Compile Include="ExceptionPatternLayoutConverter.cs" />
     <Compile Include="Implementations\ErrorDialogServiceFactory.cs" />
     <Compile Include="Implementations\YesNoDialogServiceFactory.cs" />
+    <Compile Include="Settings\CommunalSettings.cs" />
     <Compile Include="Views\CategoryItemView.xaml.cs">
       <DependentUpon>CategoryItemView.xaml</DependentUpon>
     </Compile>

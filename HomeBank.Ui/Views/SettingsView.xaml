@@ -16,12 +16,92 @@
     <Grid>
 
         <materialDesign:TransitioningContent x:Name="TransitioningContentSlide"
-                                             OpeningEffect="{materialDesign:TransitionEffect SlideInFromLeft, Duration=0:0:0.3}"
-                                             Background="#FF63AE47">
+                                             OpeningEffect="{materialDesign:TransitionEffect SlideInFromLeft, Duration=0:0:0.3}">
 
-            <TextBlock HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       Text="Settings View" />
+            <materialDesign:Card Padding="32"
+                                 Margin="16">
+
+                <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock VerticalAlignment="Center"
+                                   HorizontalAlignment="Center"
+                                   Style="{DynamicResource MaterialDesignTitleTextBlock}"
+                                   Text="Settings" />
+                    </Grid>
+
+                    <TextBox Margin="25 10 25 10"
+                             materialDesign:HintAssist.Hint="Electrical Supply In Rubles Per Kilowatt"
+                             materialDesign:HintAssist.IsFloating="True">
+                        
+                        <TextBox.Text>
+                            <Binding Path="ElectricalSupplyInRublesPerKilowatt"
+                                     TargetNullValue=''
+                                     UpdateSourceTrigger="PropertyChanged"
+                                     StringFormat="{}{0:F2}"
+                                     ValidatesOnDataErrors="True">
+                                <Binding.ValidationRules>
+                                    <ExceptionValidationRule />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                        
+                    </TextBox>
+                    
+                    <TextBox Margin="25 10 25 10"
+                             materialDesign:HintAssist.Hint="Could Water Supply In Rubles Per Cubic Meters"
+                             materialDesign:HintAssist.IsFloating="True">
+                        
+                        <TextBox.Text>
+                            <Binding Path="CouldWaterSupplyInRublesPerCubicMeters"
+                                     TargetNullValue=''
+                                     UpdateSourceTrigger="PropertyChanged"
+                                     StringFormat="{}{0:F2}"
+                                     ValidatesOnDataErrors="True">
+                                <Binding.ValidationRules>
+                                    <ExceptionValidationRule />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                        
+                    </TextBox>
+                    
+                    <TextBox Margin="25 10 25 10"
+                             materialDesign:HintAssist.Hint="Hot Water Supply In Rubles Per Cubic Meters"
+                             materialDesign:HintAssist.IsFloating="True">
+                        
+                        <TextBox.Text>
+                            <Binding Path="HotWaterSupplyInRublesPerCubicMeters"
+                                     TargetNullValue=''
+                                     UpdateSourceTrigger="PropertyChanged"
+                                     StringFormat="{}{0:F2}"
+                                     ValidatesOnDataErrors="True">
+                                <Binding.ValidationRules>
+                                    <ExceptionValidationRule />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                        
+                    </TextBox>
+
+                    <Button Margin="0 25 0 0"
+                            Width="40"
+                            Height="40"
+                            Style="{DynamicResource MaterialDesignFloatingActionButton}"
+                            Command="{Binding SaveSettingsCommand}">
+
+                        <materialDesign:PackIcon Kind="Check" />
+                    </Button>
+                    
+                    <TextBlock Margin="25 10 25 10" Text="{Binding SettingsState}" Foreground="Green" />
+
+                </StackPanel>
+
+            </materialDesign:Card>
 
         </materialDesign:TransitioningContent>
 

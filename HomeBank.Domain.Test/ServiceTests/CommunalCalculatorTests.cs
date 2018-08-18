@@ -1,5 +1,7 @@
 ﻿using HomeBank.Domain.DomainModels.CommunalModels;
+using HomeBank.Domain.Infrastructure;
 using HomeBank.Domain.Infrastructure.Communals;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace HomeBank.Domain.Test.ServiceTests
@@ -10,8 +12,10 @@ namespace HomeBank.Domain.Test.ServiceTests
         [Test]
         public void CalculateTest()
         {
-            var tariffs = new CommunalTariffs(2.49, 17.16, 100.10);
-            var calculator = new CommunalCalculator(tariffs);
+            var communalSettings = Substitute.For<ICommunalSettings>();
+            communalSettings.CommunalTariffs.Returns(new CommunalTariffs(2.49, 17.16, 100.10));
+            
+            var calculator = new CommunalCalculator(communalSettings);
             
             var outgoings = new CommunalOutgoings(107, 2, 2);
 

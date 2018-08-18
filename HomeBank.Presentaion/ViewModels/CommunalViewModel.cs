@@ -145,13 +145,14 @@ namespace HomeBank.Presentation.ViewModels
             get
             {
                 return _caclulateOperationCommand ?? (_caclulateOperationCommand = new ActionCommand(vm =>
-                {
-                    var outgoings = new CommunalOutgoings(ElectricalOutgoings, CouldWaterOutgoings, HotWaterOutgoings);
-                    var payments = _communalCalculator.Calculate(outgoings);
-                    
-                    Update(payments);
-                },
-               vm => _electricalOutgoings >= 0 && _couldWaterOutgoings >= 0 && _hotWaterOutgoings >= 0));
+                           {
+                               var outgoings = new CommunalOutgoings(ElectricalOutgoings, CouldWaterOutgoings,
+                                   HotWaterOutgoings);
+                               var payments = _communalCalculator.Calculate(outgoings);
+
+                               Update(payments);
+                           },
+                           vm => _electricalOutgoings >= 0 && _couldWaterOutgoings >= 0 && _hotWaterOutgoings >= 0));
             }
         }
         

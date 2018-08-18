@@ -12,12 +12,12 @@ using System.Runtime.InteropServices;
 using System.Reflection;
 using log4net.Config;
 using HomeBank.Data.Sqlite.UnitOfWork;
-using HomeBank.Domain.DomainModels.CommunalModels;
 using HomeBank.Domain.Infrastructure.Communals;
 using HomeBank.Domain.Infrastructure.Statistics;
 using HomeBank.Presentation.Enums;
 using HomeBank.Presentation.Infrastructure;
 using HomeBank.Presentation.ViewModels;
+using HomeBank.Ui.Settings;
 
 namespace HomeBank.Ui
 {
@@ -26,7 +26,7 @@ namespace HomeBank.Ui
     /// </summary>
     public partial class App : Application
     {
-        private static CommunalTariffs CommunalTariffs => new CommunalTariffs(2.49, 17.16, 100.1);
+        private readonly ICommunalSettings _communalSettings = new CommunalSettings();
         
         private bool _isOwner;
         private Mutex _appMutex;
@@ -76,7 +76,7 @@ namespace HomeBank.Ui
             _transactionRepository = new SqliteTransactionRepository(_sessionProvider);
 
             _statisticService = new StatisticService(_transactionRepository);
-            _communalCalculator = new CommunalCalculator(CommunalTariffs);
+            _communalCalculator = new CommunalCalculator(_communalSettings);
 
             var categoryItemViewModel = new CategoryItemViewModel(_eventBus);
             var categoryViewModel = await CategoryViewModel.CreateAsync(
@@ -100,7 +100,7 @@ namespace HomeBank.Ui
             statisticViewModel.EndDate = DateTime.Now;
 
             var communalViewModel = new CommunalViewModel(_eventBus, _communalCalculator);
-            var settingsViewModel = new SettingsViewModel(_eventBus);
+            var settingsViewModel = new SettingsViewModel(_eventBus, _communalSettings);
             
             var childrenViewModels = new ViewModel[]
             {
