@@ -36,26 +36,29 @@
                         </Grid.RowDefinitions>
 
                         <Grid Grid.Row="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-
-                            <!--<Grid Grid.Column="0">
-                                    <ComboBox Margin="25 10 25 10"
-                                                materialDesign:HintAssist.Hint="Category"
-                                                materialDesign:HintAssist.IsFloating="True"
-                                                ItemsSource="{Binding Categories}"
-                                                SelectedItem="{Binding Category, 
-                                                                    UpdateSourceTrigger=PropertyChanged,
-                                                                    ValidatesOnDataErrors=True}"
-                                                DisplayMemberPath="Title" />
-                                </Grid>-->
-
-                            <Grid Grid.Column="1">
-                                <ComboBox Margin="25 10 25 10"
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"></RowDefinition>
+                                <RowDefinition Height="*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                
+                                <ComboBox Grid.Column="0"
+                                          Margin="25 10 25 10"
+                                          materialDesign:HintAssist.Hint="Category"
+                                          materialDesign:HintAssist.IsFloating="True"
+                                          ItemsSource="{Binding Categories}"
+                                          SelectedItem="{Binding SelectedCategory, 
+                                             UpdateSourceTrigger=PropertyChanged,
+                                             ValidatesOnDataErrors=True}"
+                                          DisplayMemberPath="Title" />
+                                
+                                <ComboBox Grid.Column="1"
+                                          Margin="25 10 25 10"
                                           materialDesign:HintAssist.Hint="Type"
                                           materialDesign:HintAssist.IsFloating="True"
                                           ItemsSource="{Binding CategoryTypes}"
@@ -63,21 +66,46 @@
                                                             UpdateSourceTrigger=PropertyChanged,
                                                             ValidatesOnDataErrors=True}" />
                             </Grid>
-
-                            <Grid Grid.Column="2">
-                                <DatePicker Margin="5 25 5 10"
+                            
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="5*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="5*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                
+                                <DatePicker Grid.Column="0"
+                                            Margin="25 10 25 10"
                                             materialDesign:HintAssist.Hint="Start Date"
                                             materialDesign:HintAssist.IsFloating="True"
                                             SelectedDate="{Binding StartDate}" />
+                                
+                                <Button Grid.Column="1"
+                                        Margin="5"
+                                        Width="30"
+                                        Height="30"
+                                        Style="{DynamicResource MaterialDesignFloatingActionLightButton}"
+                                        Command="{Binding ClearStartDateCommand}">
 
-                            </Grid>
+                                    <materialDesign:PackIcon Kind="FormatClear" />
+                                </Button>
 
-                            <Grid Grid.Column="3">
-                                <DatePicker Margin="5 25 5 10"
+                                <DatePicker Grid.Column="2"
+                                            Margin="25 10 25 10"
                                             materialDesign:HintAssist.Hint="End Date"
                                             materialDesign:HintAssist.IsFloating="True"
                                             SelectedDate="{Binding EndDate}" />
+                                
+                                <Button Grid.Column="3"
+                                        Margin="5"
+                                        Width="30"
+                                        Height="30"
+                                        Style="{DynamicResource MaterialDesignFloatingActionLightButton}"
+                                        Command="{Binding ClearEndDateCommand}">
 
+                                    <materialDesign:PackIcon Kind="FormatClear" />
+                                </Button>
                             </Grid>
                         </Grid>
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using HomeBank.Domain.DomainModels.StatisticModels;
 using HomeBank.Domain.Infrastructure.Statistics;
 using HomeBank.Domain.Queries;
@@ -209,6 +210,24 @@ namespace HomeBank.Presentation.ViewModels
         private void UpdateTotal(decimal total)
         {
             Total = $"Total: {total}";
+        }
+        
+        private ICommand _сlearStartDateCommand;
+        public ICommand ClearStartDateCommand
+        {
+            get
+            {
+                return _сlearStartDateCommand ?? (_сlearStartDateCommand = new ActionCommand(vm => { StartDate = null; }));
+            }
+        }
+        
+        private ICommand _сlearEndDateCommand;
+        public ICommand ClearEndDateCommand
+        {
+            get
+            {
+                return _сlearEndDateCommand ?? (_сlearEndDateCommand = new ActionCommand(vm => { EndDate = null; }));
+            }
         }
     }
 }

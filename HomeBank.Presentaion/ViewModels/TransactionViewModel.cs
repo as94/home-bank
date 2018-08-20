@@ -68,18 +68,19 @@ namespace HomeBank.Presentation.ViewModels
             }
         }
 
-        //private CategoryItemViewModel _category;
-        //public CategoryItemViewModel Category
-        //{
-        //    get => _category;
-        //    set
-        //    {
-        //        if (_category == value) return;
-        //        _category = value;
-        //        OnPropertyChanged();
-        //        OnFilterChanged();
-        //    }
-        //}
+        private CategoryItemViewModel _selectedCategory;
+        public CategoryItemViewModel SelectedCategory
+        {
+            get => _selectedCategory;
+            set
+            {
+                if (_selectedCategory == value) return;
+                _selectedCategory = value;
+                OnPropertyChanged();
+        
+                EventBus.Notify(EventType.TransactionFilterChanged);
+            }
+        }
 
         public ObservableCollection<TransactionItemViewModel> Transactions { get; set; }
         public TransactionItemViewModel SelectedTransaction { get; set; }
@@ -165,7 +166,8 @@ namespace HomeBank.Presentation.ViewModels
         {
             var query = new TransactionQuery(
                 dateRangeQuery: new DateRangeQuery(StartDate, EndDate?.AddDays(1)),
-                type: Type.Convert());
+                type: Type.Convert(),
+                category: SelectedCategory?.ToDomain());
             
             switch (type)
             {
@@ -338,6 +340,24 @@ namespace HomeBank.Presentation.ViewModels
                         EventBus.Notify(EventType.TransactionOperationExecuted, args);
                     }
                 }));
+            }
+        }
+        
+        private ICommand _сlearStartDateCommand;
+        public ICommand ClearStartDateCommand
+        {
+            get
+            {
+                return _сlearStartDateCommand ?? (_сlearStartDateCommand = new ActionCommand(vm => { StartDate = null; }));
+            }
+        }
+        
+        private ICommand _сlearEndDateCommand;
+        public ICommand ClearEndDateCommand
+        {
+            get
+            {
+                return _сlearEndDateCommand ?? (_сlearEndDateCommand = new ActionCommand(vm => { EndDate = null; }));
             }
         }
     }

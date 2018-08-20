@@ -9,6 +9,7 @@
         Height="600"
         Width="1024"
         WindowState="Maximized"
+        Title="Home Bank"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
